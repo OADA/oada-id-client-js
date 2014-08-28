@@ -56,6 +56,9 @@ var oadaLogin = (function() {
 			}
 		}
 
+		// Can't open windows in callbacks lest we anger the popup blockers
+		var loginWindow = window.open("", "_blank", "width=500,height=400");
+
 		// Get OADA configuration
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = receiveConfig;
@@ -63,7 +66,7 @@ var oadaLogin = (function() {
 				"/.well-known/oada-configuration", true);
 		xmlhttp.send();
 
-		// Called whith GET result
+		// Called with GET result
 		function receiveConfig() {
 			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
 				conf = JSON.parse(xmlhttp.responseText);
@@ -78,7 +81,8 @@ var oadaLogin = (function() {
 				loginCallback = typeof callback !== 'undefined' ?
 						callback : function(){};
 
-				window.open(url, "_blank", "width=500,height=400");
+				// Use window opened before callback
+				loginWindow.location.assign(url);
 			}
 		}
 	};
