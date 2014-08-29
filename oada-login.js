@@ -56,15 +56,15 @@ var oadaLogin = (function() {
 			}
 		}
 
-		// Can't open windows in callbacks lest we anger the popup blockers
-		var loginWindow = window.open("", "_blank", "width=500,height=400");
-
 		// Get OADA configuration
 		var xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = receiveConfig;
 		xmlhttp.open("GET", "http://" + domain +
 				"/.well-known/oada-configuration", true);
 		xmlhttp.send();
+
+		// Can't open windows in callbacks lest we anger the popup blockers
+		var loginWindow = window.open("", "_blank", "width=500,height=400");
 
 		// Called with GET result
 		function receiveConfig() {
