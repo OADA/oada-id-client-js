@@ -55,7 +55,7 @@ app.use('/redirect', function(req, res) {
 });
 
 app.use('/get_vip3',
-        login.getAccessToken('vip3.ecn.purdue.edu:3000', options1vip3));
+    login.getAccessToken('vip3.ecn.purdue.edu:3000', options1vip3));
 
 app.use('/redirect_vip3', login.handleRedirect());
 app.use('/redirect_vip3', function(req, res) {
