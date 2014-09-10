@@ -142,9 +142,7 @@ module.exports = function(grunt) {
         'lint',
         'style',
         'build',
-        'watch:lint',
-        'watch:style',
-        'watch:build',
+        'watch',
     ]);
     // Build task.    Compile templates, browserify, and concat
     grunt.registerTask('build', 'Create distribution versions',

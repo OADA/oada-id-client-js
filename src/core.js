@@ -19,6 +19,9 @@ var request = require('superagent');
 // TODO: URIjs is big, find smaller alternative
 var URI = require('URIjs');
 var objectAssign = require('object-assign');
+var jwt = require('jsonwebtoken');
+var jws = require('jws');
+var pem = require('rsa-pem-from-mod-exp');
 
 var core = {};
 
@@ -77,31 +80,85 @@ core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
     authorize(domain, configuration, opts, redirect, cb);
 };
 
+function combineCallbacks() {
+    var callbacks = arguments;
+
+    return function callback(err, token) {
+        for (var i = 0; i < callbacks.length; i++) {
+            if (typeof callbacks[i] === 'function') {
+                callbacks[i](err, token);
+            }
+        }
+    };
+}
+
+function verifyIDToken(state, parameters, callback) {
+    if (!parameters['id_token']) {
+        return callback(null, parameters);
+    }
+
+    var decodedToken = jws.decode(parameters['id_token']);
+
+    var req = request.get(state.conf['jwks_uri']);
+    if (req.buffer) { req.buffer(); }
+    req.end(function(err, resp) {
+        if (err) { return callback(err); }
+
+        var jwks = JSON.parse(resp.text);
+        var jwk;
+
+        console.log('token'); console.dir(decodedToken);
+        console.log('jwks'); console.dir(jwks);
+
+        for (var i = 0; i < jwks.keys.length; i++) {
+            if (jwks.keys[i].kid === decodedToken.header.kid) {
+                jwk = jwks.keys[i];
+                break;
+            }
+        }
+
+        var pemKey = pem(jwk.n, jwk.e);
+
+        jwt.verify(parameters['id_token'], pemKey, function(err, token) {
+            parameters['id_token'] = token;
+
+            callback(err, parameters);
+        });
+    });
+}
+
 function exchangeCode(state, parameters, callback) {
+    if (!parameters['code']) {
+        return verifyIDToken(state, parameters, callback);
+    }
+
     var params = {
-                'grant_type': 'authorization_code',
-                'redirect_uri': state.options['redirect_uri'],
-                'client_secret': state.options['client_secret'],
-                'client_id': state.options['client_id'],
-                code: parameters.code,
-            };
+        'grant_type': 'authorization_code',
+        'redirect_uri': state.options['redirect_uri'],
+        'client_secret': state.options['client_secret'],
+        'client_id': state.options['client_id'],
+        'code': parameters.code,
+    };
 
     console.log(parameters);
 
-    request.post(state.conf['token_endpoint']).type('form').send(params)
+    request.post(state.conf['token_endpoint'])
+        .type('form')
+        .send(params)
         .end(function(err, resp) {
             var token;
 
             if (!err) {
                 try {
                     token = JSON.parse(resp.text);
-                } catch (err) {}
+                } catch (err) {
+                    callback(err);
+                }
             }
 
             console.log(token);
 
-            if (state.callback) { state.callback(err, token); }
-            if (callback) { callback(err, token); }
+            verifyIDToken(state, token, callback);
         });
 }
 
@@ -111,17 +168,14 @@ core.handleRedirect = function handleRedirect(parameters, callback) {
     var state = stuff[parameters.state];
     delete stuff[parameters.state];
 
+    var cb = combineCallbacks(state && state.callback, callback);
+
     if (state) {
-        if (parameters.code) {
-            exchangeCode(state, parameters, callback);
-        } else {
-            if (state.callback) { state.callback(null, parameters); }
-            if (callback) { callback(null, parameters); }
-        }
+        exchangeCode(state, parameters, cb);
     } else {
         var err = 'Spurrious redirect received';
 
-        if (callback) { callback(err, parameters); }
+        cb(err, parameters);
     }
 };
 
