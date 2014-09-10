@@ -122,21 +122,21 @@ module.exports = function(grunt) {
                 },
             },
         },
-        // grunt-contrib-connect
-        // A really simple static web server that supports live-reload
-        connect: {
-            dev: {
+        // grunt-express
+        express: {
+            livereloadServer: {
                 options: {
-                    port: grunt.option('port') || 8000,
-                    base: ['./dist/', './examples/browser-client/'],
-                    livereload: true
-                }
-            }
-        }
+                    server: './examples/server-client/server-client.js',
+                    bases: ['./dist/', './examples/browser-client/'],
+                    livereload: true,
+                    serverreload: true,
+                },
+            },
+        },
     });
 
     // Default task.    Build, start the server, and watch files for changes
-    grunt.registerTask('default', ['build', 'connect', 'watch']);
+    grunt.registerTask('default', ['build', 'express', 'watch']);
     // Build task.    Compile templates, browserify, and concat
     grunt.registerTask('build', ['lint', 'style', 'browserify']);
 

@@ -12,7 +12,7 @@
   },
   "keywords": [
     "oada",
-	"openid"
+    "openid"
   ],
   "author": "Alex Layton <alex@layton.in>",
   "license": "Apache 2.0",
@@ -27,12 +27,12 @@
   },
   "devDependencies": {
     "browserify": "^5.11.1",
-    "connect": "^3.2.0",
+    "express": "^4.9.0",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.0.1",
-    "grunt-contrib-connect": "^0.8.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-watch": "^0.6.1",
+    "grunt-express": "^1.4.1",
     "grunt-jscs": "^0.7.1",
     "grunt-newer": "^0.7.0",
     "load-grunt-tasks": "^0.6.0",

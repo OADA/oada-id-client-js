@@ -62,4 +62,5 @@ app.use('/redirect_vip3', function(req, res) {
     res.json(req.token);
 });
 
-app.listen(3000);
+//app.listen(3000);
+module.exports = app;
