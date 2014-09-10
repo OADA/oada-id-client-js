@@ -68,12 +68,11 @@ module.exports = function(grunt) {
                 // config so only files that changed will be linted
                 tasks: ['newer:jscs:all'],
             },
-            browserifyMain: {
+            build: {
                 // only rebuild when our core when our app changes
                 files: ['src/**/*.js'],
                 tasks: [
-                    'browserify:main',
-                    'browserify:mainMin',
+                    'browserify',
                     'newer:jshint:all'
                 ],
             },
@@ -82,13 +81,12 @@ module.exports = function(grunt) {
                 files: ['tmp/*browserify.js'],
                 tasks: ['concat']
             },
-            livereload: {
-                // reload our testing page
-                files: ['public/**/*'],
-                options: {
-                    livereload: true
-                },
-            },
+            //livereload: {
+            //    files: ['dist/**/*', 'examples/**/*', 'src/**/*'],
+            //    options: {
+            //        livereload: true,
+            //    },
+            //},
         },
         // grunt-browserify
         browserify: {
@@ -127,7 +125,11 @@ module.exports = function(grunt) {
             livereloadServer: {
                 options: {
                     server: './examples/server-client/server-client.js',
-                    bases: ['./dist/', './examples/browser-client/'],
+                    bases: [
+                        './dist/',
+                        './examples/server-client/',
+                        './examples/browser-client/',
+                    ],
                     livereload: true,
                     serverreload: true,
                 },
@@ -136,11 +138,22 @@ module.exports = function(grunt) {
     });
 
     // Default task.    Build, start the server, and watch files for changes
-    grunt.registerTask('default', ['build', 'express', 'watch']);
+    grunt.registerTask('default', [
+        'lint',
+        'style',
+        'build',
+        'watch:lint',
+        'watch:style',
+        'watch:build',
+    ]);
     // Build task.    Compile templates, browserify, and concat
-    grunt.registerTask('build', ['lint', 'style', 'browserify']);
+    grunt.registerTask('build', 'Create distribution versions',
+        ['browserify']);
 
-    grunt.registerTask('lint', ['jshint']);
-    grunt.registerTask('style', ['jscs']);
+    grunt.registerTask('lint', 'Lint the project files', ['jshint']);
+    grunt.registerTask('style', 'Style check the project files', ['jscs']);
+
+    // Run the examples of using the library
+    grunt.registerTask('demo', 'Run the usage examples', ['express']);
 
 };

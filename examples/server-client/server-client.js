@@ -44,10 +44,10 @@ var options1vip3 = {
 };
 
 app.use('/who',
-	login.getIDToken('vip1.ecn.purdue.edu/~awlayton', options1));
+    login.getIDToken('vip1.ecn.purdue.edu/~awlayton', options1));
 
 app.use('/get',
-	login.getAccessToken('vip1.ecn.purdue.edu/~awlayton', options2));
+    login.getAccessToken('vip1.ecn.purdue.edu/~awlayton', options2));
 
 app.use('/redirect', login.handleRedirect());
 app.use('/redirect', function(req, res) {
