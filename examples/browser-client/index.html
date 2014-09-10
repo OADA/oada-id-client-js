@@ -15,27 +15,32 @@
 
 <html>
 <head>
-	<script src=../oada-login.js></script>
+</head>
+
+	<script src=main.browserify.js></script>
 	<script src=http://medialize.github.io/URI.js/src/URI.js></script>
 	<script>
 		var options = {
 			client_id: "222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p.apps.googleusercontent.com",
-			redirect_uri: URI("redirect").absoluteTo(window.location.href),
+			redirect_uri: URI("redirect.html").absoluteTo(window.location.href),
 			scope: "openid",
 			// Make it always ask for consent again
 			prompt: "consent",
 		};
 
-		oadaLogin.init(options);
+		//oadaIdClient.init(options);
 
-		var callback = function(conf, params) {
-			console.dir(conf);
-			console.dir(params);
+		var callback = function(err, token) {
+			console.log("Err");
+			console.dir(err);
+			console.log("Token");
+			console.dir(token);
 		};
 	</script>
 </head>
 <body>
-<button onclick="oadaLogin.login('provider.oada-dev.com', callback)">Login</button>
+<button onclick="oadaIdClient.getIDToken('vip1.ecn.purdue.edu/~awlayton', options, callback)">ID Token</button>
+<button onclick="oadaIdClient.getAccessToken('vip1.ecn.purdue.edu/~awlayton', options, callback)">Access Token</button>
 </body>
 </html>
 

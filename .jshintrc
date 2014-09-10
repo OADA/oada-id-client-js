@@ -1,0 +1,20 @@
+{
+    "node": true,
+    "bitwise": true,
+    "camelcase": false,
+    "curly": true,
+    "forin": true,
+    "immed": true,
+    "latedef": true,
+    "newcap": true,
+    "noarg": true,
+    "noempty": true,
+    "nonew": true,
+    "quotmark": "single",
+    "undef": true,
+    "unused": true,
+    "strict": true,
+    "maxlen": 80,
+    "trailing": true,
+	"sub": true
+}
