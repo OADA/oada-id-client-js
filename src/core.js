@@ -133,12 +133,18 @@ function verifyIDToken(state, parameters, callback) {
 
 function generateClientSecret(key, issuer, audience, accessCode) {
     var sec = {
-        iss: issuer,
-        aud: audience,
         ac: accessCode,
     };
+    var options = {
+        algorithm: 'RS256',
+        audience: audience,
+        issuer: issuer,
+        headers: {
+            kid: key.kid,
+        },
+    };
 
-    return jwt.sign(sec, key, {algorithm: 'RS256'});
+    return jwt.sign(sec, key.pem, options);
 }
 
 function exchangeCode(state, parameters, callback) {

@@ -20,9 +20,12 @@
     "url": "https://github.com/OADA/oada-login/issues"
   },
   "homepage": "https://github.com/OADA/oada-login",
+  "browser": {
+    "cypto": "./src/crypto-shim.js"
+  },
   "dependencies": {
     "URIjs": "^1.13.2",
-    "jsonwebtoken": "^1.1.1",
+    "jsonwebtoken": "git+https://git@github.com/awlayton/node-jsonwebtoken.git",
     "jws": "^0.2.6",
     "object-assign": "^1.0.0",
     "rsa-pem-from-mod-exp": "^0.8.4",

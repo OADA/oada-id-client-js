@@ -23,7 +23,9 @@ var express = require('express');
 var app = express();
 var login = require('../../').middleware;
 
-var key = fs.readFileSync(__dirname + '/privkey.pem');
+var pem = fs.readFileSync(__dirname + '/privkey.pem');
+var kid = 'ad8alkjca38afvudsZA';
+var key = {pem:pem, kid:kid};
 
 var options1 = {
     'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
@@ -41,7 +43,7 @@ var options2 = {
 
 var options1vip3 = {
     'client_id': 'abc123@vip3.ecn.purdue.edu:3000',
-    'client_secret': '123secret456',
+    privateKey: key,
     'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect_vip3',
     scope: 'configurations.me.machines.harvesters',
 };
