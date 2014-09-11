@@ -164,7 +164,7 @@ function exchangeCode(state, parameters, callback) {
         .type('form')
         .send(params)
         .end(function(err, resp) {
-            if (!err) { return callback(err); }
+            if (err) { return callback(err); }
 
             if(!resp.ok) { return callback('Token request failed'); }
 
