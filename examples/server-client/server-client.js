@@ -18,21 +18,24 @@
  */
 'use strict';
 
+var fs = require('fs');
 var express = require('express');
 var app = express();
 var login = require('../../').middleware;
 
+var key = fs.readFileSync(__dirname + '/privkey.pem');
+
 var options1 = {
     'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
         '.apps.googleusercontent.com',
-    'client_secret': 'U4M-D5ANWgQeNDofGxfmEPZ9',
-    'redirect_uri': 'http://localhost:3000/redirect',
+    privateKey: key,
+    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect',
 };
 var options2 = {
     'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
         '.apps.googleusercontent.com',
-    'client_secret': 'U4M-D5ANWgQeNDofGxfmEPZ9',
-    'redirect_uri': 'http://localhost:3000/redirect',
+    privateKey: key,
+    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect',
     scope: 'https://mail.google.com',
 };
 

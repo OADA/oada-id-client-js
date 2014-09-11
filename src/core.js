@@ -34,6 +34,10 @@ core.init = function(opts) {
 
 function authorize(domain, configuration, parameters, redirect, callback) {
     var params = objectAssign({}, options, parameters);
+    var key = params.privateKey;
+
+    delete params['client_secret'];
+    delete params.privateKey;
 
     // TODO: HTTPS
     var req = request.get('http://' + domain + '/.well-known/' + configuration);
@@ -47,6 +51,8 @@ function authorize(domain, configuration, parameters, redirect, callback) {
 
             var state = Math.random();
             stuff[state] = {
+                key: key,
+                domain: domain,
                 conf: conf,
                 callback: callback,
                 options: params,
@@ -54,9 +60,6 @@ function authorize(domain, configuration, parameters, redirect, callback) {
 
             uri = new URI(conf['authorization_endpoint']);
             uri.addQuery({state: state}).addQuery(params);
-
-            // Do not send client secret here
-            uri.removeQuery('client_secret');
         } catch (err) {}
 
         return redirect(err, uri && uri.toString());
@@ -92,6 +95,7 @@ function combineCallbacks() {
     };
 }
 
+// TODO: Check issuer
 function verifyIDToken(state, parameters, callback) {
     if (!parameters['id_token']) {
         return callback(null, parameters);
@@ -127,6 +131,16 @@ function verifyIDToken(state, parameters, callback) {
     });
 }
 
+function generateClientSecret(key, issuer, audience, accessCode) {
+    var sec = {
+        iss: issuer,
+        aud: audience,
+        ac: accessCode,
+    };
+
+    return jwt.sign(sec, key, {algorithm: 'RS256'});
+}
+
 function exchangeCode(state, parameters, callback) {
     if (!parameters['code']) {
         return verifyIDToken(state, parameters, callback);
@@ -135,12 +149,16 @@ function exchangeCode(state, parameters, callback) {
     var params = {
         'grant_type': 'authorization_code',
         'redirect_uri': state.options['redirect_uri'],
-        'client_secret': state.options['client_secret'],
+        'client_secret': generateClientSecret(
+                state.key,
+                state.options['client_id'],
+                state.conf['token_endpoint'],
+                parameters.code),
         'client_id': state.options['client_id'],
         'code': parameters.code,
     };
 
-    console.log(parameters);
+    console.log(params);
 
     request.post(state.conf['token_endpoint'])
         .type('form')

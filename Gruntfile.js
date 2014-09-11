@@ -130,6 +130,7 @@ module.exports = function(grunt) {
                         './examples/server-client/',
                         './examples/browser-client/',
                     ],
+                    port: grunt.option('port') || 3000,
                     livereload: true,
                     serverreload: true,
                 },
