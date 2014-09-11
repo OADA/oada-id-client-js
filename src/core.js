@@ -172,12 +172,13 @@ function exchangeCode(state, parameters, callback) {
         .end(function(err, resp) {
             if (err) { return callback(err); }
 
-            if(!resp.ok) { return callback('Token request failed'); }
+            if (!resp.ok) { return callback('Token request failed'); }
 
+            var token;
             try {
                 token = JSON.parse(resp.text);
             } catch (err) {
-               return callback(err);
+                return callback(err);
             }
 
             verifyIDToken(state, token, callback);
