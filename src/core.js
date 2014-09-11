@@ -97,7 +97,7 @@ function combineCallbacks() {
 
 // TODO: Check issuer
 function verifyIDToken(state, parameters, callback) {
-    if (!parameters['id_token']) {
+    if (!parameters || !parameters['id_token']) {
         return callback(null, parameters);
     }
 
@@ -164,17 +164,15 @@ function exchangeCode(state, parameters, callback) {
         .type('form')
         .send(params)
         .end(function(err, resp) {
-            var token;
+            if (!err) { return callback(err); }
 
-            if (!err) {
-                try {
-                    token = JSON.parse(resp.text);
-                } catch (err) {
-                    callback(err);
-                }
+            if(!resp.ok) { return callback('Token request failed'); }
+
+            try {
+                token = JSON.parse(resp.text);
+            } catch (err) {
+               return callback(err);
             }
-
-            console.log(token);
 
             verifyIDToken(state, token, callback);
         });
