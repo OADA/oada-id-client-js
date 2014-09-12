@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "description": "OADA identity client library for Node.JS and Browser",
   "main": "index.js",
+  "scripts": {
+    "prepublish": "grunt build"
+  },
   "directories": {
     "test": "test"
   },
