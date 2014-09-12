@@ -7,7 +7,9 @@
     "prepublish": "grunt build"
   },
   "directories": {
-    "test": "test"
+    "lib": "src",
+    "test": "test",
+    "example": "examples"
   },
   "repository": {
     "type": "git",
@@ -17,7 +19,7 @@
     "oada",
     "openid"
   ],
-  "author": "Alex Layton <alex@layton.in>",
+  "author": "Alex Layton <alex@layton.in> (http://alex.layton.in)",
   "license": "Apache License 2.0",
   "bugs": {
     "url": "https://github.com/OADA/oada-login/issues"
@@ -28,7 +30,7 @@
   },
   "dependencies": {
     "URIjs": "^1.13.2",
-    "jsonwebtoken": "git+https://git@github.com/awlayton/node-jsonwebtoken.git",
+    "jsonwebtoken": "awlayton/node-jsonwebtoken",
     "jws": "^0.2.6",
     "object-assign": "^1.0.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
