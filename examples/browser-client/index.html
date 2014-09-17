@@ -19,28 +19,34 @@
 
 	<script src=main.browserify.js></script>
 	<script src=http://medialize.github.io/URI.js/src/URI.js></script>
+	<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
 	<script>
 		var options = {
-			client_id: "222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p.apps.googleusercontent.com",
-			redirect_uri: URI("redirect.html").absoluteTo(window.location.href),
-			scope: "openid",
+			'client_id': 'jf93caauf3uzud7f308faesf3@provider.oada-dev.com',
+			'redirect_uri': 'http://localhost:3000/redirect.html',
+			scope: 'configurations.me.machines.harvesters',
 			// Make it always ask for consent again
-			prompt: "consent",
+			prompt: 'consent',
 		};
 
 		//oadaIdClient.init(options);
 
 		var callback = function(err, token) {
-			console.log("Err");
-			console.dir(err);
-			console.log("Token");
-			console.dir(token);
+			'use strict';
+
+			var block = document.getElementById('token');
+            
+            block.innerHTML =
+                JSON.stringify(token, undefined, 4);
+            hljs.highlightBlock(block);
 		};
 	</script>
 </head>
 <body>
-<button onclick="oadaIdClient.getIDToken('vip1.ecn.purdue.edu/~awlayton', options, callback)">ID Token</button>
-<button onclick="oadaIdClient.getAccessToken('vip1.ecn.purdue.edu/~awlayton', options, callback)">Access Token</button>
+<button onclick="oadaIdClient.getIDToken('provider.oada-dev.com', options, callback)">ID Token</button>
+<button onclick="oadaIdClient.getAccessToken('provider.oada-dev.com', options, callback)">Access Token</button>
+<pre class="json" id="token"></pre>
 </body>
 </html>
 
