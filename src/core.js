@@ -22,6 +22,7 @@ var objectAssign = require('object-assign');
 var jwt = require('jsonwebtoken');
 var jws = require('jws');
 var pem = require('rsa-pem-from-mod-exp');
+var crypto = require('crypto');
 
 var core = {};
 
@@ -31,6 +32,47 @@ var stuff = {};
 core.init = function(opts) {
     objectAssign(options, opts);
 };
+
+function storeState(stateObj, callback) {
+    // Make sure neither or both state storing functions are overridden
+    if (core.retrieveState != retrieveState) {
+        callback('Overrode retrieveState but not storeState!');
+    }
+
+    // Cryptographically secure random bytes
+    var stateTok = crypto.randomBytes(16);
+
+    // Make it base64URL
+    stateTok = stateTok.toString('base64')
+        .replace(/\+/g, '-')
+        .replace(/\//g, '_')
+        .replace(/=/g, '');
+
+    // Rembmer stuff
+    stuff[stateTok] = stateObj;
+
+    return callback(null, stateTok);
+}
+
+function retrieveState(stateTok, callback) {
+    // Make sure neither or both state storing functions are overridden
+    if (core.storeState != storeState) {
+        callback('Overrode storeState but not retrieveState!');
+    }
+
+    // Retrie stored state
+    var stateObj = stuff[stateTok];
+
+    // Only use each state once
+    delete stuff[stateTok];
+
+    return callback(null, stateObj);
+}
+
+// These can be replaced with to change how state is stored
+// TODO: Should these be exposed somehow for browser and/or middleware?
+core.storeState = storeState;
+core.retrieveState = retrieveState;
 
 function authorize(domain, configuration, parameters, redirect, callback) {
     var params = objectAssign({}, options, parameters);
@@ -45,12 +87,10 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     req.end(function(err, resp) {
         if (err) { return redirect(err); }
 
-        var uri;
         try {
             var conf = JSON.parse(resp.text);
-
-            var state = Math.random();
-            stuff[state] = {
+            // Stuff to remember for when redirect is received
+            var stateObj = {
                 key: key,
                 domain: domain,
                 conf: conf,
@@ -58,11 +98,18 @@ function authorize(domain, configuration, parameters, redirect, callback) {
                 options: params,
             };
 
-            uri = new URI(conf['authorization_endpoint']);
-            uri.addQuery({state: state}).addQuery(params);
-        } catch (err) {}
+            core.storeState(stateObj, function(err, stateTok) {
+                // Construct authorization redirect
+                var uri = new URI(conf['authorization_endpoint']);
+                uri.addQuery({state: stateTok}).addQuery(params);
 
-        return redirect(err, uri && uri.toString());
+                // Redirect the user to constructed uri
+                return redirect(err, uri && uri.toString());
+            });
+        } catch (err) {
+            // Should I be passing the error to both?
+            return combineCallbacks(redirect, callback)(err);
+        }
     });
 }
 
@@ -86,10 +133,10 @@ core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
 function combineCallbacks() {
     var callbacks = arguments;
 
-    return function callback(err, token) {
+    return function callback(err, result) {
         for (var i = 0; i < callbacks.length; i++) {
             if (typeof callbacks[i] === 'function') {
-                callbacks[i](err, token);
+                callbacks[i](err, result);
             }
         }
     };
@@ -187,19 +234,17 @@ function exchangeCode(state, parameters, callback) {
 
 // TODO: Should I be able to register callbacks in two places?
 core.handleRedirect = function handleRedirect(parameters, callback) {
-    // TODO: Keep this stuff somewhere better
-    var state = stuff[parameters.state];
-    delete stuff[parameters.state];
+    var stateTok = parameters.state;
 
-    var cb = combineCallbacks(state && state.callback, callback);
+    core.retrieveState(stateTok, function(err, stateObj) {
+        var cb = combineCallbacks(stateObj && stateObj.callback, callback);
 
-    if (state) {
-        exchangeCode(state, parameters, cb);
-    } else {
-        var err = 'Spurrious redirect received';
-
-        cb(err, parameters);
-    }
+        if (stateObj) {
+            exchangeCode(stateObj, parameters, cb);
+        } else {
+            cb('Spurrious redirect received', parameters);
+        }
+    });
 };
 
 module.exports = core;
