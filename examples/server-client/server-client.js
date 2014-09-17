@@ -27,45 +27,27 @@ var pem = fs.readFileSync(__dirname + '/privkey.pem');
 var kid = 'ad8alkjca38afvudsZA';
 var key = {pem:pem, kid:kid};
 
-var options1 = {
-    'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
-        '.apps.googleusercontent.com',
-    privateKey: key,
-    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect',
-};
-var options2 = {
-    'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
-        '.apps.googleusercontent.com',
-    privateKey: key,
-    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect',
-    scope: 'https://mail.google.com',
-};
-
-var options1vip3 = {
-    'client_id': 'abc123@vip3.ecn.purdue.edu:3000',
-    privateKey: key,
-    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect_vip3',
+var options = {
+    'client_id': 'jf93caauf3uzud7f308faesf3@provider.oada-dev.com',
+    'redirect_uri': 'http://localhost:3000/redirect',
     scope: 'configurations.me.machines.harvesters',
+    prompt: 'consent',
+    privateKey: key,
 };
 
 app.use('/who',
-    login.getIDToken('vip1.ecn.purdue.edu/~awlayton', options1));
+    login.getIDToken('provider.oada-dev.com', options));
 
 app.use('/get',
-    login.getAccessToken('vip1.ecn.purdue.edu/~awlayton', options2));
+    login.getAccessToken('provider.oada-dev.com', options));
 
 app.use('/redirect', login.handleRedirect());
 app.use('/redirect', function(req, res) {
     res.json(req.token);
 });
 
-app.use('/get_vip3',
-    login.getAccessToken('vip3.ecn.purdue.edu:3000', options1vip3));
+if (require.main === module) {
+    app.listen(3000);
+}
 
-app.use('/redirect_vip3', login.handleRedirect());
-app.use('/redirect_vip3', function(req, res) {
-    res.json(req.token);
-});
-
-//app.listen(3000);
 module.exports = app;
