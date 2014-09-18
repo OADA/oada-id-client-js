@@ -30,18 +30,30 @@ module.exports = function(grunt) {
         'src/**/*.js',
         'index.js',
     ];
+    // All the project HTML files
+    var htmlFiles = [
+        'examples/**/*.html',
+        'index.html',
+    ];
 
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         // grunt-contrib-jshint
         jshint: {
-            all: {
-                // Monitors all files except for vendor code
+            options: {
+                jshintrc: true,
+            },
+            js: {
                 src: jsFiles,
             },
-            options: {
-                jshintrc: './.jshintrc',
+            html: {
+                src: htmlFiles,
+                options: {
+                    extensions: 'htm html',
+                    extract: 'always',
+                    browser: true,
+                },
             },
         },
         jscs: {
@@ -54,12 +66,19 @@ module.exports = function(grunt) {
         },
         // grunt-contrib-watch
         watch: {
-            lint: {
+            jsLint: {
                 files: jsFiles,
                 // grunt-newer is also included.
                 // It will dynamically modify the jshint
                 // config so only files that changed will be linted
-                tasks: ['newer:jshint:all'],
+                tasks: ['newer:jshint:js'],
+            },
+            htmlLint: {
+                files: htmlFiles,
+                // grunt-newer is also included.
+                // It will dynamically modify the jshint
+                // config so only files that changed will be linted
+                tasks: ['newer:jshint:html'],
             },
             style: {
                 files: jsFiles,
@@ -71,10 +90,7 @@ module.exports = function(grunt) {
             build: {
                 // only rebuild when our core when our app changes
                 files: ['src/**/*.js'],
-                tasks: [
-                    'browserify',
-                    'newer:jshint:all'
-                ],
+                tasks: ['browserify'],
             },
             concat: {
                 // automatically reconcatenate
