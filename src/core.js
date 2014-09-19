@@ -81,11 +81,14 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     delete params['client_secret'];
     delete params.privateKey;
 
+    // Should I be passing the error to both?
+    var errCallback = combineCallbacks(redirect, callback);
+
     // TODO: HTTPS
     var req = request.get('http://' + domain + '/.well-known/' + configuration);
     if (req.buffer) { req.buffer(); }
-    req.end(function(err, resp) {
-        if (err) { return redirect(err); }
+    req.end(function(resp) {
+        if (resp.error) { return errCallback(resp.error); }
 
         try {
             var conf = JSON.parse(resp.text);
@@ -107,8 +110,7 @@ function authorize(domain, configuration, parameters, redirect, callback) {
                 return redirect(err, uri && uri.toString());
             });
         } catch (err) {
-            // Should I be passing the error to both?
-            return combineCallbacks(redirect, callback)(err);
+            return errCallback(err);
         }
     });
 }
@@ -152,8 +154,8 @@ function verifyIDToken(state, parameters, callback) {
 
     var req = request.get(state.conf['jwks_uri']);
     if (req.buffer) { req.buffer(); }
-    req.end(function(err, resp) {
-        if (err) { return callback(err); }
+    req.end(function(resp) {
+        if (resp.error) { return callback(resp.error); }
 
         var jwks = JSON.parse(resp.text);
         var jwk;
