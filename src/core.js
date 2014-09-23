@@ -151,33 +151,56 @@ function verifyIDToken(state, parameters, callback) {
         return callback(null, parameters);
     }
 
+    // Need to look at JOSE header to find JWK
     var decodedToken = jws.decode(parameters['id_token']);
+    if (!decodedToken) {
+        var err = new Error('Could not decode ID token as JWT');
+        return callback(err, parameters);
+    }
 
     var req = request.get(state.conf['jwks_uri']);
     if (req.buffer) { req.buffer(); }
     req.end(function(resp) {
-        if (resp.error) { return callback(resp.error); }
+        if (resp.error) { return callback(resp.error, parameters); }
 
-        var jwks = JSON.parse(resp.text);
-        var jwk;
-
-        console.log('token'); console.dir(decodedToken);
-        console.log('jwks'); console.dir(jwks);
-
-        for (var i = 0; i < jwks.keys.length; i++) {
-            if (jwks.keys[i].kid === decodedToken.header.kid) {
-                jwk = jwks.keys[i];
-                break;
+        try {
+            var jwks;
+            try {
+                jwks = JSON.parse(resp.text);
+            } catch (err) {
+                // Give a better error than what JSON.parse throws
+                throw new Error('Could not parse JWKs URI as JSON');
             }
+
+            // Find the corresponding JWK
+            var jwk;
+            for (var i = 0; i < jwks.keys.length; i++) {
+                if (jwks.keys[i].kid === decodedToken.header.kid) {
+                    jwk = jwks.keys[i];
+                    break;
+                }
+            }
+            if (!jwk) {
+                throw new Error('Cannot find JWK which signed the ID token');
+            }
+
+            if (jwk.kty !== 'RSA') {
+                // TODO: Support more than RSA keys
+                throw new Error('Only RSA JWKs are currently supported');
+            }
+            var pemKey = pem(jwk.n, jwk.e);
+            console.log('PEM'); console.dir(pemKey);
+
+            jwt.verify(parameters['id_token'], pemKey, function(err, token) {
+                if (!err) {
+                    parameters['id_token'] = token;
+                }
+
+                return callback(err, parameters);
+            });
+        } catch (err) {
+            return callback(err, parameters);
         }
-
-        var pemKey = pem(jwk.n, jwk.e);
-
-        jwt.verify(parameters['id_token'], pemKey, function(err, token) {
-            parameters['id_token'] = token;
-
-            callback(err, parameters);
-        });
     });
 }
 
