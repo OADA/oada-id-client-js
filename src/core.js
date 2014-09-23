@@ -78,7 +78,6 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     var params = objectAssign({}, options, parameters);
     var key = params.privateKey;
 
-    delete params['client_secret'];
     delete params.privateKey;
 
     // Should I be passing the error to both?
@@ -105,6 +104,8 @@ function authorize(domain, configuration, parameters, redirect, callback) {
                 // Construct authorization redirect
                 var uri = new URI(conf['authorization_endpoint']);
                 uri.addQuery({state: stateTok}).addQuery(params);
+                // Do not send client_secret here
+                uri.removeQuery('client_secret');
 
                 // Redirect the user to constructed uri
                 return redirect(err, uri && uri.toString());
@@ -201,14 +202,18 @@ function exchangeCode(state, parameters, callback) {
         return verifyIDToken(state, parameters, callback);
     }
 
+    // Use the provided client_secret, else generate one as per OADA
+    var secret = state.options['client_secret'] ||
+        generateClientSecret(
+            state.key,
+            state.options['client_id'],
+            state.conf['token_endpoint'],
+            parameters.code);
+
     var params = {
         'grant_type': 'authorization_code',
         'redirect_uri': state.options['redirect_uri'],
-        'client_secret': generateClientSecret(
-                state.key,
-                state.options['client_id'],
-                state.conf['token_endpoint'],
-                parameters.code),
+        'client_secret': secret,
         'client_id': state.options['client_id'],
         'code': parameters.code,
     };
