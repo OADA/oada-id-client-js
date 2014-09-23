@@ -1,13 +1,13 @@
 <!-- Copyright 2014 Open Ag Data Alliance
 
-     Licensed under the Apache License, Version 2.0 (the "License");
+     Licensed under the Apache License, Version 2.0 (the 'License');
      you may not use this file except in compliance with the License.
      You may obtain a copy of the License at
 
          http://www.apache.org/licenses/LICENSE-2.0
 
      Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
+     distributed under the License is distributed on an 'AS IS' BASIS,
      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
      See the License for the specific language governing permissions and
      limitations under the License.
@@ -15,12 +15,10 @@
 
 <html>
 <head>
-</head>
-
     <script src=main.browserify.js></script>
     <script src=http://medialize.github.io/URI.js/src/URI.js></script>
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css">
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
+    <link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css'>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js'></script>
     <script>
         var options = {
             'client_id': 'jf93caauf3uzud7f308faesf3@provider.oada-dev.com',
@@ -30,10 +28,25 @@
             prompt: 'consent',
         };
 
-        //oadaIdClient.init(options);
+        var googleOptions = {
+            'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
+                '.apps.googleusercontent.com',
+            'redirect_uri': URI('redirect.html')
+                .absoluteTo(window.location.href),
+            scope: 'https://mail.google.com/',
+            // Make it always ask for consent again
+            prompt: 'consent',
+        };
 
         var callback = function(err, token) {
             'use strict';
+
+            if (err) {
+                if (console && (typeof console.dir === 'function')) {
+                    console.dir(err);
+                }
+                alert(err);
+            }
 
             var block = document.getElementById('token');
 
@@ -41,12 +54,29 @@
                 JSON.stringify(token, undefined, 4);
             hljs.highlightBlock(block);
         };
+
+        function secret() {
+            'use strict';
+
+            if (URI(window.location.href).hasQuery('secret')) {
+                document.getElementById('secret').style.display = 'block';
+            }
+        }
     </script>
 </head>
-<body>
-<button onclick="oadaIdClient.getIDToken('provider.oada-dev.com', options, callback)">ID Token</button>
-<button onclick="oadaIdClient.getAccessToken('provider.oada-dev.com', options, callback)">Access Token</button>
-<pre class="json" id="token"></pre>
+<body onload="secret()">
+<button onclick="oadaIdClient.getIDToken('provider.oada-dev.com', options,
+    callback)">ID Token</button>
+<button onclick="oadaIdClient.getAccessToken('provider.oada-dev.com', options,
+    callback)">Access Token</button>
+<div id="secret" style="display:none">
+<!-- The contents of this div only work if you know how to un-break them -->
+<button onclick="oadaIdClient.getIDToken('vip1.ecn.purdue.edu/~awlayton',
+    googleOptions, callback)">Google ID Token</button>
+<button onclick="oadaIdClient.getAccessToken('vip1.ecn.purdue.edu/~awlayton',
+    googleOptions, callback)">Google Access Token</button>
+<div>
+<pre class='json' id='token'></pre>
 </body>
 </html>
 
