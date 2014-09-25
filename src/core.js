@@ -88,8 +88,9 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     // TODO: HTTPS
     var req = request.get('http://' + domain + '/.well-known/' + configuration);
     if (req.buffer) { req.buffer(); }
-    req.end(function(resp) {
-        if (resp.error) { return errCallback(resp.error); }
+    req.end(function(err, resp) {
+        var e = err || resp.error;
+        if (e) { return errCallback(e); }
 
         try {
             var conf = JSON.parse(resp.text);
@@ -162,8 +163,9 @@ function verifyIDToken(state, parameters, callback) {
 
     var req = request.get(state.conf['jwks_uri']);
     if (req.buffer) { req.buffer(); }
-    req.end(function(resp) {
-        if (resp.error) { return callback(resp.error, parameters); }
+    req.end(function(err, resp) {
+        var e = err || resp.error;
+        if (e) { return callback(e, parameters); }
 
         try {
             var jwks;
@@ -239,9 +241,8 @@ function exchangeCode(state, parameters, callback) {
         .type('form')
         .send(params)
         .end(function(err, resp) {
-            if (err) { return callback(err); }
-
-            if (!resp.ok) { return callback('Token request failed'); }
+            var e = err || resp.error;
+            if (e) { return callback(e); }
 
             var token;
             try {

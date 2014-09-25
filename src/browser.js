@@ -34,7 +34,7 @@ function popUpRedirect(authFun, opts) {
         window._oadaIdClientPopUpFunction = core.handleRedirect;
 
         authFun(domain, params, function redirect(err, uri) {
-            if (err) { throw err; }
+            if (err) { return win.close(); } // TODO: Do something with err?
 
             win.location.assign(uri);
         }, callback);
