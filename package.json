@@ -26,11 +26,13 @@
   },
   "homepage": "https://github.com/OADA/oada-login",
   "browser": {
-    "cypto": "./src/crypto-shim.js"
+    "index.js": "./src/browser.js",
+    "./src/jws-jwk.js": "./src/shims/jws-jwk.js"
   },
   "dependencies": {
     "URIjs": "^1.13.2",
-    "jsonwebtoken": "awlayton/node-jsonwebtoken",
+    "jsonwebtoken": "^1.1.1",
+    "jsrsasign": "0.0.3",
     "jws": "^0.2.6",
     "object-assign": "^1.0.0",
     "rsa-pem-from-mod-exp": "^0.8.4",

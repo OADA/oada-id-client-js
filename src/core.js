@@ -20,8 +20,8 @@ var request = require('superagent');
 var URI = require('URIjs');
 var objectAssign = require('object-assign');
 var jwt = require('jsonwebtoken');
-var jws = require('jws');
-var pem = require('rsa-pem-from-mod-exp');
+// Make jws better
+var jws = require('./jws-jwk.js');
 var crypto = require('crypto');
 
 var core = {};
@@ -78,6 +78,8 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     var params = objectAssign({}, options, parameters);
     var key = params.privateKey;
 
+    // Assume key is PEM ecnoded
+    if (key) { key.kty = key.kty || 'PEM'; }
     delete params.privateKey;
 
     // Should I be passing the error to both?
@@ -184,14 +186,7 @@ function verifyIDToken(state, parameters, callback) {
                 throw new Error('Cannot find JWK which signed the ID token');
             }
 
-            if (jwk.kty !== 'RSA') {
-                // TODO: Support more than RSA keys
-                throw new Error('Only RSA JWKs are currently supported');
-            }
-            var pemKey = pem(jwk.n, jwk.e);
-            console.log('PEM'); console.dir(pemKey);
-
-            jwt.verify(parameters['id_token'], pemKey, function(err, token) {
+            jwt.verify(parameters['id_token'], jwk, function(err, token) {
                 if (!err) {
                     parameters['id_token'] = token;
                 }
@@ -212,12 +207,9 @@ function generateClientSecret(key, issuer, audience, accessCode) {
         algorithm: 'RS256',
         audience: audience,
         issuer: issuer,
-        headers: {
-            kid: key.kid,
-        },
     };
 
-    return jwt.sign(sec, key.pem, options);
+    return jwt.sign(sec, key, options);
 }
 
 function exchangeCode(state, parameters, callback) {
