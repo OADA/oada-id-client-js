@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+- node
+sudo: false
+addons:
+  sauce_connect: true
+before_install:
+- npm install -g grunt-cli mocha
+before_script:
+- grunt demo > demo_output &
+script:
+- grunt jshint
+- grunt lint5
+- grunt style
+- mocha
+after_script:
+- cat demo_output
+env:
+  global:
+  - secure: at6PQ5ZLWpRHzzc/XvZ4oEsjT5Dcs6vHVDlEw/oJ4W6+Uy2k2l6zDnalD5xfifiEt4BL/vhQ7O2W6CkWJTQniUbaQ1hRCLjJF5X2OOjVL5EtqXfrwQnd+j+qMzOnibyPiDKbB9SI8fDk8/my/35YCti19plBWdU4x1M9xpKiPSE=
+  - secure: fjB4cPRkiQKexG/oP0QkD0pS/HHm3VtdQBIFgnQiuTHnQXJ+sw9rBruUIRFFOU5AbuitqarslQcfl4MOhPzk4B+lDzVSEKBgE/uTG2U79xW+lzhxCARlnHBMKJXD/oT+TgBFoHfWQXiNJDmocIjhlfqwcVfm2H0ZnSGY508DrCc=
+  matrix:
+  - BROWSER="chrome"
+  - BROWSER="firefox"
+  - BROWSER="internet explorer"
+  - BROWSER="safari"
