@@ -104,30 +104,23 @@ describe('get access token (' + desired.browserName + ')', function() {
             });
     });
 
-    it('should load login page', function(done) {
-        browser
-            .waitForElementByName('username')
-            .waitForElementByName('password')
-            .waitForElementByXPath('//input[@type="submit"]')
-            .nodeify(done);
-    });
-
     it('should login', function(done) {
         browser
-            .elementByName('username')
+            .waitForElementByName('username')
                 .type('frank')
                 .getValue().should.become('frank')
-            .elementByName('password')
+            .waitForElementByName('password')
                 .type('pass')
                 .getValue().should.become('pass')
-            .elementByXPath('//input[@type="submit"]')
+            .waitForElementByXPath('//input[@type="submit"]')
                 .click()
             .nodeify(done);
     });
 
     it('should allow the scope(s)', function(done) {
         browser
-            .waitForElementById('allow').click()
+            .waitForElementById('allow')
+                .click()
             .nodeify(done);
     });
 

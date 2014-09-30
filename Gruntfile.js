@@ -173,7 +173,7 @@ module.exports = function(grunt) {
         },
         concurrent: {
             options: {
-                limit: 2
+                limit: 3
             },
             'test-sauce': [], // dynamically filled
         },
