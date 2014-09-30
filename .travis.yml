@@ -3,14 +3,15 @@ node_js:
 - '0.10'
 addons:
   sauce_connect:
-    username: awlayton_github
+    username:
+      secure: Fcj3wx0+uUEuz3GfGLlTpTBwdDxWZiqnAw8PlLx15Txp2y+0u9a5eI8axVT/mMCtbT0s3AkSXArr0Lb7ZzxbwMys4PcZZyTWG245ov15H/bsD3dl8Ep+MXqZAdAJtMLLphoNFta8KD8w9iaB1Yen7bQQKOphoL3yRdOVZxRZB/0=
     access_key:
-      secure: E3SYptoju8MEcOg0vK/Jtvyau1/jdXPAnxxHRSwqOWTVZlugazNLlFNlQxSM0jppEHtg2r4zYcFKB7jAx+UOF7goeRhilZrv17iYU8T/SbTSJwh08AFp6n7PgQxvnrKFJqwb9xu6k4+4NS/52B8Wu66+LdXYOVSuAzaL6pbLCnQ=
+      secure: Bqfv13ktmnHhBK6/9oHLFObg9FFuRnMTmEHkaE2EDRG+8DH0M/tDNBUkmYUMUTAmbWIFmUhu6IRdG4weO/57lNS8Ja22rUPghOKJ311fp7wRNPhDhasA78M+FD1wYwsSw7SX7NSxo9dom9hHsIaYEW8oR7rQC4EgpZjtu1ure7U=
 before_install:
 - npm install -g grunt-cli
 script:
 - ./travis.sh
 env:
   global:
-  - secure: M3AbvYX/wuwcW73n/VtTD0gC64FhkiqYBR8yab1NbwWUbVZwM6VcjAt3YrXsCQwC7VLMkgcd4cG0WW/M9qvdeWfHSWT3N7wW/KHCFDV7kWEeN4EZndKUSvdyv/DiHxvjUym5H63GXNOQKFGvdw0UgNYASpwZf8pbaUW5/FjGA1c=
-  - secure: UokrTVglxqge/3xIGMpRmPO1GTL+I8Bou4SewC3Ta9nad6ByUcpZp2hw/XbJPo47/YPdXCWVJGuJ2PGf//XVYCWYwrv7cXtUU/FI/JZiaZCB1Fxwvqcd9PFfUJ/zEO26Xr9k0vGh8X21jrzZ/iQN4fmoIz+My3ZB5nkbdnU/yEM=
+  - secure: jR4sxwbyaxtgmA8F9fj/o/bMxpM26kRrWF2m/CsQaFO4h14MR8HT7FgNVtz8aQ8HkG1OpUAP1NA+Zhy3fVZwOjQSQQ7kLHK2+qg5K1pXm6jOAsMrgxnJ7EojXw0XR7jdiJZODEVZCZ4GZJyu38WNnLYkHv+Z5XaYKvjltgJ5SDk=
+  - secure: ZkZAYhedR8aLv/BpxVIBvZs21jw1HZ18ExdzTwYyn0IzfxLEAxgXyv758KhOKCS4CArwnc4iTdlHoyGjg83rQjGD7YoaadaorL9vUOKprJpfnQi/TPpXsdo9u2NiLXDqUz8qGFqdAz6ZcoDf1PDzxiUo+OxJaEYjZ3AxTRWEKsI=
