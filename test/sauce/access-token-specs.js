@@ -31,6 +31,7 @@ desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
 
 if (process.env.TRAVIS_JOB_NUMBER) {
+    console.log('HERE');
     desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
 }
 

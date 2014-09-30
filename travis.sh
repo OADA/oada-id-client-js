@@ -5,4 +5,4 @@
 grunt --force test:sauce:parallel | tee grunt_output
 
 # Check output for error warnings
-! grep 'Used --force, continuing.' grunt_output
+! grep 'Used --force, continuing.' grunt_output > /dev/null
