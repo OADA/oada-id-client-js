@@ -4,6 +4,7 @@ var wd = require('wd');
 require('colors');
 var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
+var port = 3000;
 
 chai.use(chaiAsPromised);
 chai.should();
@@ -30,8 +31,9 @@ var desired = JSON.parse(process.env.DESIRED || '{browserName: "chrome"}');
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
 
+// Make it work on TravisCI
 if (process.env.TRAVIS_JOB_NUMBER) {
-    console.log('HERE');
+    port = 80;
     desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
 }
 
@@ -72,7 +74,7 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should load test page', function(done) {
         browser
-            .get('http://localhost:3000/')
+            .get('http://localhost:' + port + '/')
             .nodeify(done);
     });
 
