@@ -9,6 +9,8 @@ addons:
       secure: Bqfv13ktmnHhBK6/9oHLFObg9FFuRnMTmEHkaE2EDRG+8DH0M/tDNBUkmYUMUTAmbWIFmUhu6IRdG4weO/57lNS8Ja22rUPghOKJ311fp7wRNPhDhasA78M+FD1wYwsSw7SX7NSxo9dom9hHsIaYEW8oR7rQC4EgpZjtu1ure7U=
 before_install:
 - npm install -g grunt-cli
+before_script:
+- grunt demo &
 script:
 - ./travis.sh
 env:
