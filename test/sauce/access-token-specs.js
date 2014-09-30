@@ -76,8 +76,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                 .then(
                     function() { browser.nodeify(done); },
                     function(err) { done(err); }
-                )
-            .nodeify(done);
+                );
     });
 
     it('should try to get access token', function(done) {

@@ -10,6 +10,8 @@ addons:
 before_install:
 - npm install -g grunt-cli
 before_script:
-- grunt demo &
+- grunt demo > demo_output &
 script:
 - ./travis.sh
+after_script:
+- cat demo_output
