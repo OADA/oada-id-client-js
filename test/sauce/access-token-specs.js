@@ -30,7 +30,9 @@ var desired = JSON.parse(process.env.DESIRED || '{browserName: "chrome"}');
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
 
-//desired['tunnel-identifier'] = 'b2a06efdb8de471180d1838bba42f7f7';
+if (process.env.TRAVIS_JOB_NUMBER) {
+    desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
+}
 
 describe('get access token (' + desired.browserName + ')', function() {
     var browser;
@@ -99,7 +101,6 @@ describe('get access token (' + desired.browserName + ')', function() {
     });
 
     it('should load login page', function(done) {
-        /* jshint evil: true */
         browser
             .url()
                 .should.eventually.not.equal('')
