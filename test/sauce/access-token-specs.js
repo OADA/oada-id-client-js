@@ -73,6 +73,10 @@ describe('get access token (' + desired.browserName + ')', function() {
     it('should load test page', function(done) {
         browser
             .get('http://localhost:3000/')
+                .then(
+                    function() { browser.nodeify(done); },
+                    function(err) { done(err); }
+                )
             .nodeify(done);
     });
 
@@ -103,8 +107,9 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should load login page', function(done) {
         browser
-            .url()
-                .should.eventually.not.equal('')
+            .waitForElementByName('username')
+            .waitForElementByName('password')
+            .waitForElementByXPath('//input[@type="submit"]')
             .nodeify(done);
     });
 
