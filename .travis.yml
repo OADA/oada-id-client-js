@@ -13,7 +13,3 @@ before_script:
 - grunt demo &
 script:
 - ./travis.sh
-env:
-  global:
-  - secure: jR4sxwbyaxtgmA8F9fj/o/bMxpM26kRrWF2m/CsQaFO4h14MR8HT7FgNVtz8aQ8HkG1OpUAP1NA+Zhy3fVZwOjQSQQ7kLHK2+qg5K1pXm6jOAsMrgxnJ7EojXw0XR7jdiJZODEVZCZ4GZJyu38WNnLYkHv+Z5XaYKvjltgJ5SDk=
-  - secure: ZkZAYhedR8aLv/BpxVIBvZs21jw1HZ18ExdzTwYyn0IzfxLEAxgXyv758KhOKCS4CArwnc4iTdlHoyGjg83rQjGD7YoaadaorL9vUOKprJpfnQi/TPpXsdo9u2NiLXDqUz8qGFqdAz6ZcoDf1PDzxiUo+OxJaEYjZ3AxTRWEKsI=
