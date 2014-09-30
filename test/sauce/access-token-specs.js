@@ -74,7 +74,7 @@ describe('get access token (' + desired.browserName + ')', function() {
         browser
             .get('http://localhost:3000/')
                 .then(
-                    function() { browser.nodeify(done); },
+                    function() { done(null); },
                     function(err) { done(err); }
                 );
     });
