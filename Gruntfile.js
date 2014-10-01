@@ -204,7 +204,7 @@ module.exports = function(grunt) {
     // Run the examples of using the library
     grunt.registerTask('demo', 'Run the usage examples', ['express']);
 
-    grunt.registerTask('default', ['test:sauce:' + _(desireds).keys().first()]);
+    grunt.registerTask('test', ['test:sauce:' + _(desireds).keys().first()]);
     _(desireds).each(function(desired, key) {
         grunt.registerTask('test:sauce:' + key,
             ['env:' + key, 'simplemocha:sauce']);
