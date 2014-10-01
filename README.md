@@ -58,20 +58,20 @@ provider.
 
 #### Parameters ####
 `domain` string of domain with which to log in the user.
-The value passed to the function can be overriden by a query or form
+The value passed to the function can be overridden by a query or form
 parameter with a name of `domain`.
 
-`options` object containings at least the following properties:
+`options` object containing at least the following properties:
 * [`client_id`][] string containing your client's ID
   (received when the client was registered with an OADA developer discovery
   provider).
-* [`redirect_uri`][] string containing an asbolute URI
+* [`redirect_uri`][] string containing an absolute URI
   to which the user's browser will be redirected when the token request
   finishes.
 * `privateKey`
   * `pem` string or buffer containing your client's PEM encoded private RSA
     key.
-  * [`kid`][] string containing the key ID paramter,
+  * [`kid`][] string containing the key ID parameter,
     for finding the corresponding public key where your client is registered.
 
 [Optional OpenID Connect parameters][oidparams] placed in options as
@@ -98,14 +98,14 @@ API.
 
 #### Parameters ####
 `domain` string of domain from which to get an OADA API access token.
-The value passed to the function can be overriden by a query or form
+The value passed to the function can be overridden by a query or form
 parameter with a name of `domain`.
 
-`options` object containings at least the following properties:
+`options` object containing at least the following properties:
 * [`client_id`][] string containing your client's ID
   (received when the client was registered with an OADA developer discovery
   provider).
-* [`redirect_uri`][] string containing an asbolute URI
+* [`redirect_uri`][] string containing an absolute URI
   to which the user's browser will be redirected when the token request
   finishes.
 * [`scope`][] space separated string of OAuth scopes for the request access
@@ -113,7 +113,7 @@ parameter with a name of `domain`.
 * `privateKey`
   * `pem` string or buffer containing your client's PEM encoded private RSA
     key.
-  * [`kid`][] string containing the key ID paramter,
+  * [`kid`][] string containing the key ID parameter,
     for finding the corresponding public key where your client is registered.
 
 [Optional OpenID Connect parameters][oidparams] placed in options as
@@ -139,8 +139,8 @@ app.use('/getAccessToken',
 Middleware for handling redirects from `getIDToken` or `getAccessToken`
 middlewares.
 In most case you will apply this middleware in two locations,
-one to receieve `getIDToken` redirects and
-another to recieve `getAccessToken` redirects.
+one to receive `getIDToken` redirects and
+another to receive `getAccessToken` redirects.
 
 #### Usage Example ####
 ```javascript
@@ -171,17 +171,17 @@ for easy use in the browser.
 For a working example of using this wrapper, see the [in browser example][].
 
 ### getIDToken(domain, options, callback) ###
-Asynchronous funtion for generating an ID token request against
+Asynchronous function for generating an ID token request against
 an OADA identity provider.
 
 #### Parameters ####
 `domain` string of domain with which to log in the user.
 
-`options` object containings at least the following properties:
+`options` object containing at least the following properties:
 * [`client_id`][] string containing your client's ID
   (received when the client was registered with an OADA developer discovery
   provider).
-* [`redirect_uri`][] string containing an asbolute URI
+* [`redirect_uri`][] string containing an absolute URI
   to which the user's browser will be redirected when the token request
   finishes.
 
@@ -207,19 +207,19 @@ oadaIdClient.getIDToken(domain, options, function(err, idToken) {
 ```
 
 ### getAccessToken(domain, options, callback) ###
-Asynchronous funtion for generating an access token request against an
+Asynchronous function for generating an access token request against an
 OADA compliant API.
 
 #### Parameters ####
 `domain` string of domain from which to get an OADA API access token.
-The value passed to the function can be overriden by a query or form
+The value passed to the function can be overridden by a query or form
 parameter with a name of `domain`.
 
-`options` object containings at least the following properties:
+`options` object containing at least the following properties:
 * [`client_id`][] string containing your client's ID
   (received when the client was registered with an OADA developer discovery
   provider).
-* [`redirect_uri`][] string containing an asbolute URI
+* [`redirect_uri`][] string containing an absolute URI
   to which the user's browser will be redirected when the token request
   finishes.
 * [`scope`][] space separated string of OAuth scopes for the request access
@@ -264,7 +264,7 @@ Simply needs to be called by the page served from the URL corresponding to
 </html>
 ```
 
-Base Libary Usage
+Base Library Usage
 ------------------
 Not yet documented.
 
