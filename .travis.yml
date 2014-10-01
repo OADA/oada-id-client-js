@@ -10,6 +10,6 @@ before_script:
 script:
 - grunt lint
 - grunt style
-- '[ -n "$SAUCE_USERNAME" ]  && [ -n "$SAUCE_ACCESS_KEY" ] && ./travis.sh'
+- ./travis.sh
 after_script:
 - cat demo_output
