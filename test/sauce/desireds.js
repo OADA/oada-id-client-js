@@ -57,17 +57,9 @@ module.exports = {
         browserName: 'firefox',
         platform: 'os x 10.9'
     },
-    'osx10.8-firefox': {
-        browserName: 'firefox',
-        platform: 'os x 10.8'
-    },
     'osx10.6-firefox': {
         browserName: 'firefox',
         platform: 'os x 10.6'
-    },
-    'linux-explorer': {
-        browserName: 'internet explorer',
-        platform: 'linux'
     },
     'winxp-explorer': {
         browserName: 'internet explorer',
@@ -85,37 +77,9 @@ module.exports = {
         browserName: 'internet explorer',
         platform: 'windows 8.1'
     },
-    'osx10.9-explorer': {
-        browserName: 'internet explorer',
-        platform: 'os x 10.9'
-    },
-    'osx10.8-explorer': {
-        browserName: 'internet explorer',
-        platform: 'os x 10.8'
-    },
-    'osx10.6-explorer': {
-        browserName: 'internet explorer',
-        platform: 'os x 10.6'
-    },
-    'linux-safari': {
-        browserName: 'safari',
-        platform: 'linux'
-    },
-    'winxp-safari': {
-        browserName: 'safari',
-        platform: 'windows xp'
-    },
     'win7-safari': {
         browserName: 'safari',
         platform: 'windows 7'
-    },
-    'win8-safari': {
-        browserName: 'safari',
-        platform: 'windows 8'
-    },
-    'win8.1-safari': {
-        browserName: 'safari',
-        platform: 'windows 8.1'
     },
     'osx10.9-safari': {
         browserName: 'safari',
@@ -128,6 +92,18 @@ module.exports = {
     'osx10.6-safari': {
         browserName: 'safari',
         platform: 'os x 10.6'
+    },
+    'linux-opera': {
+        browserName: 'opera',
+        platform: 'linux'
+    },
+    'winxp-opera': {
+        browserName: 'opera',
+        platform: 'windows xp'
+    },
+    'win7-opera': {
+        browserName: 'opera',
+        platform: 'windows 7'
     },
     'android': {
         browserName: 'android'
