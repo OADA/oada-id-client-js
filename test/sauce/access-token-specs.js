@@ -33,8 +33,8 @@ desired.tags = ['oada'];
 // Make it work on TravisCI
 if (process.env.TRAVIS) {
     desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
-    desired.build = process.env.TRAVIS_REPO_SLUG + ' ' +
-        process.env.TRAVIS_JOB_NUMBER;
+    desired.build = process.env.TRAVIS_JOB_NUMBER + '-' +
+        process.env.TRAVIS_REPO_SLUG;
     if (process.env.TRAVIS_PULL_REQUEST !== 'false') {
         desired.tags.push('pull request');
         desired.tags.push('pull request:' + process.env.TRAVIS_PULL_REQUEST);
