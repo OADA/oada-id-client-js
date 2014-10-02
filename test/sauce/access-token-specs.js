@@ -79,10 +79,8 @@ describe('get access token (' + desired.browserName + ')', function() {
     it('should load test page', function(done) {
         browser
             .get('http://localhost:3000/')
-                .then(
-                    function() { done(null); },
-                    function(err) { done(err); }
-                );
+                .title().should.become('In Browser Usage Example Page')
+            .nodeify(done);
     });
 
     it('should try to get access token', function(done) {
