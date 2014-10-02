@@ -21,7 +21,7 @@ var URI = require('URIjs');
 var objectAssign = require('object-assign');
 var jwt = require('jsonwebtoken');
 // Make jws better
-var jws = require('./jws-jwk.js');
+require('jws-jwk').shim();
 var crypto = require('crypto');
 
 var core = {};
@@ -154,13 +154,6 @@ function verifyIDToken(state, parameters, callback) {
         return callback(null, parameters);
     }
 
-    // Need to look at JOSE header to find JWK
-    var decodedToken = jws.decode(parameters['id_token']);
-    if (!decodedToken) {
-        var err = new Error('Could not decode ID token as JWT');
-        return callback(err, parameters);
-    }
-
     var req = request.get(state.conf['jwks_uri']);
     if (req.buffer) { req.buffer(); }
     req.end(function(err, resp) {
@@ -176,19 +169,7 @@ function verifyIDToken(state, parameters, callback) {
                 throw new Error('Could not parse JWKs URI as JSON');
             }
 
-            // Find the corresponding JWK
-            var jwk;
-            for (var i = 0; i < jwks.keys.length; i++) {
-                if (jwks.keys[i].kid === decodedToken.header.kid) {
-                    jwk = jwks.keys[i];
-                    break;
-                }
-            }
-            if (!jwk) {
-                throw new Error('Cannot find JWK which signed the ID token');
-            }
-
-            jwt.verify(parameters['id_token'], jwk, function(err, token) {
+            jwt.verify(parameters['id_token'], jwks, function(err, token) {
                 if (!err) {
                     parameters['id_token'] = token;
                 }
