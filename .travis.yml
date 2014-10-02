@@ -8,7 +8,8 @@ before_install:
 before_script:
 - grunt demo > demo_output &
 script:
-- grunt lint
+- grunt jshint
+- grunt lint5
 - grunt style
 - ./travis.sh
 after_script:
