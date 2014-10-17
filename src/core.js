@@ -85,8 +85,8 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     // Should I be passing the error to both?
     var errCallback = combineCallbacks(redirect, callback);
 
-    // TODO: HTTPS
-    var req = request.get('http://' + domain + '/.well-known/' + configuration);
+    var req =
+        request.get('https://' + domain + '/.well-known/' + configuration);
     if (req.buffer) { req.buffer(); }
     req.end(function(err, resp) {
         var e = err || resp.error;
