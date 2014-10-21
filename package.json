@@ -31,6 +31,7 @@
   "dependencies": {
     "URIjs": "^1.13.2",
     "jsonwebtoken": "^1.1.1",
+    "jws": "^0.2.6",
     "jws-jwk": "^0.1.2",
     "object-assign": "^1.0.0",
     "superagent": "^0.18.2"
