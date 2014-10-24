@@ -21,9 +21,9 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js'></script>
     <script>
         var options = {
-            'client_id': 'jf93caauf3uzud7f308faesf3@provider.oada-dev.com',
+            //'client_id': 'jf93caauf3uzud7f308faesf3@identity.oada-dev.com',
             'redirect_uri': 'http://localhost:3000/redirect.html',
-            scope: 'configurations.me.machines.harvesters',
+            scope: 'bookmarks.machines.harvesters',
             // Make it always ask for consent again
             prompt: 'consent',
         };
@@ -65,9 +65,9 @@
     </script>
 </head>
 <body onload="secret()">
-<button onclick="oadaIdClient.getIDToken('provider.oada-dev.com', options,
+<button onclick="oadaIdClient.getIDToken('identity.oada-dev.com', options,
     callback)">ID Token</button>
-<button onclick="oadaIdClient.getAccessToken('provider.oada-dev.com', options,
+<button onclick="oadaIdClient.getAccessToken('identity.oada-dev.com', options,
     callback)">Access Token</button>
 <div id="secret" style="display:none">
 <!-- The contents of this div only work if you know how to un-break them -->

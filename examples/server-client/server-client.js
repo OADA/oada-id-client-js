@@ -28,18 +28,18 @@ var kid = 'ad8alkjca38afvudsZA';
 var key = {pem:pem, kid:kid};
 
 var options = {
-    'client_id': 'jf93caauf3uzud7f308faesf3@provider.oada-dev.com',
-    'redirect_uri': 'http://localhost:3000/redirect',
-    scope: 'configurations.me.machines.harvesters',
+    //'client_id': 'jf93caauf3uzud7f308faesf3@identity.oada-dev.com',
+    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect',
+    scope: 'bookmarks.machines.harvesters',
     prompt: 'consent',
     privateKey: key,
 };
 
 app.use('/who',
-    login.getIDToken('provider.oada-dev.com', options));
+    login.getIDToken('identity.oada-dev.com', options));
 
 app.use('/get',
-    login.getAccessToken('provider.oada-dev.com', options));
+    login.getAccessToken('identity.oada-dev.com', options));
 
 app.use('/redirect', login.handleRedirect());
 app.use('/redirect', function(req, res) {
