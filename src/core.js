@@ -121,19 +121,21 @@ function authorize(domain, configuration, parameters, redirect, callback) {
 
 core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
     var configuration = 'openid-configuration';
-    var params = objectAssign({}, opts,
-            {
-                // TODO: Merge scopes instead of overwriting them???
-                scope: 'openid profile',
-            });
+    var params = objectAssign({scope: ''}, opts);
+
+    // Make sure we have openid scope
+    if (params.scope.split(' ').indexOf('openid') === -1) {
+        params.scope += ' openid';
+    }
 
     authorize(domain, configuration, params, redirect, cb);
 };
 
 core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
     var configuration = 'oada-configuration';
+    var params = objectAssign({scope: ''}, opts);
 
-    authorize(domain, configuration, opts, redirect, cb);
+    authorize(domain, configuration, params, redirect, cb);
 };
 
 function combineCallbacks() {
