@@ -29,6 +29,7 @@ middleware.getIDToken = function(domain, options) {
 
     return function(req, res, next) {
         var dom = req.param('domain') || domain;
+        params.scope = req.param('scope') || options.scope;
 
         core.getIDToken(dom, params, function(err, uri) {
             if (err) { return next(err); }
@@ -46,6 +47,7 @@ middleware.getAccessToken = function(domain, options) {
 
     return function(req, res, next) {
         var dom = req.param('domain') || domain;
+        params.scope = req.param('scope') || options.scope;
 
         core.getAccessToken(dom, params, function(err, uri) {
             if (err) { return next(err); }
