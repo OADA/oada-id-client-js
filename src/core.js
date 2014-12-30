@@ -128,6 +128,13 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
         params.scope += ' openid';
     }
 
+    // Add nonce
+    params.nonce = crypto.randomBytes(12)
+        .toString('base64')
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=/g, '');
+
     authorize(domain, configuration, params, redirect, cb);
 };
 
@@ -173,7 +180,12 @@ function verifyIDToken(state, parameters, callback) {
 
             jwt.verify(parameters['id_token'], jwks, function(err, token) {
                 if (!err) {
-                    parameters['id_token'] = token;
+                    // Check nonce
+                    if (state.options.nonce === token.nonce) {
+                        parameters['id_token'] = token;
+                    } else {
+                        err = new Error('Nonces did not match');
+                    }
                 }
 
                 return callback(err, parameters);
