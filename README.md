@@ -36,7 +36,7 @@ Examples
 * [In Browser Example][]
 
 ### Running the examples ###
-Run the following command to start an express server on `localhost:3000`
+Run the following command to start an express server on `localhost:3007`
 which server both examples:
 ```sh
 $ grunt demo
