@@ -56,6 +56,10 @@ module.exports = function(grunt) {
                 },
             },
         },
+        lint5: {
+            dirPath: '.',
+            templates: grunt.file.expand(htmlFiles),
+        },
         jscs: {
             all: {
                 src: jsFiles,
@@ -146,7 +150,7 @@ module.exports = function(grunt) {
                         './examples/server-client/',
                         './examples/browser-client/',
                     ],
-                    port: grunt.option('port') || 3000,
+                    port: grunt.option('port') || 3007,
                     livereload: true,
                     serverreload: true,
                 },
@@ -165,7 +169,7 @@ module.exports = function(grunt) {
     grunt.registerTask('build', 'Create distribution versions',
         ['browserify']);
 
-    grunt.registerTask('lint', 'Lint the project files', ['jshint']);
+    grunt.registerTask('lint', 'Lint the project files', ['jshint', 'lint5']);
     grunt.registerTask('style', 'Style check the project files', ['jscs']);
 
     // Run the examples of using the library

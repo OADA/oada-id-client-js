@@ -24,12 +24,12 @@ var app = express();
 var login = require('../../').middleware;
 
 var pem = fs.readFileSync(__dirname + '/privkey.pem');
-var kid = 'ad8alkjca38afvudsZA';
+var kid = '1234';
 var key = {pem:pem, kid:kid};
 
 var options = {
-    //'client_id': 'jf93caauf3uzud7f308faesf3@identity.oada-dev.com',
-    'redirect_uri': 'http://vip1.ecn.purdue.edu:3000/redirect',
+    'client_id': 'jf93caauf3uzud7f308faesf3@identity.oada-dev.com',
+    'redirect_uri': 'http://localhost:3007/redirect',
     scope: 'bookmarks.machines.harvesters',
     prompt: 'consent',
     privateKey: key,
@@ -47,7 +47,7 @@ app.use('/redirect', function(req, res) {
 });
 
 if (require.main === module) {
-    app.listen(3000);
+    app.listen(3007);
 }
 
 module.exports = app;
