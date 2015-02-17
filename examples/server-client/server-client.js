@@ -24,7 +24,7 @@ var app = express();
 var login = require('../../').middleware;
 
 var pem = fs.readFileSync(__dirname + '/privkey.pem');
-var kid = 'ad8alkjca38afvudsZA';
+var kid = '1234';
 var key = {pem:pem, kid:kid};
 
 var options = {
