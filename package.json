@@ -46,6 +46,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-express": "^1.4.1",
     "grunt-jscs": "^0.7.1",
+    "grunt-lint5": "^0.3.1",
     "grunt-newer": "^0.7.0",
     "load-grunt-tasks": "^0.6.0",
     "time-grunt": "^1.0.0",
