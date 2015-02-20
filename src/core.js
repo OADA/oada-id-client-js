@@ -37,7 +37,8 @@ core.init = function(opts) {
 function storeState(stateObj, callback) {
     // Make sure neither or both state storing functions are overridden
     if (core.retrieveState != retrieveState) {
-        callback('Overrode retrieveState but not storeState!');
+        return callback(
+            new Error('Overrode retrieveState but not storeState!'));
     }
 
     // Cryptographically secure random bytes
@@ -58,7 +59,8 @@ function storeState(stateObj, callback) {
 function retrieveState(stateTok, callback) {
     // Make sure neither or both state storing functions are overridden
     if (core.storeState != storeState) {
-        callback('Overrode storeState but not retrieveState!');
+        return callback(
+            new Error('Overrode storeState but not retrieveState!'));
     }
 
     // Retrie stored state
