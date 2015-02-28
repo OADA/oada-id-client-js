@@ -1,13 +1,8 @@
 'use strict';
 
+var expect = require('chai').expect;
 var wd = require('wd');
 require('colors');
-var chai = require('chai');
-var chaiAsPromised = require('chai-as-promised');
-
-chai.use(chaiAsPromised);
-chai.should();
-chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
 // checking sauce credential
 if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
@@ -26,7 +21,10 @@ wd.configureHttp({
     retries: 5
 });
 
-var desired = JSON.parse(process.env.DESIRED || '{browserName: "chrome"}');
+var username = process.env.SAUCE_USERNAME;
+var accessKey = process.env.SAUCE_ACCESS_KEY;
+
+var desired = JSON.parse(process.env.DESIRED || '{"browserName": "chrome"}');
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
 
@@ -41,27 +39,27 @@ if (process.env.TRAVIS) {
     }
 }
 
+var browser = wd.remote('ondemand.saucelabs.com', 80, username, accessKey);
+
+// optional extra logging
+if (process.env.VERBOSE) {
+    browser.on('status', function(info) {
+        console.log(info.cyan);
+    });
+    browser.on('command', function(eventType, command, response) {
+        console.log(' > ' + eventType.cyan, command, (response || '').grey);
+    });
+    browser.on('http', function(meth, path, data) {
+        console.log(' > ' + meth.magenta, path, (data || '').grey);
+    });
+}
+
 describe('get access token (' + desired.browserName + ')', function() {
-    var browser;
     var allPassed = true;
 
     before(function(done) {
-        var username = process.env.SAUCE_USERNAME;
-        var accessKey = process.env.SAUCE_ACCESS_KEY;
-        browser = wd.promiseChainRemote('ondemand.saucelabs.com', 80,
-            username, accessKey);
-        if (process.env.VERBOSE) {
-            // optional logging
-            browser.on('status', function(info) {
-                console.log(info.cyan);
-            });
-            browser.on('command', function(meth, path, data) {
-                console.log(' > ' + meth.yellow, path.grey, data || '');
-            });
-        }
-        browser
-            .init(desired)
-            .nodeify(done);
+        this.timeout(120000); // Sacuelabs can have a line
+        browser.init(desired, done);
     });
 
     afterEach(function(done) {
@@ -70,86 +68,104 @@ describe('get access token (' + desired.browserName + ')', function() {
     });
 
     after(function(done) {
-        browser
-            .quit()
-            .sauceJobStatus(allPassed)
-            .nodeify(done);
+        browser.sauceJobStatus(allPassed, function() {
+            browser.quit(done);
+        });
     });
 
     it('should load test page', function(done) {
-        browser
-            .get('http://localhost:3000/')
-                .title().should.become('In Browser Usage Example Page')
-            .nodeify(done);
+        browser.get('http://localhost:3007/', function() {
+            browser.title(function(err, title) {
+                expect(title).to.equal('In Browser Usage Example Page');
+                done();
+            });
+        });
     });
 
     it('should try to get access token', function(done) {
-        browser
-            .elementByXPath('//body/button[2]')
-                .click()
-            .nodeify(done);
+        browser.elementByXPath('//body/button[2]', function(err, el) {
+            expect(el).to.be.ok;
+            el.click(done);
+        });
     });
 
     it('should open popup', function(done) {
-        browser
-            .windowHandles()
-                .should.eventually.have.length(2)
-            .nodeify(done);
+        browser.waitFor({
+            asserter: new wd.Asserter(function(browser, cb) {
+                browser.windowHandles(function(err, handles) {
+                    return cb(err, handles.length === 2);
+                });
+            }),
+            timeout: 60000
+        }, done);
     });
 
     it('should switch to popup', function(done) {
-        browser
-            .windowHandles().then(function(windowHandles) {
-                browser
-                    .window(windowHandles[1])
-                    .windowHandle()
-                        .should.become(windowHandles[1])
-                    .nodeify(done);
-            });
+        browser.windowHandles(function(err, handles) {
+            expect(handles[1]).to.be.ok;
+            browser.window(handles[1], done);
+        });
     });
 
-    it('should login', function(done) {
-        browser
-            .waitForElementByName('username')
-                .type('frank')
-                .getValue().should.become('frank')
-            .waitForElementByName('password')
-                .type('pass')
-                .getValue().should.become('pass')
-            .waitForElementByXPath('//input[@type="submit"]')
-                .click()
-            .nodeify(done);
+    it('should use username andy', function(done) {
+        browser.waitForElementByName('username', function(err, el) {
+            expect(el).to.be.ok;
+            el.clear(function(err) {
+                expect(err).to.be.not.ok;
+                el.type('andy', done);
+            });
+        });
+    });
+
+    it('should use password pass', function(done) {
+        browser.waitForElementByName('password', function(err, el) {
+            expect(el).to.be.ok;
+            el.clear(function(err) {
+                expect(err).to.be.not.ok;
+                el.type('pass', done);
+            });
+        });
+    });
+
+    it('should click submit', function(done) {
+        browser.waitForElementByXPath('//input[@type="submit"]',
+                function(err, el) {
+            expect(el).to.be.ok;
+            el.click(done);
+        });
     });
 
     it('should allow the scope(s)', function(done) {
-        browser
-            .waitForElementById('allow')
-                .click()
-            .nodeify(done);
+        browser.waitForElementById('allow', function(err, el) {
+            expect(el).to.be.ok;
+            el.click(done);
+        });
     });
 
     it('should switch from popup', function(done) {
-        browser
-            .windowHandles().then(function(windowHandles) {
-                browser
-                    .window(windowHandles[0])
-                    .windowHandle()
-                        .should.become(windowHandles[0])
-                    .nodeify(done);
-            });
+        browser.windowHandles(function(err, handles) {
+            expect(handles[0]).to.be.ok;
+            browser.window(handles[0], done);
+        });
     });
 
     it('should receive token', function(done) {
-        browser
-            .waitForElementById('token').text()
-                .should.eventually.not.equal('')
-            .nodeify(done);
+        browser.waitForElementById(
+                'token', 
+                new wd.Asserter(function(el, cb) {
+                    el.text(function(err, text) {
+                        return cb(err, text.length > 0);
+                    });
+                }),
+                60000,
+                done
+        );
     });
 
     it('should close popup', function(done) {
-        browser
-            .windowHandles()
-                .should.eventually.have.length(1)
-            .nodeify(done);
+        browser.windowHandles(function(err, handles) {
+            expect(handles).to.have.length(1);
+            done();
+        });
     });
 });

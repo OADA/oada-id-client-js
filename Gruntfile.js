@@ -165,7 +165,8 @@ module.exports = function(grunt) {
         simplemocha: {
             sauce: {
                 options: {
-                    timeout: 60000,
+                    timeout: 90000,
+                    ui: 'bdd',
                     reporter: 'spec'
                 },
                 src: ['test/sauce/**/*-specs.js']
