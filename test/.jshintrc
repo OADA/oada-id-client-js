@@ -17,6 +17,9 @@
     "maxlen": 80,
     "trailing": true,
     "sub": true,
+    "freeze": true,
+    "eqeqeq": true,
+    "expr": true,
     "globals": {
         "describe": true,
         "it": true,

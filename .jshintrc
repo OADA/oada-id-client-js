@@ -16,5 +16,8 @@
     "strict": true,
     "maxlen": 80,
     "trailing": true,
-    "sub": true
+    "sub": true,
+    "freeze": true,
+    "eqeqeq": true,
+    "expr": true
 }
