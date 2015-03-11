@@ -70,8 +70,8 @@ describe('get access token (' + desired.browserName + ')', function() {
     });
 
     after(function(done) {
-        browser.sauceJobStatus(allPassed, function() {
-            browser.quit(done);
+        browser.quit(function() {
+            browser.sauceJobStatus(allPassed, done);
         });
     });
 
