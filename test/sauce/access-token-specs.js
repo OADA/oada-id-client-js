@@ -4,6 +4,8 @@ var expect = require('chai').expect;
 var wd = require('wd');
 require('colors');
 
+var timeout = 60000;
+
 // checking sauce credential
 if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
     console.warn(
@@ -16,7 +18,7 @@ if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
 
 // http configuration, not needed for simple runs
 wd.configureHttp({
-    timeout: 60000,
+    timeout: timeout,
     retryDelay: 15000,
     retries: 5
 });
@@ -58,7 +60,7 @@ describe('get access token (' + desired.browserName + ')', function() {
     var allPassed = true;
 
     before(function(done) {
-        this.timeout(120000); // Sacuelabs can have a line
+        this.timeout(10 * timeout); // Sacuelabs can have a line
         browser.init(desired, done);
     });
 
@@ -96,7 +98,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                     return cb(err, handles.length === 2);
                 });
             }),
-            timeout: 60000
+            timeout: timeout
         }, done);
     });
 
@@ -108,38 +110,53 @@ describe('get access token (' + desired.browserName + ')', function() {
     });
 
     it('should use username andy', function(done) {
-        browser.waitForElementByName('username', function(err, el) {
-            expect(el).to.be.ok;
-            el.clear(function(err) {
-                expect(err).to.be.not.ok;
-                el.type('andy', done);
-            });
-        });
+        browser.waitForElementByName(
+                'username',
+                timeout,
+                function(err, el) {
+                    expect(el).to.be.ok;
+                    el.clear(function(err) {
+                        expect(err).to.be.not.ok;
+                        el.type('andy', done);
+                    });
+                }
+        );
     });
 
     it('should use password pass', function(done) {
-        browser.waitForElementByName('password', function(err, el) {
-            expect(el).to.be.ok;
-            el.clear(function(err) {
-                expect(err).to.be.not.ok;
-                el.type('pass', done);
-            });
-        });
+        browser.waitForElementByName(
+                'password',
+                timeout,
+                function(err, el) {
+                    expect(el).to.be.ok;
+                    el.clear(function(err) {
+                        expect(err).to.be.not.ok;
+                        el.type('pass', done);
+                    });
+                }
+        );
     });
 
     it('should click submit', function(done) {
-        browser.waitForElementByXPath('//input[@type="submit"]',
+        browser.waitForElementByXPath(
+                '//input[@type="submit"]',
+                timeout,
                 function(err, el) {
-            expect(el).to.be.ok;
-            el.click(done);
-        });
+                    expect(el).to.be.ok;
+                    el.click(done);
+                }
+        );
     });
 
     it('should allow the scope(s)', function(done) {
-        browser.waitForElementById('allow', function(err, el) {
-            expect(el).to.be.ok;
-            el.click(done);
-        });
+        browser.waitForElementById(
+                'allow',
+                timeout,
+                function(err, el) {
+                    expect(el).to.be.ok;
+                    el.click(done);
+                }
+        );
     });
 
     it('should switch from popup', function(done) {
@@ -151,13 +168,13 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should receive token', function(done) {
         browser.waitForElementById(
-                'token', 
+                'token',
                 new wd.Asserter(function(el, cb) {
                     el.text(function(err, text) {
                         return cb(err, text.length > 0);
                     });
                 }),
-                60000,
+                timeout,
                 done
         );
     });
