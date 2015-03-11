@@ -29,14 +29,13 @@ var accessKey = process.env.SAUCE_ACCESS_KEY;
 var desired = JSON.parse(process.env.DESIRED || '{"browserName": "chrome"}');
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
-desired.name = 'access-token';
+desired.name = 'Access Token';
 
 // Make it work on TravisCI
 if (process.env.TRAVIS) {
-    desired['tunnel-identifier'] = process.env.TRAVIS_BUILD_NUMBER;
-    desired.build = process.env.TRAVIS_JOB_NUMBER + '-' +
-        process.env.TRAVIS_REPO_SLUG;
-    desired.name += '[' + process.env.TRAVIS_JOB_NUMBER + ']';
+    desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
+    desired.build = process.env.TRAVIS_BUILD_NUMBER;
+    desired.name += ' [' + process.env.TRAVIS_JOB_NUMBER + ']';
     if (process.env.TRAVIS_PULL_REQUEST !== 'false') {
         desired.tags.push('pull request');
         desired.tags.push('pull request:' + process.env.TRAVIS_PULL_REQUEST);
