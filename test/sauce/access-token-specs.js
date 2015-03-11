@@ -87,6 +87,7 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should try to get access token', function(done) {
         browser.elementByXPath('//body/button[2]', function(err, el) {
+            expect(err).to.be.not.ok;
             expect(el).to.be.ok;
             el.click(done);
         });
@@ -96,6 +97,7 @@ describe('get access token (' + desired.browserName + ')', function() {
         browser.waitFor({
             asserter: new wd.Asserter(function(browser, cb) {
                 browser.windowHandles(function(err, handles) {
+                    expect(err).to.be.not.ok;
                     return cb(err, handles.length === 2);
                 });
             }),
@@ -105,6 +107,7 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should switch to popup', function(done) {
         browser.windowHandles(function(err, handles) {
+            expect(err).to.be.not.ok;
             expect(handles[1]).to.be.ok;
             browser.window(handles[1], done);
         });
@@ -115,6 +118,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                 'username',
                 timeout,
                 function(err, el) {
+                    expect(err).to.be.not.ok;
                     expect(el).to.be.ok;
                     el.clear(function(err) {
                         expect(err).to.be.not.ok;
@@ -129,6 +133,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                 'password',
                 timeout,
                 function(err, el) {
+                    expect(err).to.be.not.ok;
                     expect(el).to.be.ok;
                     el.clear(function(err) {
                         expect(err).to.be.not.ok;
@@ -143,6 +148,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                 '//input[@type="submit"]',
                 timeout,
                 function(err, el) {
+                    expect(err).to.be.not.ok;
                     expect(el).to.be.ok;
                     el.click(done);
                 }
@@ -154,6 +160,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                 'allow',
                 timeout,
                 function(err, el) {
+                    expect(err).to.be.not.ok;
                     expect(el).to.be.ok;
                     el.click(done);
                 }
@@ -162,6 +169,7 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should switch from popup', function(done) {
         browser.windowHandles(function(err, handles) {
+            expect(err).to.be.not.ok;
             expect(handles[0]).to.be.ok;
             browser.window(handles[0], done);
         });
@@ -172,6 +180,7 @@ describe('get access token (' + desired.browserName + ')', function() {
                 'token',
                 new wd.Asserter(function(el, cb) {
                     el.text(function(err, text) {
+                        expect(err).to.be.not.ok;
                         return cb(err, text.length > 0);
                     });
                 }),
@@ -182,6 +191,7 @@ describe('get access token (' + desired.browserName + ')', function() {
 
     it('should close popup', function(done) {
         browser.windowHandles(function(err, handles) {
+            expect(err).to.be.not.ok;
             expect(handles).to.have.length(1);
             done();
         });
