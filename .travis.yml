@@ -12,7 +12,7 @@ script:
 - grunt jshint
 - grunt lint5
 - grunt style
-- mocha test/sauce
+- mocha
 after_script:
 - cat demo_output
 env:

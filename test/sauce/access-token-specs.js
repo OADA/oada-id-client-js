@@ -57,10 +57,10 @@ if (process.env.VERBOSE) {
 }
 
 describe('get access token (' + desired.browserName + ')', function() {
+    this.timeout(10 * timeout); // Sacuelabs can have a line
     var allPassed = true;
 
     before(function(done) {
-        this.timeout(10 * timeout); // Sacuelabs can have a line
         browser.init(desired, done);
     });
 
