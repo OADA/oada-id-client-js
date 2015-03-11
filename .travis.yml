@@ -20,10 +20,10 @@ env:
   - secure: at6PQ5ZLWpRHzzc/XvZ4oEsjT5Dcs6vHVDlEw/oJ4W6+Uy2k2l6zDnalD5xfifiEt4BL/vhQ7O2W6CkWJTQniUbaQ1hRCLjJF5X2OOjVL5EtqXfrwQnd+j+qMzOnibyPiDKbB9SI8fDk8/my/35YCti19plBWdU4x1M9xpKiPSE=
   - secure: fjB4cPRkiQKexG/oP0QkD0pS/HHm3VtdQBIFgnQiuTHnQXJ+sw9rBruUIRFFOU5AbuitqarslQcfl4MOhPzk4B+lDzVSEKBgE/uTG2U79xW+lzhxCARlnHBMKJXD/oT+TgBFoHfWQXiNJDmocIjhlfqwcVfm2H0ZnSGY508DrCc=
   matrix:
-  - DESIRED="{\"browserName\": \"chrome\"}"
-  - DESIRED="{\"browserName\": \"firefox\"}"
-  - DESIRED="{\"browserName\": \"internet explorer\"}"
-  - DESIRED="{\"browserName\": \"safari\"}"
-  - DESIRED="{\"browserName\": \"opera\"}"
-  - DESIRED="{\"browserName\": \"android\"}"
-  - DESIRED="{\"browserName\": \"iphone\"}"
+  - 'DESIRED={"browserName": "chrome"}'
+  - 'DESIRED={\"browserName\": \"firefox\"}'
+  - 'DESIRED={\"browserName\": \"internet explorer\"}'
+  - 'DESIRED={\"browserName\": \"safari\"}'
+  - 'DESIRED={\"browserName\": \"opera\"}'
+  - 'DESIRED={\"browserName\": \"android\"}'
+  - 'DESIRED={\"browserName\": \"iphone\"}'
