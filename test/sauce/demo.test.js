@@ -48,7 +48,7 @@ describe(desired.browserName, function() {
     var browser;
 
     before(function(done) {
-        var browser = wd.remote(
+        browser = wd.remote(
                 'ondemand.saucelabs.com',
                 80,
                 username,
