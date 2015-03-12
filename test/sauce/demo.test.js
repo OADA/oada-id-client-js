@@ -93,7 +93,6 @@ describe(desired.browserName, function() {
 
     ['access', 'id'].map(function(tokType) {
         describe('get ' + tokType + ' token', function() {
-
             before(function(done) {
                 browser.get('http://localhost:3007/', function() {
                     browser.title(function(err, title) {
@@ -104,13 +103,18 @@ describe(desired.browserName, function() {
                 });
             });
 
-            it('should open login/auth popup', function(done) {
+            before(function(done) {
                 browser.elementById('get_' + tokType, function(err, el) {
                     expect(err).to.be.not.ok;
                     expect(el).to.be.ok;
-                    el.click(function(err) {
-                        expect(err).to.be.not.ok;
-                        browser.waitFor({
+                    el.click(done);
+                });
+            });
+
+            describe('redirect', function() {
+                it('should open login/auth popup', function(done) {
+                    browser.waitFor(
+                        {
                             asserter: new wd.Asserter(function(browser, cb) {
                                 browser.windowHandles(function(err, handles) {
                                     expect(err).to.be.not.ok;
@@ -118,8 +122,9 @@ describe(desired.browserName, function() {
                                 });
                             }),
                             timeout: timeout
-                        }, done);
-                    });
+                        },
+                        done
+                    );
                 });
             });
 
@@ -201,25 +206,27 @@ describe(desired.browserName, function() {
                 });
             });
 
-            it('should receive token', function(done) {
-                browser.waitForElementById(
-                        'token',
-                        new wd.Asserter(function(el, cb) {
-                            el.text(function(err, text) {
-                                expect(err).to.be.not.ok;
-                                return cb(err, text.length > 0);
-                            });
-                        }),
-                        timeout,
-                        done
-                );
-            });
+            describe('return', function() {
+                it('should receive token', function(done) {
+                    browser.waitForElementById(
+                            'token',
+                            new wd.Asserter(function(el, cb) {
+                                el.text(function(err, text) {
+                                    expect(err).to.be.not.ok;
+                                    return cb(err, text.length > 0);
+                                });
+                            }),
+                            timeout,
+                            done
+                    );
+                });
 
-            it('should close popup', function(done) {
-                browser.windowHandles(function(err, handles) {
-                    expect(err).to.be.not.ok;
-                    expect(handles).to.have.length(1);
-                    done();
+                it('should close popup', function(done) {
+                    browser.windowHandles(function(err, handles) {
+                        expect(err).to.be.not.ok;
+                        expect(handles).to.have.length(1);
+                        done();
+                    });
                 });
             });
         });
