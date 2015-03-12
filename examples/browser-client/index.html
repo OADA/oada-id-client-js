@@ -67,10 +67,12 @@
     </script>
 </head>
 <body onload="secret()">
-<button onclick="oadaIdClient.getIDToken('identity.oada-dev.com', options,
-    callback)">ID Token</button>
-<button onclick="oadaIdClient.getAccessToken('identity.oada-dev.com', options,
-    callback)">Access Token</button>
+<button id="get_id" onclick="oadaIdClient.getIDToken(
+                        'identity.oada-dev.com', options, callback)">
+    ID Token</button>
+<button id="get_access" onclick="oadaIdClient.getAccessToken(
+                        'identity.oada-dev.com', options, callback)">
+    Access Token</button>
 <div id="secret" style="display:none">
 <!-- The contents of this div only work if you know how to un-break them -->
 <button onclick="oadaIdClient.getIDToken('vip1.ecn.purdue.edu/~awlayton',
