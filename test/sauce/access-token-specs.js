@@ -4,7 +4,7 @@ var expect = require('chai').expect;
 var wd = require('wd');
 require('colors');
 
-var timeout = 600000;
+var timeout = 60000;
 
 // checking sauce credential
 if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
