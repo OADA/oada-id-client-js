@@ -86,8 +86,7 @@ describe(desired.browserName, function() {
             browser.get('http://localhost:3007/', function() {
                 browser.title(function(err, title) {
                     expect(err).to.be.not.ok;
-                    expect(title)
-                        .to.equal('In Browser Usage Example Page');
+                    expect(title).to.equal('In Browser Usage Example Page');
                     done();
                 });
             });
@@ -181,6 +180,18 @@ describe(desired.browserName, function() {
                         });
                     },
                     function(done) {
+                        browser.waitFor(
+                            new wd.Asserter(function(browser, cb) {
+                                browser.windowHandles(function(err, handles) {
+                                    expect(err).to.be.not.ok;
+                                    return cb(err, handles.length === 1);
+                                });
+                            }),
+                            timeout,
+                            done
+                        );
+                    },
+                    function(done) {
                         browser.waitForElementById(
                             'token',
                             new wd.Asserter(function(el, cb) {
@@ -193,6 +204,7 @@ describe(desired.browserName, function() {
                             done
                         );
                     },
+                    /*
                     function(done) {
                         browser.windowHandles(function(err, handles) {
                             expect(err).to.be.not.ok;
@@ -200,6 +212,7 @@ describe(desired.browserName, function() {
                             done();
                         });
                     }
+                    */
                 ], done);
             });
         });
