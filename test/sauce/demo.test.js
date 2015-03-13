@@ -27,7 +27,11 @@ wd.configureHttp({
 var username = process.env.SAUCE_USERNAME;
 var accessKey = process.env.SAUCE_ACCESS_KEY;
 
-var desired = JSON.parse(process.env.DESIRED || '{"browserName": "chrome"}');
+var desired = {
+    browserName: process.env.BROWSER || 'chrome',
+    version: process.env.VERSION,
+    platform: process.env.PLATFORM
+};
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
 
