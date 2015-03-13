@@ -44,6 +44,7 @@ if (process.env.TRAVIS) {
 }
 
 describe(desired.browserName, function() {
+    this.timeout(timeout);
     var browser;
 
     beforeEach(function(done) {
