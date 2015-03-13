@@ -3,6 +3,7 @@
 var expect = require('chai').expect;
 var wd = require('wd');
 require('colors');
+var async = require('async');
 
 var timeout = 60000;
 
@@ -29,13 +30,13 @@ var accessKey = process.env.SAUCE_ACCESS_KEY;
 var desired = JSON.parse(process.env.DESIRED || '{"browserName": "chrome"}');
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = ['oada'];
-desired.name = 'Access Token';
+desired.name = '';
 
 // Make it work on TravisCI
 if (process.env.TRAVIS) {
     desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
     desired.build = process.env.TRAVIS_BUILD_NUMBER;
-    desired.name += ' [' + process.env.TRAVIS_JOB_NUMBER + ']';
+    desired.name = ' [' + process.env.TRAVIS_JOB_NUMBER + ']';
     if (process.env.TRAVIS_PULL_REQUEST !== 'false') {
         desired.tags.push('pull request');
         desired.tags.push('pull request:' + process.env.TRAVIS_PULL_REQUEST);
@@ -43,11 +44,12 @@ if (process.env.TRAVIS) {
 }
 
 describe(desired.browserName, function() {
-    this.timeout(10 * timeout); // Sacuelabs can have a line
-    var allPassed = true;
     var browser;
 
-    before(function(done) {
+    beforeEach(function(done) {
+        this.timeout(10 * timeout); // Sacuelabs can have a line
+        var d = desired;
+        d.name = this.currentTest.title + desired.name;
         browser = wd.remote(
                 'ondemand.saucelabs.com',
                 80,
@@ -70,165 +72,132 @@ describe(desired.browserName, function() {
                 console.log(' > ' + meth.magenta, path, (data || '').grey);
             });
         }
-        browser.init(desired, done);
-    });
-
-    beforeEach(function(done) {
-        browser.deleteAllCookies(function(err) {
-            expect(err).to.be.not.ok;
-            browser.clearLocalStorage(done);
-        });
+        browser.init(d, done);
     });
 
     afterEach(function(done) {
-        allPassed = allPassed && (this.currentTest.state === 'passed');
-        done();
-    });
-
-    after(function(done) {
         browser.quit(function() {
-            browser.sauceJobStatus(allPassed, done);
+            browser.sauceJobStatus(this.currentTest.state === 'passed',  done);
         });
     });
 
     ['access', 'id'].map(function(tokType) {
-        describe('get ' + tokType + ' token', function() {
-            before(function(done) {
-                browser.get('http://localhost:3007/', function() {
-                    browser.title(function(err, title) {
-                        expect(err).to.be.not.ok;
-                        expect(title).to.equal('In Browser Usage Example Page');
-                        done();
+        it('should get ' + tokType + ' token', function(done) {
+            async.series([
+                function(done) {
+                    browser.get('http://localhost:3007/', function() {
+                        browser.title(function(err, title) {
+                            expect(err).to.be.not.ok;
+                            expect(title)
+                                .to.equal('In Browser Usage Example Page');
+                            done();
+                        });
                     });
-                });
-            });
-
-            before(function(done) {
-                browser.elementById('get_' + tokType, function(err, el) {
-                    expect(err).to.be.not.ok;
-                    expect(el).to.be.ok;
-                    el.click(done);
-                });
-            });
-
-            describe('redirect', function() {
-                it('should open login/auth popup', function(done) {
+                },
+                function(done) {
+                    browser.elementById('get_' + tokType, function(err, el) {
+                        expect(err).to.be.not.ok;
+                        expect(el).to.be.ok;
+                        el.click(done);
+                    });
+                },
+                function(done) {
                     browser.waitFor(
-                        {
-                            asserter: new wd.Asserter(function(browser, cb) {
-                                browser.windowHandles(function(err, handles) {
-                                    expect(err).to.be.not.ok;
-                                    return cb(err, handles.length === 2);
-                                });
-                            }),
-                            timeout: timeout
-                        },
+                        new wd.Asserter(function(browser, cb) {
+                            browser.windowHandles(function(err, handles) {
+                                expect(err).to.be.not.ok;
+                                return cb(err, handles.length === 2);
+                            });
+                        }),
+                        timeout,
                         done
                     );
-                });
-            });
-
-            describe('approval', function() {
-                before(function(done) {
+                },
+                function(done) {
                     browser.windowHandles(function(err, handles) {
                         expect(err).to.be.not.ok;
                         expect(handles[1]).to.be.ok;
                         browser.window(handles[1], done);
                     });
-                });
-
-                before(function(done) {
+                },
+                function(done) {
                     browser.waitForElementByName(
-                            'username',
-                            timeout,
-                            function(err, el) {
+                        'username',
+                        timeout,
+                        function(err, el) {
+                            expect(err).to.be.not.ok;
+                            expect(el).to.be.ok;
+                            el.clear(function(err) {
                                 expect(err).to.be.not.ok;
-                                expect(el).to.be.ok;
-                                el.clear(function(err) {
-                                    expect(err).to.be.not.ok;
-                                    el.type('andy', done);
-                                });
-                            }
+                                el.type('andy', done);
+                            });
+                        }
                     );
-                });
-
-                before(function(done) {
+                },
+                function(done) {
                     browser.waitForElementByName(
-                            'password',
-                            timeout,
-                            function(err, el) {
+                        'password',
+                        timeout,
+                        function(err, el) {
+                            expect(err).to.be.not.ok;
+                            expect(el).to.be.ok;
+                            el.clear(function(err) {
                                 expect(err).to.be.not.ok;
-                                expect(el).to.be.ok;
-                                el.clear(function(err) {
-                                    expect(err).to.be.not.ok;
-                                    el.type('pass', done);
-                                });
-                            }
+                                el.type('pass', done);
+                            });
+                        }
                     );
-                });
-
-                before(function(done) {
+                },
+                function(done) {
                     browser.waitForElementByXPath(
-                            '//input[@type="submit"]',
-                            timeout,
-                            function(err, el) {
-                                expect(err).to.be.not.ok;
-                                expect(el).to.be.ok;
-                                el.click(done);
-                            }
+                        '//input[@type="submit"]',
+                        timeout,
+                        function(err, el) {
+                            expect(err).to.be.not.ok;
+                            expect(el).to.be.ok;
+                            el.click(done);
+                        }
                     );
-                });
-
-                // Parameters are set to always need consent,
-                // even if not first time
-                it('should ask for consent', function(done) {
+                },
+                function(done) {
                     browser.waitForElementById(
-                            'allow',
-                            timeout,
-                            done
+                        'allow',
+                        timeout,
+                        function(err, el) {
+                            expect(err).to.be.not.ok;
+                            expect(el).to.be.ok;
+                            el.click(done);
+                        }
                     );
-                });
-
-                after(function(done) {
-                    browser.elementById('allow', function(err, el) {
-                        expect(err).to.be.not.ok;
-                        expect(el).to.be.ok;
-                        el.click(done);
-                    });
-                });
-
-                after(function(done) {
+                },
+                function(done) {
                     browser.windowHandles(function(err, handles) {
                         expect(err).to.be.not.ok;
                         expect(handles[0]).to.be.ok;
                         browser.window(handles[0], done);
                     });
-                });
-            });
-
-            describe('return', function() {
-                it('should receive token', function(done) {
+                },
+                function(done) {
                     browser.waitForElementById(
-                            'token',
-                            new wd.Asserter(function(el, cb) {
-                                el.text(function(err, text) {
-                                    expect(err).to.be.not.ok;
-                                    return cb(err, text.length > 0);
-                                });
-                            }),
-                            timeout,
-                            done
+                        'token',
+                        new wd.Asserter(function(el, cb) {
+                            el.text(function(err, text) {
+                                expect(err).to.be.not.ok;
+                                return cb(err, text.length > 0);
+                            });
+                        }),
+                        timeout,
+                        done
                     );
-                });
-
-                it('should close popup', function(done) {
+                },
+                function(done) {
                     browser.windowHandles(function(err, handles) {
                         expect(err).to.be.not.ok;
                         expect(handles).to.have.length(1);
                         done();
                     });
-                });
-            });
+                }
+            ], done);
         });
     });
 });
