@@ -5,7 +5,7 @@ var wd = require('wd');
 require('colors');
 var async = require('async');
 
-var timeout = 60000;
+var timeout = 120000;
 
 // checking sauce credential
 if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
@@ -82,19 +82,19 @@ describe(desired.browserName, function() {
     });
 
     describe('browser side client', function() {
+        before(function(done) {
+            browser.get('http://localhost:3007/', function() {
+                browser.title(function(err, title) {
+                    expect(err).to.be.not.ok;
+                    expect(title)
+                        .to.equal('In Browser Usage Example Page');
+                    done();
+                });
+            });
+        });
         ['access', 'id'].map(function(tokType) {
             it('should get ' + tokType + ' token', function(done) {
                 async.series([
-                    function(done) {
-                        browser.get('http://localhost:3007/', function() {
-                            browser.title(function(err, title) {
-                                expect(err).to.be.not.ok;
-                                expect(title)
-                                    .to.equal('In Browser Usage Example Page');
-                                done();
-                            });
-                        });
-                    },
                     function(done) {
                         browser.elementById('get_' + tokType,
                             function(err, el) {
