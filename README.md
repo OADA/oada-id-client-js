@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/OADA/oada-id-client-js.svg)](https://travis-ci.org/OADA/oada-id-client-js)
+[![Build Status](https://travis-ci.org/OADA/oada-id-client-js.svg?branch=master)](https://travis-ci.org/OADA/oada-id-client-js)
 [![Dependency Status](https://david-dm.org/oada/oada-id-client-js.svg)](https://david-dm.org/oada/oada-id-client-js)
 [![License](http://img.shields.io/:license-Apache%202.0-green.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
