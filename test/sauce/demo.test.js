@@ -5,7 +5,7 @@ var wd = require('wd');
 require('colors');
 var async = require('async');
 
-var timeout = 120000;
+var timeout = 60000;
 
 // checking sauce credential
 if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
@@ -116,6 +116,7 @@ describe(desired.browserName, function() {
                             done
                         );
                     },
+                    /*
                     function(done) {
                         browser.windowHandles(function(err, handles) {
                             expect(err).to.be.not.ok;
@@ -123,6 +124,7 @@ describe(desired.browserName, function() {
                             browser.window(handles[1], done);
                         });
                     },
+                    */
                     function(done) {
                         browser.waitForElementByName(
                             'username',
@@ -173,6 +175,7 @@ describe(desired.browserName, function() {
                             }
                         );
                     },
+                    /*
                     function(done) {
                         browser.windowHandles(function(err, handles) {
                             expect(err).to.be.not.ok;
@@ -180,6 +183,7 @@ describe(desired.browserName, function() {
                             browser.window(handles[0], done);
                         });
                     },
+                    */
                     function(done) {
                         browser.waitForElementById(
                             'token',
