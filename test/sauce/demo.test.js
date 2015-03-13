@@ -33,7 +33,7 @@ var desired = {
     platform: process.env.PLATFORM
 };
 desired.handle = 'test in ' + desired.browserName;
-desired.tags = ['oada'];
+desired.tags = [];
 
 var nameSuffix = '';
 
@@ -42,6 +42,7 @@ if (process.env.TRAVIS) {
     desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
     desired.build = process.env.TRAVIS_BUILD_NUMBER;
     nameSuffix = ' [' + process.env.TRAVIS_JOB_NUMBER + ']';
+    desired.tags.push('branch:' + process.env.TRAVIS_BRANCH);
     if (process.env.TRAVIS_PULL_REQUEST !== 'false') {
         desired.tags.push('pull request');
         desired.tags.push('pull request:' + process.env.TRAVIS_PULL_REQUEST);
