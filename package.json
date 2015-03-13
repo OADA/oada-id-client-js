@@ -30,10 +30,10 @@
   },
   "dependencies": {
     "URIjs": "^1.13.2",
-    "jsonwebtoken": "^1.1.1",
+    "jsonwebtoken": "^4.1.0",
     "jwks-utils": "^0.1.0",
-    "jws": "^0.2.6",
-    "oada-client-secret": "^0.2.2",
+    "jws": "^2.0.0",
+    "oada-client-secret": "^1.0.0",
     "object-assign": "^1.0.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "superagent": "^1.0.0"
