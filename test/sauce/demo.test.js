@@ -82,7 +82,7 @@ describe(desired.browserName, function() {
     });
 
     describe('browser side client', function() {
-        before(function(done) {
+        beforeEach(function(done) {
             browser.get('http://localhost:3007/', function() {
                 browser.title(function(err, title) {
                     expect(err).to.be.not.ok;
