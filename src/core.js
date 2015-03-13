@@ -161,10 +161,13 @@ function combineCallbacks() {
 }
 
 // TODO: Check issuer
-function verifyIDToken(state, parameters, callback) {
-    if (!parameters || !parameters['id_token']) {
-        return callback(null, parameters);
+function verifyIDToken(state, params, callback) {
+    if (!params || !params['id_token']) {
+        return callback(null, params);
     }
+
+    // This makes it work in IE
+    var parameters = objectAssign({}, params);
 
     var req = request.get(state.conf['jwks_uri']);
     if (req.buffer) { req.buffer(); }
