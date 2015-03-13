@@ -231,8 +231,6 @@ function exchangeCode(state, parameters, callback) {
         'code': parameters.code,
     };
 
-    console.log(params);
-
     request.post(state.conf['token_endpoint'])
         .type('form')
         .send(params)

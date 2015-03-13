@@ -48,7 +48,7 @@ if (process.env.TRAVIS) {
     }
 }
 
-describe(desired.browserName, function() {
+describe(desired.browserName + ' ' + desired.version, function() {
     this.timeout(10 * timeout);
     var browser;
 
