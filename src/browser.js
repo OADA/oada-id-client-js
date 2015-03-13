@@ -28,7 +28,11 @@ browser.init = core.init;
 function popUpRedirect(authFun, opts) {
     return function(domain, options, callback) {
         var params = objectAssign({display: 'popup'}, opts, options);
-        var win = window.open('', '_blank', 'width=500,height=400');
+        var win = window.open(
+                '',
+                '_blank',
+                'width=500,height=400,status,resizable,scrollbars=yes'
+        );
 
         // TODO: Do this differently
         window._oadaIdClientPopUpFunction = core.handleRedirect;
