@@ -45,11 +45,10 @@ if (process.env.TRAVIS) {
 }
 
 describe(desired.browserName, function() {
-    this.timeout(timeout);
+    this.timeout(4 * timeout);
     var browser;
 
     beforeEach(function(done) {
-        this.timeout(10 * timeout); // Sacuelabs can have a line
         desired.name = this.currentTest.title + nameSuffix;
         browser = wd.remote(
                 'ondemand.saucelabs.com',
