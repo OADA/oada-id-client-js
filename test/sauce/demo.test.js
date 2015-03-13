@@ -79,7 +79,7 @@ describe(desired.browserName, function() {
     afterEach(function(done) {
         browser.quit(function() {
             browser.sauceJobStatus(this.currentTest.state === 'passed',  done);
-        });
+        }.bind(this));
     });
 
     ['access', 'id'].map(function(tokType) {
