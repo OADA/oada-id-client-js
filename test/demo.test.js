@@ -1,4 +1,21 @@
+/* Copyright 2015 Open Ag Data Alliance
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 'use strict';
+
+// Basically runs through the browser client demo with Saucelabs
 
 var expect = require('chai').expect;
 var wd = require('wd');
@@ -6,6 +23,9 @@ require('colors');
 var async = require('async');
 
 var timeout = 60000;
+
+// Assumes demo server is running locally (require Sauce Conect tunnel)
+var demoURL = process.env.DEMO_URL || 'http://localhost:3007/';
 
 // checking sauce credential
 if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
@@ -88,7 +108,7 @@ describe(desired.browserName + ' ' + desired.version, function() {
 
     describe('browser side client', function() {
         beforeEach(function(done) {
-            browser.get('http://localhost:3007/', function() {
+            browser.get(demoURL, function() {
                 browser.title(function(err, title) {
                     expect(err).to.be.not.ok;
                     expect(title).to.equal('In Browser Usage Example Page');

@@ -15,9 +15,6 @@
 
 'use strict';
 
-var _ = require('lodash');
-var desireds = require('./test/sauce/desireds');
-
 module.exports = function(grunt) {
 
     // This automatically loads grunt tasks from node_modules
@@ -40,7 +37,7 @@ module.exports = function(grunt) {
     ];
 
     // Project configuration.
-    var gruntConfig = {
+    grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         // grunt-contrib-jshint
         jshint: {
@@ -159,34 +156,7 @@ module.exports = function(grunt) {
                 },
             },
         },
-        env: {
-            // dynamically filled
-        },
-        simplemocha: {
-            sauce: {
-                options: {
-                    timeout: 90000,
-                    ui: 'bdd',
-                    reporter: 'spec'
-                },
-                src: ['test/sauce/**/*-specs.js']
-            }
-        },
-        concurrent: {
-            options: {
-                limit: 3
-            },
-            'test-sauce': [], // dynamically filled
-        },
-    };
-
-    _(desireds).each(function(desired, key) {
-        gruntConfig.env[key] = {
-            DESIRED: JSON.stringify(desired)
-        };
-        gruntConfig.concurrent['test-sauce'].push('test:sauce:' + key);
     });
-    grunt.initConfig(gruntConfig);
 
     // Default task.    Build, start the server, and watch files for changes
     grunt.registerTask('default', [
@@ -205,10 +175,4 @@ module.exports = function(grunt) {
     // Run the examples of using the library
     grunt.registerTask('demo', 'Run the usage examples', ['express']);
 
-    grunt.registerTask('test', ['test:sauce:' + _(desireds).keys().first()]);
-    _(desireds).each(function(desired, key) {
-        grunt.registerTask('test:sauce:' + key,
-            ['env:' + key, 'simplemocha:sauce']);
-    });
-    grunt.registerTask('test:sauce:parallel', ['concurrent:test-sauce']);
 };
