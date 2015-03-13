@@ -116,7 +116,6 @@ describe(desired.browserName, function() {
                             done
                         );
                     },
-                    /*
                     function(done) {
                         browser.windowHandles(function(err, handles) {
                             expect(err).to.be.not.ok;
@@ -124,7 +123,6 @@ describe(desired.browserName, function() {
                             browser.window(handles[1], done);
                         });
                     },
-                    */
                     function(done) {
                         browser.waitForElementByName(
                             'username',
@@ -175,7 +173,6 @@ describe(desired.browserName, function() {
                             }
                         );
                     },
-                    /*
                     function(done) {
                         browser.windowHandles(function(err, handles) {
                             expect(err).to.be.not.ok;
@@ -183,7 +180,6 @@ describe(desired.browserName, function() {
                             browser.window(handles[0], done);
                         });
                     },
-                    */
                     function(done) {
                         browser.waitForElementById(
                             'token',
