@@ -47,7 +47,7 @@
                 if (console && (typeof console.dir === 'function')) {
                     console.dir(err);
                 }
-                alert(err);
+                alert(err.name + ':' + err.message);
             }
 
             var block = document.getElementById('token');
