@@ -192,7 +192,11 @@ function verifyIDToken(state, params, callback) {
             }
             var key = pem(jwk.n, jwk.e);
 
-            jwt.verify(parameters['id_token'], key, function(err, token) {
+            var opts = {
+                audience: state.options['client_id'],
+                issuer: state.conf.issuer
+            };
+            jwt.verify(parameters['id_token'], key, opts, function(err, token) {
                 if (!err) {
                     // Check nonce
                     if (state.options.nonce === token.nonce) {
