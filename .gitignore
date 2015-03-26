@@ -12,8 +12,10 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+.coveralls.yml
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+# Grunt intermediate storage
+# (http://gruntjs.com/creating-plugins#storing-task-files)
 .grunt
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
@@ -29,3 +31,6 @@ node_modules
 
 # "Compiled" stuff
 dist
+
+# Local yeoman stuff
+.yo-rc.json

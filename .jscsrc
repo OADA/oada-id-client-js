@@ -1,5 +1,6 @@
 {
     "preset": "google",
     "fileExtensions": [ ".js" ],
-    "validateIndentation": 4
+    "validateIndentation": 4,
+    "excludeFiles": [ "node_modules/**", "coverage/**" ]
 }

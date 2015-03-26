@@ -36,7 +36,7 @@ core.init = function(opts) {
 
 function storeState(stateObj, callback) {
     // Make sure neither or both state storing functions are overridden
-    if (core.retrieveState != retrieveState) {
+    if (core.retrieveState !== retrieveState) {
         return callback(
             new Error('Overrode retrieveState but not storeState!'));
     }
@@ -58,7 +58,7 @@ function storeState(stateObj, callback) {
 
 function retrieveState(stateTok, callback) {
     // Make sure neither or both state storing functions are overridden
-    if (core.storeState != storeState) {
+    if (core.storeState !== storeState) {
         return callback(
             new Error('Overrode storeState but not retrieveState!'));
     }
@@ -230,8 +230,6 @@ function exchangeCode(state, parameters, callback) {
         'client_id': state.options['client_id'],
         'code': parameters.code,
     };
-
-    console.log(params);
 
     request.post(state.conf['token_endpoint'])
         .type('form')

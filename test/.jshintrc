@@ -19,5 +19,13 @@
     "sub": true,
     "freeze": true,
     "eqeqeq": true,
-    "expr": true
+    "expr": true,
+    "globals": {
+        "describe": true,
+        "it": true,
+        "before": true,
+        "after": true,
+        "afterEach": true,
+        "beforeEach": true
+    }
 }
