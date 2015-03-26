@@ -219,18 +219,19 @@ function exchangeCode(state, parameters, callback) {
         return verifyIDToken(state, parameters, callback);
     }
 
-    // Use the provided client_secret, else generate one as per OADA
-    var secret = state.options['client_secret'] ||
-        clientSecret.generate(
+    var secret = clientSecret.generate(
             state.key,
             state.options['client_id'],
             state.conf['token_endpoint'],
-            parameters.code);
+            parameters.code
+    );
 
     var params = {
         'grant_type': 'authorization_code',
         'redirect_uri': state.options['redirect_uri'],
-        'client_secret': secret,
+        'client_assertion': secret,
+        'client_assertion_type':
+            'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         'client_id': state.options['client_id'],
         'code': parameters.code,
     };
