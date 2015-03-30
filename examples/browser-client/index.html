@@ -23,21 +23,29 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js'></script>
     <script>
         var options = {
-            'client_id': 'jf93caauf3uzud7f308faesf3@identity.oada-dev.com',
-            'redirect_uri': 'http://localhost:3007/redirect.html',
+            metadata: {
+                'client_id': 'jf93caauf3uzud7f308faesf3@identity.oada-dev.com',
+                'redirect_uri': 'http://localhost:3007/redirect.html'
+            },
             scope: 'bookmarks.machines.harvesters',
-            // Make it always ask for consent again
-            prompt: 'consent',
+            params: {
+                // Make it always ask for consent again
+                prompt: 'consent'
+            }
         };
 
         var googleOptions = {
-            'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
-                '.apps.googleusercontent.com',
-            'redirect_uri': URI('redirect.html')
-                .absoluteTo(window.location.href),
+            metadata: {
+                'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
+                    '.apps.googleusercontent.com',
+                'redirect_uri': URI('redirect.html')
+                    .absoluteTo(window.location.href)
+            },
             scope: 'https://mail.google.com/',
-            // Make it always ask for consent again
-            prompt: 'consent',
+            params: {
+                // Make it always ask for consent again
+                prompt: 'consent'
+            }
         };
 
         var callback = function(err, token) {

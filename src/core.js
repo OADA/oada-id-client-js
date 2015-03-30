@@ -30,8 +30,36 @@ var core = {};
 var options = {};
 var stuff = {};
 
+function mergeOptions() {
+    var args = Array.prototype.concat.apply([{}], arguments);
+    var options;
+
+    options = objectAssign.apply(null, args);
+
+    var argParams = args.filter(function(arg) {
+        return arg.hasOwnProperty('params');
+    });
+    if (argParams.length) {
+        options.params = objectAssign.apply(null, argParams);
+    }
+
+    options.scope = args
+        .map(function(arg) {
+            return (arg.scope && arg.scope.split(' ')) || [];
+        })
+        .reduce(function(scopes1, scopes2) {
+            return scopes1.concat(scopes2);
+        })
+        .filter(function(scope, ind, scopes) {
+            return scopes.indexOf(scope) === ind;
+        })
+        .join(' ');
+
+    return options;
+}
+
 core.init = function(opts) {
-    objectAssign(options, opts);
+    options = mergeOptions(options, opts);
 };
 
 function storeState(stateObj, callback) {
@@ -78,12 +106,18 @@ core.storeState = storeState;
 core.retrieveState = retrieveState;
 
 function authorize(domain, configuration, parameters, redirect, callback) {
-    var params = objectAssign({}, options, parameters);
-    var key = params.privateKey;
+    var key;
+    var params;
+    var metadata;
+
+    // Get stuff from options object
+    var options = mergeOptions(options, parameters);
+    key = options.privateKey;
+    params = objectAssign(options, {scope: options.scope});
+    metadata = options.metadata;
 
     // Assume key is PEM ecnoded
     if (key) { key.kty = key.kty || 'PEM'; }
-    delete params.privateKey;
 
     // Should I be passing the error to both?
     var errCallback = combineCallbacks(redirect, callback);
@@ -124,12 +158,8 @@ function authorize(domain, configuration, parameters, redirect, callback) {
 
 core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
     var configuration = 'openid-configuration';
-    var params = objectAssign({scope: ''}, opts);
-
     // Make sure we have openid scope
-    if (params.scope.split(' ').indexOf('openid') === -1) {
-        params.scope += ' openid';
-    }
+    var params = mergeOptions({scope: 'openid'}, opts);
 
     // Add nonce
     params.nonce = crypto.randomBytes(12)
@@ -143,7 +173,7 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
 
 core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
     var configuration = 'oada-configuration';
-    var params = objectAssign({scope: ''}, opts);
+    var params = mergeOptions({scope: ''}, opts);
 
     authorize(domain, configuration, params, redirect, cb);
 };
