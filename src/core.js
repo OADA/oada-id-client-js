@@ -24,6 +24,7 @@ var jwku = require('jwks-utils');
 var pem = require('rsa-pem-from-mod-exp');
 var crypto = require('crypto');
 var clientSecret = require('oada-client-secret');
+var register = require('oauth-dyn-reg');
 
 var core = {};
 
@@ -125,31 +126,39 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     var req =
         request.get('https://' + domain + '/.well-known/' + configuration);
     if (req.buffer) { req.buffer(); }
-    req.end(function(err, resp) {
+    req.end(function configurationCallback(err, resp) {
         var e = err || resp.error;
         if (e) { return errCallback(e); }
 
         try {
             var conf = JSON.parse(resp.text);
-            // Stuff to remember for when redirect is received
-            var stateObj = {
-                key: key,
-                domain: domain,
-                conf: conf,
-                callback: callback,
-                options: params,
-            };
 
-            core.storeState(stateObj, function(err, stateTok) {
-                // Construct authorization redirect
-                var uri = new URI(conf['authorization_endpoint']);
-                uri.addQuery({state: stateTok}).addQuery(params);
-                // Do not send client_secret here
-                uri.removeQuery('client_secret');
+            register(metadata, conf['registration_endpoint'],
+                function registrationCallback(err, resp) {
+                    if (err) { return errCallback(err); }
 
-                // Redirect the user to constructed uri
-                return redirect(err, uri && uri.toString());
-            });
+                    // Stuff to remember for when redirect is received
+                    var stateObj = {
+                        key: key,
+                        domain: domain,
+                        conf: conf,
+                        callback: callback,
+                        options: resp,
+                        query: params,
+                    };
+
+                    core.storeState(stateObj, function(err, stateTok) {
+                        // Construct authorization redirect
+                        var uri = new URI(conf['authorization_endpoint']);
+                        uri.addQuery({state: stateTok}).addQuery(params);
+                        // Do not send client_secret here
+                        uri.removeQuery('client_secret');
+
+                        // Redirect the user to constructed uri
+                        return redirect(err, uri && uri.toString());
+                    });
+                }
+            );
         } catch (err) {
             return errCallback(err);
         }
@@ -229,7 +238,7 @@ function verifyIDToken(state, params, callback) {
             jwt.verify(parameters['id_token'], key, opts, function(err, token) {
                 if (!err) {
                     // Check nonce
-                    if (state.options.nonce === token.nonce) {
+                    if (state.query.nonce === token.nonce) {
                         parameters['id_token'] = token;
                     } else {
                         err = new Error('Nonces did not match');

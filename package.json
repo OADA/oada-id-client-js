@@ -34,6 +34,7 @@
     "jwks-utils": "^0.1.0",
     "jws": "^2.0.0",
     "oada-client-secret": "^1.0.0",
+    "oauth-dyn-reg": "^1.0.1",
     "object-assign": "^1.0.0",
     "rsa-pem-from-mod-exp": "^0.8.4",
     "superagent": "^1.0.0"
