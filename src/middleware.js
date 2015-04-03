@@ -22,16 +22,11 @@ var middleware = {};
 
 // TODO: I am not sure having a callback is very middleware...
 middleware.getIDToken = function(domain, options) {
-    var params = objectAssign({},
-            {
-                'response_type': 'code'
-            }, options);
-
     return function(req, res, next) {
         var dom = req.param('domain') || domain;
         params.scope = req.param('scope') || (options && options.scope);
 
-        core.getIDToken(dom, params, function(err, uri) {
+        core.getIDToken(dom, options, function(err, uri) {
             if (err) { return next(err); }
 
             return res.redirect(302, uri);
@@ -40,16 +35,11 @@ middleware.getIDToken = function(domain, options) {
 };
 
 middleware.getAccessToken = function(domain, options) {
-    var params = objectAssign({},
-            {
-                'response_type': 'code'
-            }, options);
-
     return function(req, res, next) {
         var dom = req.param('domain') || domain;
         params.scope = req.param('scope') || (options && options.scope);
 
-        core.getAccessToken(dom, params, function(err, uri) {
+        core.getAccessToken(dom, options, function(err, uri) {
             if (err) { return next(err); }
 
             return res.redirect(302, uri);

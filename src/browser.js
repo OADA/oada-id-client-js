@@ -46,10 +46,10 @@ function popUpRedirect(authFun, opts) {
 }
 
 browser.getIDToken =
-    popUpRedirect(core.getIDToken, {'response_type': 'id_token'});
+    popUpRedirect(core.getIDToken, {});
 
 browser.getAccessToken =
-    popUpRedirect(core.getAccessToken, {'response_type': 'token'});
+    popUpRedirect(core.getAccessToken, {});
 
 browser.handleRedirect = function() {
     var uri = new URI(window.location);

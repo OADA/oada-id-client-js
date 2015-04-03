@@ -147,10 +147,18 @@ function authorize(domain, configuration, parameters, redirect, callback) {
                         query: params,
                     };
 
+                    // Is this a good way to pick?
+                    var redirectUri =
+                        options.redirect || resp['redirect_uris'][0];
+
                     core.storeState(stateObj, function(err, stateTok) {
                         // Construct authorization redirect
                         var uri = new URI(conf['authorization_endpoint']);
-                        uri.addQuery({state: stateTok}).addQuery(params);
+                        uri
+                            .addQuery({state: stateTok})
+                            .addQuery(params)
+                            .addQuery({'client_id': resp['client_id']})
+                            .addQuery({'redirect_uri': redirectUri});
                         // Do not send client_secret here
                         uri.removeQuery('client_secret');
 
@@ -167,8 +175,13 @@ function authorize(domain, configuration, parameters, redirect, callback) {
 
 core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
     var configuration = 'openid-configuration';
+    var response = process.browser ? 'id_token' : 'code';
     // Make sure we have openid scope
-    var params = mergeOptions({scope: 'openid'}, opts);
+    var params = mergeOptions({
+            scope: 'openid',
+            params: {'response_type': response}
+        }, opts
+    );
 
     // Add nonce
     params.nonce = crypto.randomBytes(12)
@@ -182,7 +195,12 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
 
 core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
     var configuration = 'oada-configuration';
-    var params = mergeOptions({scope: ''}, opts);
+    var response = process.browser ? 'token' : 'code';
+    var params = mergeOptions({
+            scope: '',
+            params: {'response_type': response}
+        }, opts
+    );
 
     authorize(domain, configuration, params, redirect, cb);
 };
