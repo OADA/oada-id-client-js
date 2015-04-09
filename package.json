@@ -30,7 +30,7 @@
   },
   "dependencies": {
     "URIjs": "^1.13.2",
-    "jsonwebtoken": "^4.1.0",
+    "jsonwebtoken": "^4.2.2",
     "jwks-utils": "^0.1.0",
     "jws": "^2.0.0",
     "oada-client-secret": "^1.0.0",
