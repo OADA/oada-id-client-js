@@ -23,7 +23,7 @@ var jwt = require('jsonwebtoken');
 var jwku = require('jwks-utils');
 var pem = require('rsa-pem-from-mod-exp');
 var crypto = require('crypto');
-var clientSecret = require('oada-client-secret');
+var clientAuth = require('jwt-bearer-client-auth');
 var register = require('oauth-dyn-reg');
 
 var core = {};
@@ -177,7 +177,8 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
     var configuration = 'openid-configuration';
     var response = process.browser ? 'id_token' : 'code';
     // Make sure we have openid scope
-    var params = mergeOptions({
+    var params = mergeOptions(
+        {
             scope: 'openid',
             params: {'response_type': response}
         }, opts
@@ -196,7 +197,8 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
 core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
     var configuration = 'oada-configuration';
     var response = process.browser ? 'token' : 'code';
-    var params = mergeOptions({
+    var params = mergeOptions(
+        {
             scope: '',
             params: {'response_type': response}
         }, opts
@@ -276,17 +278,19 @@ function exchangeCode(state, parameters, callback) {
         return verifyIDToken(state, parameters, callback);
     }
 
-    var secret = clientSecret.generate(
+    var assertion = clientAuth.generate(
             state.key,
             state.options['client_id'],
+            state.options['client_id'],
             state.conf['token_endpoint'],
-            parameters.code
+            60,
+            {payload: {jti: parameters.code}}
     );
 
     var params = {
         'grant_type': 'authorization_code',
         'redirect_uri': state.options['redirect_uri'],
-        'client_assertion': secret,
+        'client_assertion': assertion,
         'client_assertion_type':
             'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         'client_id': state.options['client_id'],
