@@ -22,31 +22,6 @@ var wd = require('wd');
 require('colors');
 var async = require('async');
 
-var timeout = 60000;
-
-// Assumes demo server is running locally (require Sauce Conect tunnel)
-var demoURL = process.env.DEMO_URL || 'http://localhost:3007/';
-
-// checking sauce credential
-if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
-    console.warn(
-        '\nPlease configure your sauce credential:\n\n' +
-        'export SAUCE_USERNAME=<SAUCE_USERNAME>\n' +
-        'export SAUCE_ACCESS_KEY=<SAUCE_ACCESS_KEY>\n\n'
-    );
-    throw new Error('Missing sauce credentials');
-}
-
-// http configuration, not needed for simple runs
-wd.configureHttp({
-    timeout: timeout,
-    retryDelay: 15000,
-    retries: 5
-});
-
-var username = process.env.SAUCE_USERNAME;
-var accessKey = process.env.SAUCE_ACCESS_KEY;
-
 var desired = {
     browserName: process.env.BROWSER || 'chrome',
     version: process.env.VERSION,
@@ -55,23 +30,51 @@ var desired = {
 desired.handle = 'test in ' + desired.browserName;
 desired.tags = [];
 
-var nameSuffix = '';
-
-// Make it work on TravisCI
-if (process.env.TRAVIS) {
-    desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
-    desired.build = process.env.TRAVIS_BUILD_NUMBER;
-    nameSuffix = ' [' + process.env.TRAVIS_JOB_NUMBER + ']';
-    desired.tags.push('branch:' + process.env.TRAVIS_BRANCH);
-    if (process.env.TRAVIS_PULL_REQUEST !== 'false') {
-        desired.tags.push('pull request');
-        desired.tags.push('pull request:' + process.env.TRAVIS_PULL_REQUEST);
-    }
-}
-
 describe(desired.browserName + ' ' + (desired.version || ''), function() {
+    var timeout = 60000;
+
+    // Assumes demo server is running locally (require Sauce Conect tunnel)
+    var demoURL = process.env.DEMO_URL || 'http://localhost:3007/';
+
+    var username = process.env.SAUCE_USERNAME;
+    var accessKey = process.env.SAUCE_ACCESS_KEY;
+
+    var nameSuffix = '';
+
     this.timeout(10 * timeout);
     var browser;
+
+    before(function() {
+        // checking sauce credential
+        if (!process.env.SAUCE_USERNAME || !process.env.SAUCE_ACCESS_KEY) {
+            console.warn(
+                '\nPlease configure your sauce credential:\n\n' +
+                'export SAUCE_USERNAME=<SAUCE_USERNAME>\n' +
+                'export SAUCE_ACCESS_KEY=<SAUCE_ACCESS_KEY>\n\n'
+            );
+            throw new Error('Missing sauce credentials');
+        }
+
+        // http configuration, not needed for simple runs
+        wd.configureHttp({
+            timeout: timeout,
+            retryDelay: 15000,
+            retries: 5
+        });
+
+        // Make it work on TravisCI
+        if (process.env.TRAVIS) {
+            desired['tunnel-identifier'] = process.env.TRAVIS_JOB_NUMBER;
+            desired.build = process.env.TRAVIS_BUILD_NUMBER;
+            nameSuffix = ' [' + process.env.TRAVIS_JOB_NUMBER + ']';
+            desired.tags.push('branch:' + process.env.TRAVIS_BRANCH);
+            if (process.env.TRAVIS_PULL_REQUEST !== 'false') {
+                desired.tags.push('pull request');
+                desired.tags.push('pull request:' +
+                        process.env.TRAVIS_PULL_REQUEST);
+            }
+        }
+    });
 
     beforeEach(function(done) {
         desired.name = this.currentTest.title + nameSuffix;

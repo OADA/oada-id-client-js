@@ -1,11 +1,24 @@
 {
-  "name": "oadaIdClient",
+  "name": "oada-id-client",
   "version": "0.0.1",
   "description": "OADA identity client library for Node.JS and Browser",
   "main": "index.js",
   "scripts": {
-    "prepublish": "grunt build"
+    "prepublish": "grunt build",
+    "test": "mocha",
+    "browser-test": "./node_modules/karma/bin/karma start --single-run",
+    "cover": "istanbul cover _mocha",
+    "browser-cover": "./node_modules/karma/bin/karma start --single-run --cover",
+    "lint": "jshint --reporter node_modules/jshint-stylish/stylish.js .",
+    "style": "jscs .",
+    "clean": "rm -rf ./coverage"
   },
+  "pre-commit": [
+    "lint",
+    "style",
+    "test",
+    "browser-test"
+  ],
   "directories": {
     "lib": "src",
     "test": "test",
@@ -13,18 +26,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/OADA/oada-id-client-js.git"
+    "url": "https://github.com/OADA/oada-id-client-js.git"
   },
   "keywords": [
     "oada",
-    "openid"
+    "browser",
+    "openid",
+    "oauth"
   ],
-  "author": "Alex Layton <alex@layton.in> (http://alex.layton.in)",
-  "license": "Apache License 2.0",
+  "author": {
+    "name": "Alex Layton",
+    "email": "alex@layton.in",
+    "url": "http://alex.layton.in"
+  },
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/OADA/oada-id-client-js/issues"
   },
-  "homepage": "https://github.com/OADA/oada-login",
+  "homepage": "https://github.com/OADA/oada-id-client-js",
   "browser": {
     "index.js": "./src/browser.js"
   },
@@ -41,9 +60,13 @@
   },
   "devDependencies": {
     "async": "^0.9.0",
-    "browserify": "^9.0.3",
-    "chai": "^2.1.1",
+    "brfs": "^1.4.0",
+    "browserify": "^9.0.8",
+    "browserify-istanbul": "^0.2.1",
+    "chai": "^2.2.0",
+    "coffee-script": "^1.9.1",
     "colors": "^0.6.2",
+    "cors": "^2.5.3",
     "express": "^4.9.0",
     "grunt": "^0.4.5",
     "grunt-browserify": "^3.0.1",
@@ -57,15 +80,27 @@
     "grunt-lint5": "^0.3.1",
     "grunt-newer": "^0.7.0",
     "grunt-simple-mocha": "^0.4.0",
-    "istanbul": "^0.3.7",
-    "jscs": "^1.11.3",
+    "istanbul": "^0.3.13",
+    "jscs": "^1.12.0",
     "jshint": "^2.6.3",
     "jshint-stylish": "^1.0.1",
+    "karma": "^0.12.31",
+    "karma-browserify": "^4.1.2",
+    "karma-coverage": "^0.2.6",
+    "karma-mocha": "^0.1.10",
+    "karma-mocha-reporter": "^1.0.2",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-phantomjs-shim": "^1.0.0",
     "load-grunt-tasks": "^0.6.0",
     "lodash": "^2.4.1",
-    "mocha": "^2.2.1",
+    "mocha": "^2.2.4",
+    "pre-commit": "^1.0.6",
+    "rewire": "^2.3.1",
+    "rewireify": "0.0.13",
+    "sinon": "^1.14.1",
     "time-grunt": "^1.0.0",
     "uglifyify": "^2.5.0",
-    "wd": "^0.3.8"
+    "wd": "^0.3.8",
+    "yargs": "^3.7.0"
   }
 }

@@ -38,7 +38,9 @@ function mergeOptions() {
     options = objectAssign.apply(null, args);
 
     var argParams = args.filter(function(arg) {
-        return arg.hasOwnProperty('params');
+        return arg && arg.hasOwnProperty('params');
+    }).map(function(arg) {
+        return arg.params;
     });
     if (argParams.length) {
         options.params = objectAssign.apply(null, argParams);
@@ -46,7 +48,7 @@ function mergeOptions() {
 
     options.scope = args
         .map(function(arg) {
-            return (arg.scope && arg.scope.split(' ')) || [];
+            return (arg && arg.scope && arg.scope.split(' ')) || [];
         })
         .reduce(function(scopes1, scopes2) {
             return scopes1.concat(scopes2);
@@ -112,9 +114,9 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     var metadata;
 
     // Get stuff from options object
-    var options = mergeOptions(options, parameters);
+    var options = mergeOptions({}, options, parameters);
     key = options.privateKey;
-    params = objectAssign(options, {scope: options.scope});
+    params = objectAssign(options.params, {scope: options.scope});
     metadata = options.metadata;
 
     // Assume key is PEM ecnoded
@@ -185,7 +187,7 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
     );
 
     // Add nonce
-    params.nonce = crypto.randomBytes(12)
+    params.params.nonce = crypto.randomBytes(12)
         .toString('base64')
             .replace(/\+/g, '-')
             .replace(/\//g, '_')

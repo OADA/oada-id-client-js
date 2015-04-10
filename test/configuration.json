@@ -1,0 +1,4 @@
+{
+    "registration_endpoint": "http://localhost:300/register",
+    "authorization_endpoint": "http://localhost:300/auth"
+}
