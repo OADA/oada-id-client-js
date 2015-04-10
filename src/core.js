@@ -21,7 +21,7 @@ var URI = require('URIjs');
 var objectAssign = require('object-assign');
 var jwt = require('jsonwebtoken');
 var jwku = require('jwks-utils');
-var pem = require('rsa-pem-from-mod-exp');
+var jwk2pem = require('pem-jwk').jwk2pem;
 var crypto = require('crypto');
 var clientAuth = require('jwt-bearer-client-auth');
 var register = require('oauth-dyn-reg');
@@ -139,6 +139,10 @@ function authorize(domain, configuration, parameters, redirect, callback) {
                 function registrationCallback(err, resp) {
                     if (err) { return errCallback(err); }
 
+                    // Is this a good way to pick?
+                    params['redirect_uri'] =
+                        options.redirect || resp['redirect_uris'][0];
+
                     // Stuff to remember for when redirect is received
                     var stateObj = {
                         key: key,
@@ -149,18 +153,13 @@ function authorize(domain, configuration, parameters, redirect, callback) {
                         query: params,
                     };
 
-                    // Is this a good way to pick?
-                    var redirectUri =
-                        options.redirect || resp['redirect_uris'][0];
-
                     core.storeState(stateObj, function(err, stateTok) {
                         // Construct authorization redirect
                         var uri = new URI(conf['authorization_endpoint']);
                         uri
                             .addQuery({state: stateTok})
                             .addQuery(params)
-                            .addQuery({'client_id': resp['client_id']})
-                            .addQuery({'redirect_uri': redirectUri});
+                            .addQuery({'client_id': resp['client_id']});
                         // Do not send client_secret here
                         uri.removeQuery('client_secret');
 
@@ -230,28 +229,10 @@ function verifyIDToken(state, params, callback) {
     // This makes it work in IE
     var parameters = objectAssign({}, params);
 
-    var req = request.get(state.conf['jwks_uri']);
-    if (req.buffer) { req.buffer(); }
-    req.end(function(err, resp) {
-        var e = err || resp.error;
-        if (e) { return callback(e, parameters); }
-
-        try {
-            var jwks;
-            try {
-                jwks = JSON.parse(resp.text);
-                if (!jwku.isJWKset(jwks)) { throw new Error(); }
-            } catch (err) {
-                // Give a better error than what JSON.parse throws
-                throw new Error('Could not parse JWKs URI');
-            }
-
-            var jwk = jwku.jwkForSignature(parameters['id_token'], jwks);
-            if (!jwk) {
-                throw new Error('Provided JWKs did not contain ' +
-                        'the JWK for this JWS');
-            }
-            var key = pem(jwk.n, jwk.e);
+    return jwku.jwkForSignature(parameters['id_token'], state.conf['jwks_uri'],
+        function(err, jwk) {
+            if (err) { return callback(err); }
+            var key = jwk2pem(jwk);
 
             var opts = {
                 audience: state.options['client_id'],
@@ -261,7 +242,7 @@ function verifyIDToken(state, params, callback) {
                 if (!err) {
                     // Check nonce
                     if (state.query.nonce === token.nonce) {
-                        parameters['id_token'] = token;
+                        parameters = token;
                     } else {
                         err = new Error('Nonces did not match');
                     }
@@ -269,10 +250,7 @@ function verifyIDToken(state, params, callback) {
 
                 return callback(err, parameters);
             });
-        } catch (err) {
-            return callback(err, parameters);
-        }
-    });
+        });
 }
 
 function exchangeCode(state, parameters, callback) {
@@ -291,12 +269,12 @@ function exchangeCode(state, parameters, callback) {
 
     var params = {
         'grant_type': 'authorization_code',
-        'redirect_uri': state.options['redirect_uri'],
+        'redirect_uri': state.query['redirect_uri'],
         'client_assertion': assertion,
         'client_assertion_type':
             'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         'client_id': state.options['client_id'],
-        'code': parameters.code,
+        'code': parameters.code
     };
 
     request.post(state.conf['token_endpoint'])
@@ -318,8 +296,10 @@ function exchangeCode(state, parameters, callback) {
 }
 
 // TODO: Should I be able to register callbacks in two places?
-core.handleRedirect = function handleRedirect(parameters, callback) {
-    var stateTok = parameters.state;
+core.handleRedirect = function handleRedirect(params, callback) {
+    var stateTok = params.state;
+    var parameters = objectAssign({}, params);
+    delete parameters.state;
 
     core.retrieveState(stateTok, function(err, stateObj) {
         var cb = combineCallbacks(stateObj && stateObj.callback, callback);

@@ -18,20 +18,31 @@
 var sinon = require('sinon');
 var expect = require('chai').expect;
 var URI = require('URIjs');
-
-// TODO: Figure out something less gross with rewire
-var core;
-if (process.browser) {
-    core = require('../src/core.js');
-} else {
-    var rewire = require('rewire');
-    core = rewire('../src/core.js');
-}
+var objectAssign = require('object-assign');
 
 var metadata = require('./metadata.json');
 var configuration = require('./configuration.json');
+var token = require('./token.json');
+var idToken = require('./id_token.json');
 
 describe('core.js', function() {
+    var core;
+
+    before(function stubSignature() {
+        sinon.stub(require('jwks-utils'), 'jwkForSignature').yields(null, {});
+        sinon.stub(require('pem-jwk'), 'jwk2pem').returns('PEM');
+    });
+
+    before(function loadModule() {
+        // TODO: Figure out something less gross with rewire
+        if (process.browser) {
+            core = require('../src/core.js');
+        } else {
+            var rewire = require('rewire');
+            core = rewire('../src/core.js');
+        }
+    });
+
     before(function stubRegister() {
         var registerStub = sinon.stub();
 
@@ -95,6 +106,82 @@ describe('core.js', function() {
                             done();
                         });
                     }, null);
+            });
+
+            var flow = process.browser ? 'implicit' : 'code';
+            var tokType = method === 'getIDToken' ? 'id_token' : 'token';
+            var respType = flow === 'code' ? 'code' : tokType;
+            it('should use ' + flow + ' flow', function(done) {
+                core[method]('localhost:3000', {}, function redirect(err, loc) {
+                    expect(err).to.be.not.ok;
+
+                    URI(loc).hasQuery('response_type', function(val) {
+                        expect(val).to.equal(respType);
+                        done();
+                    });
+                }, null);
+            });
+
+            describe('#handleRedirect', function() {
+                var code = {'code': tokType};
+                var ret = method === 'getIDToken' ? idToken : token;
+                var resp = flow === 'code' ?
+                    code :
+                    method === 'getIDToken' ? {'id_token': idToken} : token;
+                var jwtVerify;
+
+                beforeEach(function() {
+                    jwtVerify = sinon.stub(require('jsonwebtoken'), 'verify');
+                });
+
+                afterEach(function() {
+                    jwtVerify.restore();
+                });
+
+                it('should pass token to its callback', function(done) {
+                    core[method]('localhost:3000', {}, function(err, loc) {
+                        expect(err).to.be.not.ok;
+                        var locParams = URI(loc).query(true);
+
+                        var params = objectAssign({
+                                'state': locParams.state
+                            }, resp);
+
+                        var t = JSON.parse(JSON.stringify(
+                                objectAssign({}, ret, {nonce: locParams.nonce})
+                        ));
+                        jwtVerify.yields(null, t);
+
+                        core.handleRedirect(params, function(err, tok) {
+                            expect(err).to.be.not.ok;
+                            expect(tok).to.deep.equal(t);
+                            done();
+                        });
+                    });
+                });
+
+                it('should pass token to original callback', function(done) {
+                    var t;
+                    core[method]('localhost:3000', {}, function(err, loc) {
+                        expect(err).to.be.not.ok;
+                        var locParams = URI(loc).query(true);
+
+                        var params = objectAssign({
+                                'state': locParams.state
+                            }, resp);
+
+                        t = JSON.parse(JSON.stringify(
+                                objectAssign({}, ret, {nonce: locParams.nonce})
+                        ));
+                        jwtVerify.yields(null, t);
+
+                        core.handleRedirect(params);
+                    }, function(err, tok) {
+                        expect(err).to.be.not.ok;
+                        expect(tok).to.deep.equal(t);
+                        done();
+                    });
+                });
             });
         });
     });

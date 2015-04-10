@@ -25,7 +25,7 @@ module.exports = function(config) {
 
     if (args.cover) {
         reporters.push('coverage');
-        transforms.push('browserify-istanbul');
+        transforms = ['browserify-istanbul'].concat(transforms);
     }
 
     config.set({
