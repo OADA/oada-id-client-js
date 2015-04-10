@@ -5,5 +5,5 @@
     "maximumLineLength": 80,
     "requireCapitalizedConstructors": true,
     "disallowEmptyBlocks": true,
-    "excludeFiles": [ "node_modules/**", "coverage/**" ]
+    "excludeFiles": [ "node_modules/**", "coverage/**", "dist/**" ]
 }

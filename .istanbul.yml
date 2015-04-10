@@ -8,4 +8,5 @@ instrumentation:
         - Gruntfile.*
         - gruntfile.*
         - examples/**/*.js
+        - dist/**/*.js
     include-all-sources: true
