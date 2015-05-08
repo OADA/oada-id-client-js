@@ -1,0 +1,9 @@
+{
+    "client_id": "RUSTY_SCHAKLEFORD",
+    "clinet_secret": "SSSH",
+    "foo": "bar",
+    "redirect_uris": [
+        "localhost:3000/redirect1",
+        "localhost:3000/redirect2"
+    ]
+}

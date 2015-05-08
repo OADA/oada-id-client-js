@@ -1,9 +1,10 @@
 [![Build Status](https://travis-ci.org/OADA/oada-id-client-js.svg?branch=master)](https://travis-ci.org/OADA/oada-id-client-js)
+[![Coverage Status](https://coveralls.io/repos/OADA/oada-id-client-js/badge.svg?branch=master)](https://coveralls.io/r/OADA/oada-id-client-js?branch=master)
 [![Dependency Status](https://david-dm.org/oada/oada-id-client-js.svg)](https://david-dm.org/oada/oada-id-client-js)
 [![License](http://img.shields.io/:license-Apache%202.0-green.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 oada-id-client
-============
+==============
 
 JavaScript client library for OADA identity.
 Can be used both in NodeJS and in the browser.
@@ -66,26 +67,20 @@ The value passed to the function can be overridden by a query or form
 parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
-* [`client_id`][] string containing your client's ID
-  (received when the client was registered with an OADA developer discovery
-  provider).
-* [`redirect_uri`][] string containing an absolute URI
-  to which the user's browser will be redirected when the token request
-  finishes.
+* [`metadata`][] object containg client metadata,
+  or string of a [`software_statement`][] JWT
 * `privateKey`
   * `pem` string or buffer containing your client's PEM encoded private RSA
-    key.
+    key
   * [`kid`][] string containing the key ID parameter,
-    for finding the corresponding public key where your client is registered.
-
-[Optional OpenID Connect parameters][oidparams] placed in options as
-string properties will be used (e.g. `display`, `prompt`, `login_hint`).
+    for finding the corresponding public key where your client is registered
+* `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
+  string properties will be used (e.g. `display`, `prompt`, `login_hint`)
 
 #### Usage Example ####
 ```javascript
 var options = {
-    client_id: 'your_clients_client_id',
-    redirect_uri: 'https://some/url/that/calls/handleRedirect()',
+    metadata: { /* See spec linked above */ },
     privateKey: {
         pem: fs.readFileSync('/path/to/key.pem'),
         kid: 'key_id_corresponding_to_pem',
@@ -106,28 +101,22 @@ The value passed to the function can be overridden by a query or form
 parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
-* [`client_id`][] string containing your client's ID
-  (received when the client was registered with an OADA developer discovery
-  provider).
-* [`redirect_uri`][] string containing an absolute URI
-  to which the user's browser will be redirected when the token request
-  finishes.
-* [`scope`][] space separated string of OAuth scopes for the request access
-  token to have.
+* [`metadata`][] object containg client metadata,
+  or string of a [`software_statement`][] JWT
 * `privateKey`
   * `pem` string or buffer containing your client's PEM encoded private RSA
-    key.
+    key
   * [`kid`][] string containing the key ID parameter,
-    for finding the corresponding public key where your client is registered.
-
-[Optional OpenID Connect parameters][oidparams] placed in options as
-string properties will be used (e.g. `display`, `prompt`, `login_hint`).
+    for finding the corresponding public key where your client is registered
+* [`scope`][] space separated string of OAuth scopes for the request access
+  token to have.
+* `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
+  string properties will be used (e.g. `display`, `prompt`, `login_hint`)
 
 #### Usage Example ####
 ```javascript
 var options = {
-    client_id: 'your_clients_client_id',
-    redirect_uri: 'https://some/url/that/calls/handleRedirect()',
+    metadata: { /* See spec linked above */ },
     privateKey: {
         pem: fs.readFileSync('/path/to/key.pem'),
         kid: 'key_id_corresponding_to_pem',
@@ -182,12 +171,10 @@ an OADA identity provider.
 `domain` string of domain with which to log in the user.
 
 `options` object containing at least the following properties:
-* [`client_id`][] string containing your client's ID
-  (received when the client was registered with an OADA developer discovery
-  provider).
-* [`redirect_uri`][] string containing an absolute URI
-  to which the user's browser will be redirected when the token request
-  finishes.
+* [`metadata`][] object containg client metadata,
+  or string of a [`software_statement`][] JWT
+* `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
+  string properties will be used (e.g. `display`, `prompt`, `login_hint`)
 
 [Optional OpenID Connect parameters][oidparams] placed in options as
 string properties will be used (e.g. `display`, `prompt`, `login_hint`).
@@ -197,8 +184,7 @@ string properties will be used (e.g. `display`, `prompt`, `login_hint`).
 #### Usage Example ####
 ```javascript
 var options = {
-    client_id: 'your_clients_client_id',
-    redirect_uri: 'https://some/url/that/calls/handleRedirect()',
+    metadata: { /* See spec linked above */ }
 };
 
 var domain; // Set domain based on text box, dropdown, etc.
@@ -220,25 +206,19 @@ The value passed to the function can be overridden by a query or form
 parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
-* [`client_id`][] string containing your client's ID
-  (received when the client was registered with an OADA developer discovery
-  provider).
-* [`redirect_uri`][] string containing an absolute URI
-  to which the user's browser will be redirected when the token request
-  finishes.
+* [`metadata`][] object containg client metadata,
+  or string of a [`software_statement`][] JWT
 * [`scope`][] space separated string of OAuth scopes for the request access
   token to have.
-
-[Optional OpenID Connect parameters][oidparams] placed in options as
-string properties will be used (e.g. `display`, `prompt`, `login_hint`).
+* `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
+  string properties will be used (e.g. `display`, `prompt`, `login_hint`)
 
 `callback` function of the form `function(err, accessToken)`.
 
 #### Usage Example ####
 ```javascript
 var options = {
-    client_id: 'your_clients_client_id',
-    redirect_uri: 'https://some/url/that/calls/handleRedirect()',
+    metadata: { /* See spec linked above */ },
     scope: 'some.oada.defined.scope',
 };
 
@@ -278,9 +258,12 @@ References
 [in browser example]: examples/browser-client/
 1. [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html)
 [oidparams]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest "OpenID Connect Core 1.0 Section 3.1.2.1"
-2. [OAuth 2.0 Authorization Framework](http://tools.ietf.org/html/rfc6749 "RFC6749")
+1. [OAuth 2.0 Authorization Framework](http://tools.ietf.org/html/rfc6749 "RFC6749")
 [`client_id`]: http://tools.ietf.org/html/rfc6749#section-2.2 "RFC6794 Section 2.2"
 [`redirect_uri`]: http://tools.ietf.org/html/rfc6749#section-3.1.2 "RFC6794 Section 3.1.2"
 [`scope`]: http://tools.ietf.org/html/rfc6749#section-3.3 "RFC6794 Section 3.3"
-3. [JSON Web Key (JWK) Draft 31](https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31)
+1. [JSON Web Key (JWK) Draft 31](https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31)
 [`kid`]: https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.5 "JWK Section 4.5"
+1. [OAuth 2.0 Dynamic Client Registration Protocol](https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg)
+[`metadata`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2 "oauth-dyn-reg Section 2"
+[`software_statement`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2.3 "oauth-dyn-reg Section 2.3"

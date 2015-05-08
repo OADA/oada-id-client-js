@@ -21,17 +21,48 @@ var URI = require('URIjs');
 var objectAssign = require('object-assign');
 var jwt = require('jsonwebtoken');
 var jwku = require('jwks-utils');
-var pem = require('rsa-pem-from-mod-exp');
+var jwk2pem = require('pem-jwk').jwk2pem;
 var crypto = require('crypto');
-var clientSecret = require('oada-client-secret');
+var clientAuth = require('jwt-bearer-client-auth');
+var register = require('oauth-dyn-reg');
 
 var core = {};
 
 var options = {};
 var stuff = {};
 
+function mergeOptions() {
+    var args = Array.prototype.concat.apply([{}], arguments);
+    var options;
+
+    options = objectAssign.apply(null, args);
+
+    var argParams = args.filter(function(arg) {
+        return arg && arg.hasOwnProperty('params');
+    }).map(function(arg) {
+        return arg.params;
+    });
+    if (argParams.length) {
+        options.params = objectAssign.apply(null, argParams);
+    }
+
+    options.scope = args
+        .map(function(arg) {
+            return (arg && arg.scope && arg.scope.split(' ')) || [];
+        })
+        .reduce(function(scopes1, scopes2) {
+            return scopes1.concat(scopes2);
+        })
+        .filter(function(scope, ind, scopes) {
+            return scopes.indexOf(scope) === ind;
+        })
+        .join(' ');
+
+    return options;
+}
+
 core.init = function(opts) {
-    objectAssign(options, opts);
+    options = mergeOptions(options, opts);
 };
 
 function storeState(stateObj, callback) {
@@ -78,12 +109,18 @@ core.storeState = storeState;
 core.retrieveState = retrieveState;
 
 function authorize(domain, configuration, parameters, redirect, callback) {
-    var params = objectAssign({}, options, parameters);
-    var key = params.privateKey;
+    var key;
+    var params;
+    var metadata;
+
+    // Get stuff from options object
+    var options = mergeOptions({}, options, parameters);
+    key = options.privateKey;
+    params = objectAssign(options.params, {scope: options.scope});
+    metadata = options.metadata;
 
     // Assume key is PEM ecnoded
     if (key) { key.kty = key.kty || 'PEM'; }
-    delete params.privateKey;
 
     // Should I be passing the error to both?
     var errCallback = combineCallbacks(redirect, callback);
@@ -91,31 +128,46 @@ function authorize(domain, configuration, parameters, redirect, callback) {
     var req =
         request.get('https://' + domain + '/.well-known/' + configuration);
     if (req.buffer) { req.buffer(); }
-    req.end(function(err, resp) {
+    req.end(function configurationCallback(err, resp) {
         var e = err || resp.error;
         if (e) { return errCallback(e); }
 
         try {
             var conf = JSON.parse(resp.text);
-            // Stuff to remember for when redirect is received
-            var stateObj = {
-                key: key,
-                domain: domain,
-                conf: conf,
-                callback: callback,
-                options: params,
-            };
 
-            core.storeState(stateObj, function(err, stateTok) {
-                // Construct authorization redirect
-                var uri = new URI(conf['authorization_endpoint']);
-                uri.addQuery({state: stateTok}).addQuery(params);
-                // Do not send client_secret here
-                uri.removeQuery('client_secret');
+            register(metadata, conf['registration_endpoint'],
+                function registrationCallback(err, resp) {
+                    if (err) { return errCallback(err); }
 
-                // Redirect the user to constructed uri
-                return redirect(err, uri && uri.toString());
-            });
+                    // Is this a good way to pick?
+                    params['redirect_uri'] =
+                        options.redirect || resp['redirect_uris'][0];
+
+                    // Stuff to remember for when redirect is received
+                    var stateObj = {
+                        key: key,
+                        domain: domain,
+                        conf: conf,
+                        callback: callback,
+                        options: resp,
+                        query: params,
+                    };
+
+                    core.storeState(stateObj, function(err, stateTok) {
+                        // Construct authorization redirect
+                        var uri = new URI(conf['authorization_endpoint']);
+                        uri
+                            .addQuery({state: stateTok})
+                            .addQuery(params)
+                            .addQuery({'client_id': resp['client_id']});
+                        // Do not send client_secret here
+                        uri.removeQuery('client_secret');
+
+                        // Redirect the user to constructed uri
+                        return redirect(err, uri && uri.toString());
+                    });
+                }
+            );
         } catch (err) {
             return errCallback(err);
         }
@@ -124,15 +176,17 @@ function authorize(domain, configuration, parameters, redirect, callback) {
 
 core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
     var configuration = 'openid-configuration';
-    var params = objectAssign({scope: ''}, opts);
-
+    var response = process.browser ? 'id_token' : 'code';
     // Make sure we have openid scope
-    if (params.scope.split(' ').indexOf('openid') === -1) {
-        params.scope += ' openid';
-    }
+    var params = mergeOptions(
+        {
+            scope: 'openid',
+            params: {'response_type': response}
+        }, opts
+    );
 
     // Add nonce
-    params.nonce = crypto.randomBytes(12)
+    params.params.nonce = crypto.randomBytes(12)
         .toString('base64')
             .replace(/\+/g, '-')
             .replace(/\//g, '_')
@@ -143,7 +197,13 @@ core.getIDToken = function getIDToken(domain, opts, redirect, cb) {
 
 core.getAccessToken = function getAccessToken(domain, opts, redirect, cb) {
     var configuration = 'oada-configuration';
-    var params = objectAssign({scope: ''}, opts);
+    var response = process.browser ? 'token' : 'code';
+    var params = mergeOptions(
+        {
+            scope: '',
+            params: {'response_type': response}
+        }, opts
+    );
 
     authorize(domain, configuration, params, redirect, cb);
 };
@@ -169,28 +229,10 @@ function verifyIDToken(state, params, callback) {
     // This makes it work in IE
     var parameters = objectAssign({}, params);
 
-    var req = request.get(state.conf['jwks_uri']);
-    if (req.buffer) { req.buffer(); }
-    req.end(function(err, resp) {
-        var e = err || resp.error;
-        if (e) { return callback(e, parameters); }
-
-        try {
-            var jwks;
-            try {
-                jwks = JSON.parse(resp.text);
-                if (!jwku.isJWKset(jwks)) { throw new Error(); }
-            } catch (err) {
-                // Give a better error than what JSON.parse throws
-                throw new Error('Could not parse JWKs URI');
-            }
-
-            var jwk = jwku.jwkForSignature(parameters['id_token'], jwks);
-            if (!jwk) {
-                throw new Error('Provided JWKs did not contain ' +
-                        'the JWK for this JWS');
-            }
-            var key = pem(jwk.n, jwk.e);
+    return jwku.jwkForSignature(parameters['id_token'], state.conf['jwks_uri'],
+        function(err, jwk) {
+            if (err) { return callback(err); }
+            var key = jwk2pem(jwk);
 
             var opts = {
                 audience: state.options['client_id'],
@@ -199,8 +241,8 @@ function verifyIDToken(state, params, callback) {
             jwt.verify(parameters['id_token'], key, opts, function(err, token) {
                 if (!err) {
                     // Check nonce
-                    if (state.options.nonce === token.nonce) {
-                        parameters['id_token'] = token;
+                    if (state.query.nonce === token.nonce) {
+                        parameters = token;
                     } else {
                         err = new Error('Nonces did not match');
                     }
@@ -208,10 +250,7 @@ function verifyIDToken(state, params, callback) {
 
                 return callback(err, parameters);
             });
-        } catch (err) {
-            return callback(err, parameters);
-        }
-    });
+        });
 }
 
 function exchangeCode(state, parameters, callback) {
@@ -219,20 +258,23 @@ function exchangeCode(state, parameters, callback) {
         return verifyIDToken(state, parameters, callback);
     }
 
-    // Use the provided client_secret, else generate one as per OADA
-    var secret = state.options['client_secret'] ||
-        clientSecret.generate(
+    var assertion = clientAuth.generate(
             state.key,
             state.options['client_id'],
+            state.options['client_id'],
             state.conf['token_endpoint'],
-            parameters.code);
+            60,
+            {payload: {jti: parameters.code}}
+    );
 
     var params = {
         'grant_type': 'authorization_code',
-        'redirect_uri': state.options['redirect_uri'],
-        'client_secret': secret,
+        'redirect_uri': state.query['redirect_uri'],
+        'client_assertion': assertion,
+        'client_assertion_type':
+            'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
         'client_id': state.options['client_id'],
-        'code': parameters.code,
+        'code': parameters.code
     };
 
     request.post(state.conf['token_endpoint'])
@@ -254,8 +296,10 @@ function exchangeCode(state, parameters, callback) {
 }
 
 // TODO: Should I be able to register callbacks in two places?
-core.handleRedirect = function handleRedirect(parameters, callback) {
-    var stateTok = parameters.state;
+core.handleRedirect = function handleRedirect(params, callback) {
+    var stateTok = params.state;
+    var parameters = objectAssign({}, params);
+    delete parameters.state;
 
     core.retrieveState(stateTok, function(err, stateObj) {
         var cb = combineCallbacks(stateObj && stateObj.callback, callback);
