@@ -23,7 +23,30 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js'></script>
     <script>
         var options = {
-            metadata: 'eyJqa3UiOiJodHRwczovL2lkZW50aXR5Lm9hZGEtZGV2LmNvbS9jZXJ0cyIsImtpZCI6ImtqY1NjamMzMmR3SlhYTEpEczNyMTI0c2ExIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJyZWRpcmVjdF91cmlzIjpbImh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9yZWRpcmVjdC5odG1sIl0sInRva2VuX2VuZHBvaW50X2F1dGhfbWV0aG9kIjoidXJuOmlldGY6cGFyYW1zOm9hdXRoOmNsaWVudC1hc3NlcnRpb24tdHlwZTpqd3QtYmVhcmVyIiwiZ3JhbnRfdHlwZXMiOlsiaW1wbGljaXQiXSwicmVzcG9uc2VfdHlwZXMiOlsidG9rZW4iLCJpZF90b2tlbiIsImlkX3Rva2VuIHRva2VuIl0sImNsaWVudF9uYW1lIjoiT0FEQSBJRCBFeGFtcGxlIEJyb3dzZXIgQ2xpZW50IiwiY2xpZW50X3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwNyIsImNvbnRhY3RzIjpbIkluZm8gPGluZm9Ab3BlbmFnLmlvPiJdLCJwb2xpY3lfdXJpIjoiaHR0cDovL2xvY2FsaG9zdDozMDA3L3B1Yy5odG1sIiwidG9zX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9wdWMuaHRtbCIsImxpY2Vuc2VzIjpbeyJpZCI6Im9hZGEtMS4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2MS4wIn0seyJpZCI6Im9hZGEtMi4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2Mi4wIn1dLCJqd2tzX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9jZXJ0cyIsInNvZnR3YXJlX2lkIjoiNjQ1OTllNTItNmIxNi00MzZlLThjN2MtODgwYTQ2ZGEzZDcwIiwicmVnaXN0cmF0aW9uX3Byb2l2ZGVyIjoiaHR0cHM6Ly9pZGVudGl0eS5vYWRhLWRldi5jb20iLCJpYXQiOjE0NTc5NzM3OTN9.SESOCLatSDplOWKg7X-bNHU6JWuqs9es4jlHa-u1qcdKnNxC-G0RQzW6T9HLPYmJ21dvvhiDuKpFY16BH5j9SHmCIMP6JjHuUfbHNiyrBkIPzEYvHo9PdoEQZoigeMunW6MOAMJZN2k1VBhcXRsgRII-6tiA0GlAxxyeksMSd-A',
+            metadata: 'eyJqa3UiOiJodHRwczovL2lkZW50aXR5Lm9hZGEtZGV2LmNvbS9jZX' +
+                      'J0cyIsImtpZCI6ImtqY1NjamMzMmR3SlhYTEpEczNyMTI0c2ExIiwi' +
+                      'dHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJyZWRpcmVjdF91cml' +
+                      'zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9yZWRpcmVjdC5odG1sI' +
+                      'l0sInRva2VuX2VuZHBvaW50X2F1dGhfbWV0aG9kIjoidXJuOmlldGY' +
+                      '6cGFyYW1zOm9hdXRoOmNsaWVudC1hc3NlcnRpb24tdHlwZTpqd3QtY' +
+                      'mVhcmVyIiwiZ3JhbnRfdHlwZXMiOlsiaW1wbGljaXQiXSwicmVzcG9' +
+                      'uc2VfdHlwZXMiOlsidG9rZW4iLCJpZF90b2tlbiIsImlkX3Rva2VuI' +
+                      'HRva2VuIl0sImNsaWVudF9uYW1lIjoiT0FEQSBJRCBFeGFtcGxlIEJ' +
+                      'yb3dzZXIgQ2xpZW50IiwiY2xpZW50X3VyaSI6Imh0dHA6Ly9sb2Nhb' +
+                      'Ghvc3Q6MzAwNyIsImNvbnRhY3RzIjpbIkluZm8gPGluZm9Ab3BlbmF' +
+                      'nLmlvPiJdLCJwb2xpY3lfdXJpIjoiaHR0cDovL2xvY2FsaG9zdDozM' +
+                      'DA3L3B1Yy5odG1sIiwidG9zX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q' +
+                      '6MzAwNy9wdWMuaHRtbCIsImxpY2Vuc2VzIjpbeyJpZCI6Im9hZGEtM' +
+                      'S4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2MS4wIn0seyJpZCI6Im9' +
+                      'hZGEtMi4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2Mi4wIn1dLCJqd' +
+                      '2tzX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9jZXJ0cyIsInN' +
+                      'vZnR3YXJlX2lkIjoiNjQ1OTllNTItNmIxNi00MzZlLThjN2MtODgwY' +
+                      'TQ2ZGEzZDcwIiwicmVnaXN0cmF0aW9uX3Byb2l2ZGVyIjoiaHR0cHM' +
+                      '6Ly9pZGVudGl0eS5vYWRhLWRldi5jb20iLCJpYXQiOjE0NTc5NzM3O' +
+                      'TN9.SESOCLatSDplOWKg7X-bNHU6JWuqs9es4jlHa-u1qcdKnNxC-G' +
+                      '0RQzW6T9HLPYmJ21dvvhiDuKpFY16BH5j9SHmCIMP6JjHuUfbHNiyr' +
+                      'BkIPzEYvHo9PdoEQZoigeMunW6MOAMJZN2k1VBhcXRsgRII-6tiA0G' +
+                      'lAxxyeksMSd-A',
             scope: 'bookmarks.machines.harvesters',
             params: {
                 // Make it always ask for consent again
