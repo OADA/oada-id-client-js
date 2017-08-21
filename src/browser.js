@@ -17,7 +17,7 @@
 'use strict';
 
 // TODO: URIjs is:ta big, find smaller alternative
-var URI = require('URIjs');
+var URI = require('urijs');
 var objectAssign = require('object-assign');
 var core = require('./core.js');
 
