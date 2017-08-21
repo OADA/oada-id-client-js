@@ -17,7 +17,7 @@
 
 var request = require('superagent');
 // TODO: URIjs is big, find smaller alternative
-var URI = require('URIjs');
+var URI = require('urijs');
 var objectAssign = require('object-assign');
 var jwt = require('jsonwebtoken');
 var jwku = require('jwks-utils');
