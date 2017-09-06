@@ -48,7 +48,7 @@
     "index.js": "./src/browser.js"
   },
   "dependencies": {
-    "URIjs": "^1.13.2",
+    "urijs": "^1.18.12",
     "jsonwebtoken": "^5.0.0",
     "jwks-utils": "^1.0.2",
     "jws": "^3.0.0",
