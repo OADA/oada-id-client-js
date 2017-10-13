@@ -242,7 +242,7 @@ function verifyIDToken(state, params, callback) {
                 if (!err) {
                     // Check nonce
                     if (state.query.nonce === token.nonce) {
-                        parameters = token;
+                        parameters['id_token'] = token;
                     } else {
                         err = new Error('Nonces did not match');
                     }
