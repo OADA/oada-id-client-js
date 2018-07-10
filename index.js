@@ -17,4 +17,6 @@ module.exports = require('./src/core');
 
 module.exports.browser = require('./src/browser');
 
+module.exports.node = require('./src/node-browser');
+
 module.exports.middleware = require('./src/middleware');

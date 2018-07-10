@@ -26,6 +26,7 @@ var browser = {};
 browser.init = core.init;
 
 function popUpRedirect(authFun, opts) {
+
     return function(domain, options, callback) {
         var params = objectAssign({display: 'popup'}, opts, options);
         var win = window.open(
