@@ -11,7 +11,9 @@ function hostLogin(domain, options) {
         var server = http.createServer(function(req, res) {
 
             if (/favicon/.test(req.url)) {
-                res.status(404).send("Not found.");
+                res.statusCode = 404;
+                res.statusMessage = "Not found";
+                res.end();
                 return;
             }
 

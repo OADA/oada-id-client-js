@@ -25,6 +25,10 @@
         var callback = function(err, token) {
             'use strict';
 
+            function closeListener () {
+                window.close();
+            }
+
             if (err) {
                 if (console && (typeof console.dir === 'function')) {
                     console.dir(err);
@@ -38,8 +42,10 @@
                 JSON.stringify(token, undefined, 4);
             hljs.highlightBlock(block);
 
-            window.location = '/somefile?access_token='+token.access_token;
-
+            var oReq = new XMLHttpRequest();
+            oReq.addEventListener("loadstart", closeListener);
+            oReq.open("GET", '/somefile?access_token='+token.access_token);
+            oReq.send();
         };
     </script>
 </head>
