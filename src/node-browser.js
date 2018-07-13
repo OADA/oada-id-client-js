@@ -10,6 +10,11 @@ function hostLogin(domain, options) {
     return new Promise(function(resolve) {
         var server = http.createServer(function(req, res) {
 
+            if (/favicon/.test(req.url)) {
+                res.status(404).send("Not found.");
+                return;
+            }
+
             if (/^\/somefile/.test(req.url)) {
                 var urlObj = url.parse(req.url, true);
                 server.close();

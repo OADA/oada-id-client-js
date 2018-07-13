@@ -49,6 +49,7 @@
     "index.js": "./src/browser.js"
   },
   "dependencies": {
+    "grunt-parallel": "^0.5.1",
     "jsonwebtoken": "^5.0.0",
     "jwks-utils": "^1.0.2",
     "jws": "^3.0.0",
