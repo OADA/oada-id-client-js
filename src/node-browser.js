@@ -1,5 +1,5 @@
 'use strict';
-var opn = require('opn');
+var opn = require('open');
 var http = require('http');
 var fs = require('fs');
 var url = require('url');
