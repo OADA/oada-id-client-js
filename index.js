@@ -13,10 +13,10 @@
  * limitations under the License.
  */
 
-module.exports = require('./src/core');
+module.exports = require('./src/core')
 
-module.exports.browser = require('./src/browser');
+module.exports.browser = require('./src/browser')
 
-module.exports.node = require('./src/node-browser');
+module.exports.node = require('./src/node-browser')
 
-module.exports.middleware = require('./src/middleware');
+module.exports.middleware = require('./src/middleware')

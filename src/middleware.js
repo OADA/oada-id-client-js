@@ -13,53 +13,59 @@
  * limitations under the License.
  */
 
-'use strict';
+'use strict'
 
-var objectAssign = require('object-assign');
-var core = require('./core');
+var objectAssign = require('object-assign')
+var core = require('./core')
 
-var middleware = {};
+var middleware = {}
 
 // TODO: I am not sure having a callback is very middleware...
-middleware.getIDToken = function(domain, options) {
-    var params = objectAssign({}, options);
+middleware.getIDToken = function (domain, options) {
+  var params = objectAssign({}, options)
 
-    return function(req, res, next) {
-        var dom = req.param('domain') || domain;
-        params.scope = req.param('scope') || params.scope;
+  return function (req, res, next) {
+    var dom = req.param('domain') || domain
+    params.scope = req.param('scope') || params.scope
 
-        core.getIDToken(dom, params, function(err, uri) {
-            if (err) { return next(err); }
+    core.getIDToken(dom, params, function (err, uri) {
+      if (err) {
+        return next(err)
+      }
 
-            return res.redirect(302, uri);
-        });
-    };
-};
+      return res.redirect(302, uri)
+    })
+  }
+}
 
-middleware.getAccessToken = function(domain, options) {
-    var params = objectAssign({}, options);
+middleware.getAccessToken = function (domain, options) {
+  var params = objectAssign({}, options)
 
-    return function(req, res, next) {
-        var dom = req.param('domain') || domain;
-        params.scope = req.param('scope') || params.scope;
+  return function (req, res, next) {
+    var dom = req.param('domain') || domain
+    params.scope = req.param('scope') || params.scope
 
-        core.getAccessToken(dom, params, function(err, uri) {
-            if (err) { return next(err); }
+    core.getAccessToken(dom, params, function (err, uri) {
+      if (err) {
+        return next(err)
+      }
 
-            return res.redirect(302, uri);
-        });
-    };
-};
+      return res.redirect(302, uri)
+    })
+  }
+}
 
-middleware.handleRedirect = function() {
-    return function(req, res, next) {
-        core.handleRedirect(req.query, function(err, token) {
-            if (err) { return next(err); }
+middleware.handleRedirect = function () {
+  return function (req, res, next) {
+    core.handleRedirect(req.query, function (err, token) {
+      if (err) {
+        return next(err)
+      }
 
-            req.token = token;
-            next();
-        });
-    };
-};
+      req.token = token
+      next()
+    })
+  }
+}
 
-module.exports = middleware;
+module.exports = middleware

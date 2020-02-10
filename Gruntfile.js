@@ -13,111 +13,89 @@
  * limitations under the License.
  */
 
-'use strict';
+'use strict'
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
+  // This automatically loads grunt tasks from node_modules
+  require('load-grunt-tasks')(grunt)
+  // This installs timers so you can monitor how log each step takes
+  require('time-grunt')(grunt)
 
-    // This automatically loads grunt tasks from node_modules
-    require('load-grunt-tasks')(grunt);
-    // This installs timers so you can monitor how log each step takes
-    require('time-grunt')(grunt);
-
-    // All the project JS files
-    var jsFiles = [
-        'Gruntfile.js',
-        'test/**/*.js',
-        'examples/**/*.js',
-        'src/**/*.js',
-        'index.js',
-    ];
-    // All the project HTML files
-    var htmlFiles = [
-        'examples/**/*.html',
-        'index.html',
-    ];
-
-    // Project configuration.
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        // grunt-contrib-watch
-        watch: {
-            build: {
-                // only rebuild when our core when our app changes
-                files: ['src/**/*.js'],
-                tasks: ['browserify'],
-            },
-            concat: {
-                // automatically reconcatenate
-                files: ['tmp/*browserify.js'],
-                tasks: ['concat']
-            },
-            //livereload: {
-            //    files: ['dist/**/*', 'examples/**/*', 'src/**/*'],
-            //    options: {
-            //        livereload: true,
-            //    },
-            //},
+  // Project configuration.
+  grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
+    // grunt-contrib-watch
+    watch: {
+      build: {
+        // only rebuild when our core when our app changes
+        files: ['src/**/*.js'],
+        tasks: ['browserify']
+      },
+      concat: {
+        // automatically reconcatenate
+        files: ['tmp/*browserify.js'],
+        tasks: ['concat']
+      }
+      // livereload: {
+      //     files: ['dist/**/*', 'examples/**/*', 'src/**/*'],
+      //     options: {
+      //         livereload: true,
+      //     },
+      // },
+    },
+    // grunt-browserify
+    browserify: {
+      // The main browserify build
+      main: {
+        files: {
+          // Build from the main entry point into a temp folder
+          'dist/main.browserify.js': ['src/browser.js']
         },
-        // grunt-browserify
-        browserify: {
-            // The main browserify build
-            main: {
-                files: {
-                    // Build from the main entry point into a temp folder
-                    'dist/main.browserify.js': ['src/browser.js']
-                },
-                options: {
-                    browserifyOptions: {
-                        standalone: 'oadaIdClient'
-                    },
-                    external: [
-                    ],
-                },
-            },
-            // The minified main browserify build
-            mainMin: {
-                files: {
-                    // Build from the main entry point into a temp folder
-                    'dist/main.browserify.min.js': ['src/browser.js']
-                },
-                options: {
-                    transform: [['uglifyify', {global: true}]],
-                    browserifyOptions: {
-                        standalone: 'oadaIdClient'
-                    },
-                    external: [
-                    ],
-                },
-            },
+        options: {
+          browserifyOptions: {
+            standalone: 'oadaIdClient'
+          },
+          external: []
+        }
+      },
+      // The minified main browserify build
+      mainMin: {
+        files: {
+          // Build from the main entry point into a temp folder
+          'dist/main.browserify.min.js': ['src/browser.js']
         },
-        // grunt-express
-        express: {
-            livereloadServer: {
-                options: {
-                    server: './examples/server-client/server-client.js',
-                    bases: [
-                        './dist/',
-                        './examples/server-client/',
-                        './examples/browser-client/',
-                    ],
-                    port: grunt.option('port') || 3007,
-                    livereload: true,
-                    serverreload: true,
-                },
-            },
-        },
-    });
+        options: {
+          transform: [['uglifyify', { global: true }]],
+          browserifyOptions: {
+            standalone: 'oadaIdClient'
+          },
+          external: []
+        }
+      }
+    },
+    // grunt-express
+    express: {
+      livereloadServer: {
+        options: {
+          server: './examples/server-client/server-client.js',
+          bases: [
+            './dist/',
+            './examples/server-client/',
+            './examples/browser-client/'
+          ],
+          port: grunt.option('port') || 3007,
+          livereload: true,
+          serverreload: true
+        }
+      }
+    }
+  })
 
-    // Default task.    Build, start the server, and watch files for changes
-    grunt.registerTask('default', [
-        'build',
-        'watch',
-    ]);
-    // Build task.    Compile templates, browserify, and concat
-    grunt.registerTask('build', 'Create distribution versions',
-        ['browserify']);
+  // Default task.    Build, start the server, and watch files for changes
+  grunt.registerTask('default', ['build', 'watch'])
+  // Build task.    Compile templates, browserify, and concat
+  grunt.registerTask('build', 'Create distribution versions', ['browserify'])
 
-    // Run the examples of using the library
-    grunt.registerTask('demo', 'Run the usage examples', ['express']);
-
-};
+  // Run the examples of using the library
+  grunt.registerTask('demo', 'Run the usage examples', ['express'])
+}

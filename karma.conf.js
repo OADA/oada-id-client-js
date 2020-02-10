@@ -13,67 +13,64 @@
  * limitations under the License.
  */
 
-'use strict';
+'use strict'
 
-require('./test/setup.js');
+require('./test/setup.js')
 
-var args = require('yargs').argv;
+var args = require('yargs').argv
 
-module.exports = function(config) {
-    var reporters = ['mocha'];
-    var transforms = ['brfs', 'rewireify'];
+module.exports = function (config) {
+  var reporters = ['mocha']
+  var transforms = ['brfs', 'rewireify']
 
-    if (args.cover) {
-        reporters.push('coverage');
-        transforms = ['browserify-istanbul'].concat(transforms);
-    }
+  if (args.cover) {
+    reporters.push('coverage')
+    transforms = ['browserify-istanbul'].concat(transforms)
+  }
 
-    config.set({
-        basePath: '',
+  config.set({
+    basePath: '',
 
-        frameworks: ['mocha', 'browserify', 'phantomjs-shim'],
+    frameworks: ['mocha', 'browserify', 'phantomjs-shim'],
 
-        files: [
-            'test/**/*.test.js'
-        ],
+    files: ['test/**/*.test.js'],
 
-        exclude: [
-        ],
+    exclude: [],
 
-        preprocessors: {
-            'test/**/*.test.js': ['browserify']
-        },
+    preprocessors: {
+      'test/**/*.test.js': ['browserify']
+    },
 
-        browserify: {
-            debug: true,
-            transform: transforms
-        },
+    browserify: {
+      debug: true,
+      transform: transforms
+    },
 
-        reporters: reporters,
+    reporters: reporters,
 
-        coverageReporter: {
-            type: 'lcov',
-            dir: 'coverage/',
-            subdir: '.'
-        },
+    coverageReporter: {
+      type: 'lcov',
+      dir: 'coverage/',
+      subdir: '.'
+    },
 
-        port: 9876,
+    port: 9876,
 
-        colors: true,
+    colors: true,
 
-        logLevel: config.LOG_INFO,
+    logLevel: config.LOG_INFO,
 
-        autoWatch: true,
+    autoWatch: true,
 
-        customLaunchers: {
-            PhantomJSignoreSSL: {
-                base: 'PhantomJS',
-                flags: ['--ignore-ssl-errors=yes']
-            }
-        },
+    customLaunchers: {
+      PhantomJSignoreSSL: {
+        base: 'PhantomJS',
+        flags: ['--ignore-ssl-errors=yes']
+      }
+    },
 
-        browsers: ['PhantomJSignoreSSL'],
+    browsers: ['PhantomJSignoreSSL'],
 
-        singleRun: true
-    });
-};
+    singleRun: true
+  })
+}
