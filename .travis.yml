@@ -4,7 +4,6 @@ node_js:
 - '0.11'
 - '0.12'
 - node
-- iojs
 env:
 - TEST=cover
 matrix:
@@ -27,8 +26,6 @@ deploy:
 before_install:
 - npm install -g coveralls
 script:
-- npm run lint
-- npm run style
 - npm run $TEST
 after_success:
 - cat ./coverage/lcov.info | coveralls --verbose

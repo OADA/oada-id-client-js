@@ -18,7 +18,7 @@
 
 var sinon = require('sinon')
 var expect = require('chai').expect
-var URI = require('URIjs')
+var URI = require('urijs')
 var objectAssign = require('object-assign')
 
 var metadata = require('./metadata.json')

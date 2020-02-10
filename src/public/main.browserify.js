@@ -26909,14 +26909,15 @@ module.exports={
   "_args": [
     [
       "elliptic@6.5.2",
-      "C:\\Users\\alex\\source\\oada-cache"
+      "C:\\Users\\alex\\source\\oada-id-client-js"
     ]
   ],
+  "_development": true,
   "_from": "elliptic@6.5.2",
   "_id": "elliptic@6.5.2",
   "_inBundle": false,
   "_integrity": "sha512-f4x70okzZbIQl/NSRLkI/+tteV/9WqL98zx+SQ69KbXxmVrmjwsNUPn/gYJJ0sHvEak24cZgHIPegRePAtA/xw==",
-  "_location": "/oada-id-client/elliptic",
+  "_location": "/elliptic",
   "_phantomChildren": {},
   "_requested": {
     "type": "version",
@@ -26929,12 +26930,12 @@ module.exports={
     "fetchSpec": "6.5.2"
   },
   "_requiredBy": [
-    "/oada-id-client/browserify-sign",
-    "/oada-id-client/create-ecdh"
+    "/browserify-sign",
+    "/create-ecdh"
   ],
   "_resolved": "https://registry.npmjs.org/elliptic/-/elliptic-6.5.2.tgz",
   "_spec": "6.5.2",
-  "_where": "C:\\Users\\alex\\source\\oada-cache",
+  "_where": "C:\\Users\\alex\\source\\oada-id-client-js",
   "author": {
     "name": "Fedor Indutny",
     "email": "fedor@indutny.com"

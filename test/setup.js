@@ -20,7 +20,7 @@ var cors = require('cors')
 var bodyParser = require('body-parser')
 var https = require('https')
 var fs = require('fs')
-var URI = require('URIjs')
+var URI = require('urijs')
 var jwt = require('jsonwebtoken')
 
 var configuration = require('./configuration.json')

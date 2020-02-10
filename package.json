@@ -6,9 +6,9 @@
   "scripts": {
     "prepublish": "grunt build",
     "test": "mocha",
-    "browser-test": "./node_modules/karma/bin/karma start --single-run",
+    "browser-test": "karma start --single-run",
     "cover": "istanbul cover _mocha",
-    "browser-cover": "./node_modules/karma/bin/karma start --single-run --cover",
+    "browser-cover": "karma start --single-run --cover",
     "dev": "cpx --watch --verbose './' '../oada-cache/node_modules/oada-id-client'",
     "clean": "rm -rf ./coverage"
   },
