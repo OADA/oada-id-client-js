@@ -19,12 +19,6 @@
     "require": "./test/setup.js",
     "recursive": true
   },
-  "pre-commit": [
-    "lint",
-    "style",
-    "test",
-    "browser-test"
-  ],
   "directories": {
     "lib": "src",
     "test": "test",
@@ -98,7 +92,6 @@
     "load-grunt-tasks": "^5.1.0",
     "lodash": "^4.17.15",
     "mocha": "^7.0.1",
-    "pre-commit": "^1.0.6",
     "prettier-standard": "^16.1.0",
     "rewire": "^4.0.1",
     "rewireify": "^0.2.5",
