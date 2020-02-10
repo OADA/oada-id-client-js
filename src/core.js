@@ -203,7 +203,10 @@ core.getIDToken = function getIDToken (domain, opts, redirect, cb) {
     .replace(/\//g, '_')
     .replace(/=/g, '')
 
-  authorize(domain, configuration, params, redirect, cb)
+  authorize(domain, configuration, params, redirect, function (err, tok) {
+    // return only id_token
+    return cb && cb(err, tok && tok.id_token)
+  })
 }
 
 core.getAccessToken = function getAccessToken (domain, opts, redirect, cb) {

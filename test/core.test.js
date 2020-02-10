@@ -189,7 +189,9 @@ describe('core.js', function () {
 
             core.handleRedirect(params, function (err, tok) {
               expect(err).to.be.not.ok
-              expect(tok).to.deep.equal(t)
+              expect(tok).to.deep.equal(
+                method === 'getIDToken' ? { id_token: t } : t
+              )
               done()
             })
           })
