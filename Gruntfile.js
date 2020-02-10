@@ -39,58 +39,8 @@ module.exports = function(grunt) {
     // Project configuration.
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
-        // grunt-contrib-jshint
-        jshint: {
-            options: {
-                jshintrc: true,
-            },
-            js: {
-                src: jsFiles,
-            },
-            html: {
-                src: htmlFiles,
-                options: {
-                    extensions: 'htm html',
-                    extract: 'always',
-                    browser: true,
-                },
-            },
-        },
-        lint5: {
-            dirPath: '.',
-            templates: grunt.file.expand(htmlFiles),
-        },
-        jscs: {
-            all: {
-                src: jsFiles,
-                options: {
-                    config: './.jscsrc',
-                },
-            },
-        },
         // grunt-contrib-watch
         watch: {
-            jsLint: {
-                files: jsFiles,
-                // grunt-newer is also included.
-                // It will dynamically modify the jshint
-                // config so only files that changed will be linted
-                tasks: ['newer:jshint:js'],
-            },
-            htmlLint: {
-                files: htmlFiles,
-                // grunt-newer is also included.
-                // It will dynamically modify the jshint
-                // config so only files that changed will be linted
-                tasks: ['newer:jshint:html'],
-            },
-            style: {
-                files: jsFiles,
-                // grunt-newer is also included.
-                // It will dynamically modify the jscs
-                // config so only files that changed will be linted
-                tasks: ['newer:jscs:all'],
-            },
             build: {
                 // only rebuild when our core when our app changes
                 files: ['src/**/*.js'],
@@ -160,17 +110,12 @@ module.exports = function(grunt) {
 
     // Default task.    Build, start the server, and watch files for changes
     grunt.registerTask('default', [
-        'lint',
-        'style',
         'build',
         'watch',
     ]);
     // Build task.    Compile templates, browserify, and concat
     grunt.registerTask('build', 'Create distribution versions',
         ['browserify']);
-
-    grunt.registerTask('lint', 'Lint the project files', ['jshint', 'lint5']);
-    grunt.registerTask('style', 'Style check the project files', ['jscs']);
 
     // Run the examples of using the library
     grunt.registerTask('demo', 'Run the usage examples', ['express']);
