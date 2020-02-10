@@ -49,7 +49,10 @@ module.exports = function (grunt) {
       main: {
         files: {
           // Build from the main entry point into a temp folder
-          'dist/main.browserify.js': ['src/browser.js']
+          'dist/main.browserify.js': ['src/browser.js'],
+          // Not sure what these are about??
+          'src/public/main.browserify.js': ['src/browser.js'],
+          'src/public/oauth2/main.browserify.js': ['src/browser.js']
         },
         options: {
           browserifyOptions: {
