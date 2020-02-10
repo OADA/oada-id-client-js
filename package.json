@@ -48,13 +48,13 @@
     "index.js": "./src/browser.js"
   },
   "dependencies": {
+    "@oada/oada-certs": "^1.0.2",
     "bluebird": "^3.7.2",
     "grunt-parallel": "^0.5.1",
     "jsonwebtoken": "^8.5.1",
-    "jwks-utils": "^1.0.2",
     "jws": "^4.0.0",
-    "jwt-bearer-client-auth": "^0.4.0",
-    "oauth-dyn-reg": "^1.0.1",
+    "jwt-bearer-client-auth": "^1.0.0",
+    "oauth-dyn-reg": "^1.0.2",
     "object-assign": "^4.1.1",
     "open": "^7.0.2",
     "pem-jwk": "^2.0.0",

@@ -30,7 +30,7 @@ describe('core.js', function () {
   var core
 
   before(function stubSignature () {
-    sinon.stub(require('jwks-utils'), 'jwkForSignature').yields(null, {})
+    sinon.stub(require('@oada/oada-certs').jwksutils, 'jwkForSignature').yields(null, {})
     sinon.stub(require('pem-jwk'), 'jwk2pem').returns('PEM')
   })
 
