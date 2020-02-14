@@ -30,18 +30,16 @@ describe('core.js', function () {
   var core
 
   before(function stubSignature () {
-    sinon.stub(require('@oada/oada-certs').jwksutils, 'jwkForSignature').yields(null, {})
+    sinon
+      .stub(require('@oada/oada-certs').jwksutils, 'jwkForSignature')
+      .yields(null, {})
     sinon.stub(require('pem-jwk'), 'jwk2pem').returns('PEM')
   })
 
   before(function loadModule () {
     // TODO: Figure out something less gross with rewire
-    if (process.browser) {
-      core = require('../src/core.js')
-    } else {
-      var rewire = require('rewire')
-      core = rewire('../src/core.js')
-    }
+    var rewire = require('rewire')
+    core = rewire('../src/core.js')
   })
 
   before(function stubRegister () {

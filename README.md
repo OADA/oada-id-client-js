@@ -20,32 +20,16 @@ $ npm install OADA/oada-id-client-js
 ```
 
 ### Browser Code Generation ###
-Grunt is needed to create the browser version of the code.
-If you do not already have it, Grunt can be installed like so:
-```sh
-$ npm install -g grunt-cli
-```
-
 The code to use in the browser can be generated with the following command:
 ```sh
-$ grunt build
+$ npm run bundle
 ```
-This will create the file `dist/main.browserify.min.js`,
-which is a UMD bundle of the browser version of the library functions.
-It will work with most browser module systems,
-or expose a global variable `oadaIdClient` if no module system is present.
+This will create the file `dist/bundle.js`.
 
 Examples
 --------
 * [On Server Example][]
 * [In Browser Example][]
-
-### Running the examples ###
-Run the following command to start an express server on `localhost:3007`
-which server both examples:
-```sh
-$ grunt demo
-```
 
 Connect Style "Middleware" Wrapper Usage
 ----------------------------------------

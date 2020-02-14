@@ -13,38 +13,34 @@
  * limitations under the License.
  */
 
-'use strict'
-
 require('./test/setup.js')
 
-var args = require('yargs').argv
+const Rewire = require('rewire-webpack-plugin')
+const webpack = require('./webpack.config')[0]
+const args = require('yargs').argv
 
+webpack.plugins = [new Rewire()].concat(webpack.plugins || [])
 module.exports = function (config) {
   var reporters = ['mocha']
-  var transforms = ['brfs', 'rewireify']
 
   if (args.cover) {
     reporters.push('coverage')
-    transforms = ['browserify-istanbul'].concat(transforms)
   }
 
   config.set({
     basePath: '',
 
-    frameworks: ['mocha', 'browserify', 'phantomjs-shim'],
+    frameworks: ['mocha'],
 
     files: ['test/**/*.test.js'],
 
     exclude: [],
 
     preprocessors: {
-      'test/**/*.test.js': ['browserify']
+      'test/**/*.test.js': ['webpack']
     },
 
-    browserify: {
-      debug: true,
-      transform: transforms
-    },
+    webpack,
 
     reporters: reporters,
 
@@ -62,14 +58,14 @@ module.exports = function (config) {
 
     autoWatch: true,
 
+    browsers: ['vivaldi'],
     customLaunchers: {
-      PhantomJSignoreSSL: {
-        base: 'PhantomJS',
-        flags: ['--ignore-ssl-errors=yes']
+      vivaldi: {
+        base: 'Vivaldi',
+
+        flags: ['--allow-insecure-localhost']
       }
     },
-
-    browsers: ['PhantomJSignoreSSL'],
 
     singleRun: true
   })

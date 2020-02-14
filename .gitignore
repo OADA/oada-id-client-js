@@ -31,6 +31,7 @@ node_modules
 
 # "Compiled" stuff
 dist
+src/public/bundle.js
 
 # Local yeoman stuff
 .yo-rc.json
