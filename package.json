@@ -8,7 +8,7 @@
     "bundle": "webpack",
     "test": "mocha test/**/*.test.js",
     "browser-test": "karma start --single-run",
-    "cover": "istanbul cover _mocha",
+    "cover": "nyc npm test",
     "browser-cover": "karma start --single-run --cover",
     "dev": "cpx --watch --verbose './' '../oada-cache/node_modules/oada-id-client'",
     "clean": "rm -rf ./coverage"
@@ -27,7 +27,7 @@
   "mocha": {
     "reporter": "spec",
     "ui": "bdd",
-    "timeout": 1000,
+    "timeout": 2000,
     "require": "./test/setup.js",
     "recursive": true,
     "exit": true
@@ -81,7 +81,6 @@
     "colors": "^1.4.0",
     "cors": "^2.5.3",
     "express": "^4.9.0",
-    "istanbul": "^0.4.5",
     "karma": "^4.4.1",
     "karma-coverage": "^2.0.1",
     "karma-mocha": "^1.3.0",
@@ -90,6 +89,7 @@
     "karma-webpack": "^4.0.2",
     "lodash": "^4.17.15",
     "mocha": "^7.0.1",
+    "nyc": "^15.0.0",
     "prettier-standard": "^16.1.0",
     "rewire": "^4.0.1",
     "rewire-webpack-plugin": "^1.0.0",
