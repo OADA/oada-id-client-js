@@ -58,12 +58,19 @@ module.exports = function (config) {
 
     autoWatch: true,
 
-    browsers: ['vivaldi'],
+    // browsers: ['vivaldi'],
     customLaunchers: {
       vivaldi: {
         base: 'Vivaldi',
-
         flags: ['--allow-insecure-localhost']
+      },
+      chrome: {
+        base: 'Chrome',
+        flags: ['--allow-insecure-localhost', '--headless', '--disable-gpu']
+      },
+      firfox: {
+        base: 'Firefox',
+        flags: ['-headless']
       }
     },
 

@@ -1,16 +1,18 @@
 language: node_js
 node_js:
-- '0.10'
-- '0.11'
-- '0.12'
+- lts/*
 - node
 env:
+- MOZ_HEADLESS=1
 - TEST=cover
 matrix:
   include:
   - node_js: node
-    env: TEST=browser-cover
+    env: TEST="browser-cover -- --browsers chrome,firefox"
 sudo: false
+addons:
+    chrome: stable
+    firefox: latest
 before_deploy:
 - npm install -g npm
 deploy:
