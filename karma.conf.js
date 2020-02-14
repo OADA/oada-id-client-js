@@ -65,8 +65,8 @@ module.exports = function (config) {
         flags: ['--allow-insecure-localhost']
       },
       chrome: {
-        base: 'Chrome',
-        flags: ['--allow-insecure-localhost', '--headless', '--disable-gpu']
+        base: 'ChromeHeadless',
+        flags: ['--allow-insecure-localhost', '--disable-gpu']
       },
       firefox: {
         base: 'Firefox',
