@@ -21,10 +21,14 @@ const args = require('yargs').argv
 
 webpack.plugins = [new Rewire()].concat(webpack.plugins || [])
 module.exports = function (config) {
-  var reporters = ['mocha']
+  const reporters = ['mocha']
+  const preprocessors = {
+    'test/**/*.test.js': ['webpack']
+  }
 
   if (args.cover) {
     reporters.push('coverage')
+    preprocessors['src/browser.js'] = ['webpack', 'coverage']
   }
 
   config.set({
@@ -32,13 +36,11 @@ module.exports = function (config) {
 
     frameworks: ['mocha'],
 
-    files: ['test/**/*.test.js'],
+    files: ['src/browser.js', 'test/**/*.test.js'],
 
     exclude: [],
 
-    preprocessors: {
-      'test/**/*.test.js': ['webpack']
-    },
+    preprocessors,
 
     webpack,
 
