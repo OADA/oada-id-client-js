@@ -3,8 +3,7 @@ node_js:
 - lts/*
 - node
 env:
-- MOZ_HEADLESS=1
-- TEST=cover
+- MOZ_HEADLESS=1 TEST=cover
 matrix:
   include:
   - node_js: node
