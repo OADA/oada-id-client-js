@@ -1,6 +1,6 @@
 {
   "name": "@oada/oada-id-client",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "OADA identity client library for Node.JS and Browser",
   "main": "index.js",
   "scripts": {
