@@ -17,6 +17,10 @@ module.exports = require('./src/core')
 
 module.exports.browser = require('./src/browser')
 
-module.exports.node = require('./src/node-browser')
+// You can only include this in node because the "open" library that it uses
+// fails to compile in the browser
+if (typeof process !== 'undefined' && typeof window === 'undefined') {
+  module.exports.node = require('./src/node-browser')
+}
 
 module.exports.middleware = require('./src/middleware')
