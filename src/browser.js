@@ -27,11 +27,6 @@ browser.init = core.init
 function popUpRedirect (authFun, opts) {
   return function (domain, options, callback) {
     var params = objectAssign({ display: 'popup' }, opts, options)
-    var win = window.open(
-      '',
-      '_blank',
-      'width=500,height=400,status,resizable,scrollbars=yes'
-    )
 
     // TODO: Do this differently
     window._oadaIdClientPopUpFunction = core.handleRedirect
@@ -41,10 +36,16 @@ function popUpRedirect (authFun, opts) {
       params,
       function redirect (err, uri) {
         if (err) {
-          return win.close()
+          console.log('Failed to do learn auth endpoint for domain ', domain);
+          // Finish the flow 
+          core.handleRedirect({ error: 'Failed to learn auth endpoint' });
+          return null;
         } // TODO: Do something with err?
-
-        win.location.assign(uri)
+        var win = window.open(
+          uri,
+          '_blank',
+          'width=500,height=400,status,resizable,scrollbars=yes'
+        )
       },
       callback
     )
