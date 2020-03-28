@@ -5,6 +5,7 @@ module.exports = ['dist', 'src/public'].map(dir => ({
   target: 'web',
   output: {
     path: path.resolve(__dirname, dir),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
+    library: 'oadaIdClient'
   }
 }))
