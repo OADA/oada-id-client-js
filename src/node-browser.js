@@ -1,10 +1,11 @@
 'use strict'
-var opn = require('open')
-var http = require('http')
-var fs = require('fs')
-var url = require('url')
-var path = require('path')
-var Promise = require('bluebird')
+const open = require('open')
+const isWsl = require('is-wsl')
+const http = require('http')
+const fs = require('fs')
+const url = require('url')
+const path = require('path')
+const Promise = require('bluebird')
 
 function hostLogin (domain, options) {
   return new Promise(function (resolve) {
@@ -31,12 +32,16 @@ function hostLogin (domain, options) {
         readStream.pipe(res)
       })
       .listen(8000, function () {
-        opn(
+        open(
           'http://localhost:8000/index.html?domain=' +
             JSON.stringify(domain) +
             '&options=' +
             JSON.stringify(options),
-          { url: true }
+          {
+            url: true,
+            // Hack to make open work in WSL
+            app: isWsl && 'wslview'
+          }
         )
       })
   })
