@@ -59,7 +59,7 @@
   "homepage": "https://github.com/OADA/oada-id-client-js",
   "browser": "dist/bundle.js",
   "dependencies": {
-    "@oada/oada-certs": "^1.0.2",
+    "@oada/oada-certs": "^3.1.6",
     "bluebird": "^3.7.2",
     "grunt-parallel": "^0.5.1",
     "jsonwebtoken": "^8.5.1",
@@ -67,13 +67,13 @@
     "jwt-bearer-client-auth": "^1.0.0",
     "oauth-dyn-reg": "^1.0.2",
     "object-assign": "^4.1.1",
-    "open": "^7.0.2",
+    "open": "^7.0.3",
     "pem-jwk": "^2.0.0",
-    "superagent": "^5.2.1",
+    "superagent": "^5.2.2",
     "urijs": "^1.18.12"
   },
   "devDependencies": {
-    "async": "^3.1.1",
+    "async": "^3.2.0",
     "body-parser": "^1.12.2",
     "brfs": "^2.0.2",
     "chai": "^4.2.0",
@@ -90,18 +90,18 @@
     "karma-vivaldi-launcher": "0.0.1",
     "karma-webpack": "^4.0.2",
     "lodash": "^4.17.15",
-    "mocha": "^7.0.1",
+    "mocha": "^7.1.1",
     "nyc": "^15.0.0",
-    "prettier-standard": "^16.1.0",
-    "rewire": "^4.0.1",
+    "prettier-standard": "^16.2.1",
+    "rewire": "^5.0.0",
     "rewire-webpack-plugin": "^1.0.0",
-    "sinon": "^8.1.1",
-    "standard": "^14.3.1",
+    "sinon": "^9.0.1",
+    "standard": "^14.3.3",
     "time-grunt": "^2.0.0",
     "uglifyify": "^5.0.2",
     "wd": "^1.12.1",
-    "webpack": "^4.41.6",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
-    "yargs": "^15.1.0"
+    "yargs": "^15.3.1"
   }
 }
