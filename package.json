@@ -57,7 +57,7 @@
     "url": "https://github.com/OADA/oada-id-client-js/issues"
   },
   "homepage": "https://github.com/OADA/oada-id-client-js",
-  "browser": "dist/bundle.js",
+  "browser": "src/browser.js",
   "dependencies": {
     "@oada/oada-certs": "^3.1.6",
     "bluebird": "^3.7.2",
