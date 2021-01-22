@@ -15,100 +15,118 @@
 -->
 
 <html>
-<head>
+  <head>
     <title>In Browser Usage Example Page</title>
-    <script src=bundle.js></script>
-    <script src=http://medialize.github.io/URI.js/src/URI.js></script>
-    <link rel='stylesheet' href='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css'>
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js'></script>
+    <script src="bundle.js"></script>
+    <script src="http://medialize.github.io/URI.js/src/URI.js"></script>
+    <link
+      rel="stylesheet"
+      href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/styles/default.min.css"
+    />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.2/highlight.min.js"></script>
     <script>
-        var options = {
-            metadata: 'eyJqa3UiOiJodHRwczovL2lkZW50aXR5Lm9hZGEtZGV2LmNvbS9jZX' +
-                      'J0cyIsImtpZCI6ImtqY1NjamMzMmR3SlhYTEpEczNyMTI0c2ExIiwi' +
-                      'dHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJyZWRpcmVjdF91cml' +
-                      'zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9yZWRpcmVjdC5odG1sI' +
-                      'l0sInRva2VuX2VuZHBvaW50X2F1dGhfbWV0aG9kIjoidXJuOmlldGY' +
-                      '6cGFyYW1zOm9hdXRoOmNsaWVudC1hc3NlcnRpb24tdHlwZTpqd3QtY' +
-                      'mVhcmVyIiwiZ3JhbnRfdHlwZXMiOlsiaW1wbGljaXQiXSwicmVzcG9' +
-                      'uc2VfdHlwZXMiOlsidG9rZW4iLCJpZF90b2tlbiIsImlkX3Rva2VuI' +
-                      'HRva2VuIl0sImNsaWVudF9uYW1lIjoiT0FEQSBJRCBFeGFtcGxlIEJ' +
-                      'yb3dzZXIgQ2xpZW50IiwiY2xpZW50X3VyaSI6Imh0dHA6Ly9sb2Nhb' +
-                      'Ghvc3Q6MzAwNyIsImNvbnRhY3RzIjpbIkluZm8gPGluZm9Ab3BlbmF' +
-                      'nLmlvPiJdLCJwb2xpY3lfdXJpIjoiaHR0cDovL2xvY2FsaG9zdDozM' +
-                      'DA3L3B1Yy5odG1sIiwidG9zX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q' +
-                      '6MzAwNy9wdWMuaHRtbCIsImxpY2Vuc2VzIjpbeyJpZCI6Im9hZGEtM' +
-                      'S4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2MS4wIn0seyJpZCI6Im9' +
-                      'hZGEtMi4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2Mi4wIn1dLCJqd' +
-                      '2tzX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9jZXJ0cyIsInN' +
-                      'vZnR3YXJlX2lkIjoiNjQ1OTllNTItNmIxNi00MzZlLThjN2MtODgwY' +
-                      'TQ2ZGEzZDcwIiwicmVnaXN0cmF0aW9uX3Byb2l2ZGVyIjoiaHR0cHM' +
-                      '6Ly9pZGVudGl0eS5vYWRhLWRldi5jb20iLCJpYXQiOjE0NTc5NzM3O' +
-                      'TN9.SESOCLatSDplOWKg7X-bNHU6JWuqs9es4jlHa-u1qcdKnNxC-G' +
-                      '0RQzW6T9HLPYmJ21dvvhiDuKpFY16BH5j9SHmCIMP6JjHuUfbHNiyr' +
-                      'BkIPzEYvHo9PdoEQZoigeMunW6MOAMJZN2k1VBhcXRsgRII-6tiA0G' +
-                      'lAxxyeksMSd-A',
-            scope: 'bookmarks.machines.harvesters',
-            params: {
-                // Make it always ask for consent again
-                prompt: 'consent'
-            }
-        };
+      var options = {
+        metadata:
+          'eyJqa3UiOiJodHRwczovL2lkZW50aXR5Lm9hZGEtZGV2LmNvbS9jZX' +
+          'J0cyIsImtpZCI6ImtqY1NjamMzMmR3SlhYTEpEczNyMTI0c2ExIiwi' +
+          'dHlwIjoiSldUIiwiYWxnIjoiUlMyNTYifQ.eyJyZWRpcmVjdF91cml' +
+          'zIjpbImh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9yZWRpcmVjdC5odG1sI' +
+          'l0sInRva2VuX2VuZHBvaW50X2F1dGhfbWV0aG9kIjoidXJuOmlldGY' +
+          '6cGFyYW1zOm9hdXRoOmNsaWVudC1hc3NlcnRpb24tdHlwZTpqd3QtY' +
+          'mVhcmVyIiwiZ3JhbnRfdHlwZXMiOlsiaW1wbGljaXQiXSwicmVzcG9' +
+          'uc2VfdHlwZXMiOlsidG9rZW4iLCJpZF90b2tlbiIsImlkX3Rva2VuI' +
+          'HRva2VuIl0sImNsaWVudF9uYW1lIjoiT0FEQSBJRCBFeGFtcGxlIEJ' +
+          'yb3dzZXIgQ2xpZW50IiwiY2xpZW50X3VyaSI6Imh0dHA6Ly9sb2Nhb' +
+          'Ghvc3Q6MzAwNyIsImNvbnRhY3RzIjpbIkluZm8gPGluZm9Ab3BlbmF' +
+          'nLmlvPiJdLCJwb2xpY3lfdXJpIjoiaHR0cDovL2xvY2FsaG9zdDozM' +
+          'DA3L3B1Yy5odG1sIiwidG9zX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q' +
+          '6MzAwNy9wdWMuaHRtbCIsImxpY2Vuc2VzIjpbeyJpZCI6Im9hZGEtM' +
+          'S4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2MS4wIn0seyJpZCI6Im9' +
+          'hZGEtMi4wIiwibmFtZSI6Ik9BREEgRXhhbXBsZSB2Mi4wIn1dLCJqd' +
+          '2tzX3VyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwNy9jZXJ0cyIsInN' +
+          'vZnR3YXJlX2lkIjoiNjQ1OTllNTItNmIxNi00MzZlLThjN2MtODgwY' +
+          'TQ2ZGEzZDcwIiwicmVnaXN0cmF0aW9uX3Byb2l2ZGVyIjoiaHR0cHM' +
+          '6Ly9pZGVudGl0eS5vYWRhLWRldi5jb20iLCJpYXQiOjE0NTc5NzM3O' +
+          'TN9.SESOCLatSDplOWKg7X-bNHU6JWuqs9es4jlHa-u1qcdKnNxC-G' +
+          '0RQzW6T9HLPYmJ21dvvhiDuKpFY16BH5j9SHmCIMP6JjHuUfbHNiyr' +
+          'BkIPzEYvHo9PdoEQZoigeMunW6MOAMJZN2k1VBhcXRsgRII-6tiA0G' +
+          'lAxxyeksMSd-A',
+        scope: 'bookmarks.machines.harvesters',
+        params: {
+          // Make it always ask for consent again
+          prompt: 'consent',
+        },
+      };
 
-        var googleOptions = {
-            metadata: {
-                'client_id': '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
-                    '.apps.googleusercontent.com',
-                'redirect_uri': URI('redirect.html')
-                    .absoluteTo(window.location.href)
-            },
-            scope: 'https://mail.google.com/',
-            params: {
-                // Make it always ask for consent again
-                prompt: 'consent'
-            }
-        };
+      var googleOptions = {
+        metadata: {
+          client_id:
+            '222922449179-va3k4ldqsg9aq5kmv4db8jvlijvv5s8p' +
+            '.apps.googleusercontent.com',
+          redirect_uri: URI('redirect.html').absoluteTo(window.location.href),
+        },
+        scope: 'https://mail.google.com/',
+        params: {
+          // Make it always ask for consent again
+          prompt: 'consent',
+        },
+      };
 
-        var callback = function(err, token) {
-            'use strict';
+      var callback = function (err, token) {
+        'use strict';
 
-            if (err) {
-                if (console && (typeof console.dir === 'function')) {
-                    console.dir(err);
-                }
-                alert(err.name + ':' + err.message);
-            }
-
-            var block = document.getElementById('token');
-
-            block.innerHTML =
-                JSON.stringify(token, undefined, 4);
-            hljs.highlightBlock(block);
-        };
-
-        function secret() {
-            'use strict';
-
-            if (URI(window.location.href).hasQuery('secret')) {
-                document.getElementById('secret').style.display = 'block';
-            }
+        if (err) {
+          if (console && typeof console.dir === 'function') {
+            console.dir(err);
+          }
+          alert(err.name + ':' + err.message);
         }
-    </script>
-</head>
-<body onload="secret()">
-<button id="get_id" onclick="oadaIdClient.getIDToken(
-                        'identity.oada-dev.com', options, callback)">
-    ID Token</button>
-<button id="get_access" onclick="oadaIdClient.getAccessToken(
-                        'identity.oada-dev.com', options, callback)">
-    Access Token</button>
-<div id="secret" style="display:none">
-<!-- The contents of this div only work if you know how to un-break them -->
-<button onclick="oadaIdClient.getIDToken('vip1.ecn.purdue.edu/~awlayton',
-    googleOptions, callback)">Google ID Token</button>
-<button onclick="oadaIdClient.getAccessToken('vip1.ecn.purdue.edu/~awlayton',
-    googleOptions, callback)">Google Access Token</button>
-</div>
-<pre class='json' id='token'></pre>
-</body>
-</html>
 
+        var block = document.getElementById('token');
+
+        block.innerHTML = JSON.stringify(token, undefined, 4);
+        hljs.highlightBlock(block);
+      };
+
+      function secret() {
+        'use strict';
+
+        if (URI(window.location.href).hasQuery('secret')) {
+          document.getElementById('secret').style.display = 'block';
+        }
+      }
+    </script>
+  </head>
+  <body onload="secret()">
+    <button
+      id="get_id"
+      onclick="oadaIdClient.getIDToken(
+                        'identity.oada-dev.com', options, callback)"
+    >
+      ID Token
+    </button>
+    <button
+      id="get_access"
+      onclick="oadaIdClient.getAccessToken(
+                        'identity.oada-dev.com', options, callback)"
+    >
+      Access Token
+    </button>
+    <div id="secret" style="display: none">
+      <!-- The contents of this div only work if you know how to un-break them -->
+      <button
+        onclick="oadaIdClient.getIDToken('vip1.ecn.purdue.edu/~awlayton',
+    googleOptions, callback)"
+      >
+        Google ID Token
+      </button>
+      <button
+        onclick="oadaIdClient.getAccessToken('vip1.ecn.purdue.edu/~awlayton',
+    googleOptions, callback)"
+      >
+        Google Access Token
+      </button>
+    </div>
+    <pre class="json" id="token"></pre>
+  </body>
+</html>

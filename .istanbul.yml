@@ -1,12 +1,12 @@
 instrumentation:
-    root: .
-    default-excludes: true
-    excludes:
-        - karma.conf.js
-        - gulpfile.*
-        - Gulpfile.*
-        - Gruntfile.*
-        - gruntfile.*
-        - examples/**/*.js
-        - dist/**/*.js
-    include-all-sources: true
+  root: .
+  default-excludes: true
+  excludes:
+    - karma.conf.js
+    - gulpfile.*
+    - Gulpfile.*
+    - Gruntfile.*
+    - gruntfile.*
+    - examples/**/*.js
+    - dist/**/*.js
+  include-all-sources: true

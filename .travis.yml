@@ -1,19 +1,19 @@
 language: node_js
 node_js:
-- lts/*
-- node
+  - lts/*
+  - node
 env:
-- TEST=cover
+  - TEST=cover
 matrix:
   include:
-  - node_js: node
-    env: MOZ_HEADLESS=1 TEST="browser-cover -- --browsers chrome"
+    - node_js: node
+      env: MOZ_HEADLESS=1 TEST="browser-cover -- --browsers chrome"
 sudo: false
 addons:
-    chrome: stable
-    firefox: latest
+  chrome: stable
+  firefox: latest
 before_deploy:
-- npm install -g npm
+  - npm install -g npm
 deploy:
   provider: npm
   email: alex@layton.in
@@ -25,8 +25,8 @@ deploy:
     all_branches: true
     repo: OADA/oada-id-client-js
 before_install:
-- npm install -g coveralls
+  - npm install -g coveralls
 script:
-- npm run $TEST
+  - npm run $TEST
 after_success:
-- cat ./coverage/lcov.info | coveralls --verbose
+  - cat ./coverage/lcov.info | coveralls --verbose

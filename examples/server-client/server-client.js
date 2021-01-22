@@ -16,16 +16,16 @@
 /*
  * Express server to test the server client part of the library
  */
-'use strict'
+'use strict';
 
-var fs = require('fs')
-var express = require('express')
-var app = express()
-var login = require('../../').middleware
+var fs = require('fs');
+var express = require('express');
+var app = express();
+var login = require('../../').middleware;
 
-var pem = fs.readFileSync(__dirname + '/privkey.pem')
-var kid = '1234'
-var key = { pem: pem, kid: kid }
+var pem = fs.readFileSync(__dirname + '/privkey.pem');
+var kid = '1234';
+var key = { pem: pem, kid: kid };
 
 var options = {
   metadata:
@@ -52,22 +52,22 @@ var options = {
     '9pQZGWW5i7y3xcgZf5Lm3fNSNks7I',
   scope: 'bookmarks.machines.harvesters',
   params: {
-    prompt: 'consent'
+    prompt: 'consent',
   },
-  privateKey: key
-}
+  privateKey: key,
+};
 
-app.use('/who', login.getIDToken('identity.oada-dev.com', options))
+app.use('/who', login.getIDToken('identity.oada-dev.com', options));
 
-app.use('/get', login.getAccessToken('identity.oada-dev.com', options))
+app.use('/get', login.getAccessToken('identity.oada-dev.com', options));
 
-app.use('/redirect', login.handleRedirect())
+app.use('/redirect', login.handleRedirect());
 app.use('/redirect', function (req, res) {
-  res.json(req.token)
-})
+  res.json(req.token);
+});
 
 if (require.main === module) {
-  app.listen(3007)
+  app.listen(3007);
 }
 
-module.exports = app
+module.exports = app;

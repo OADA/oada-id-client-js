@@ -13,22 +13,22 @@
  * limitations under the License.
  */
 
-require('./test/setup.js')
+require('./test/setup.js');
 
-const Rewire = require('rewire-webpack-plugin')
-const webpack = require('./webpack.config')[0]
-const args = require('yargs').argv
+const Rewire = require('rewire-webpack-plugin');
+const webpack = require('./webpack.config')[0];
+const args = require('yargs').argv;
 
-webpack.plugins = [new Rewire()].concat(webpack.plugins || [])
+webpack.plugins = [new Rewire()].concat(webpack.plugins || []);
 module.exports = function (config) {
-  const reporters = ['mocha']
+  const reporters = ['mocha'];
   const preprocessors = {
-    'test/**/*.test.js': ['webpack']
-  }
+    'test/**/*.test.js': ['webpack'],
+  };
 
   if (args.cover) {
-    reporters.push('coverage')
-    preprocessors['src/browser.js'] = ['webpack', 'coverage']
+    reporters.push('coverage');
+    preprocessors['src/browser.js'] = ['webpack', 'coverage'];
   }
 
   config.set({
@@ -49,7 +49,7 @@ module.exports = function (config) {
     coverageReporter: {
       type: 'lcov',
       dir: 'coverage/',
-      subdir: '.'
+      subdir: '.',
     },
 
     port: 9876,
@@ -64,18 +64,18 @@ module.exports = function (config) {
     customLaunchers: {
       vivaldi: {
         base: 'Vivaldi',
-        flags: ['--allow-insecure-localhost']
+        flags: ['--allow-insecure-localhost'],
       },
       chrome: {
         base: 'ChromeHeadless',
-        flags: ['--allow-insecure-localhost', '--disable-gpu']
+        flags: ['--allow-insecure-localhost', '--disable-gpu'],
       },
       firefox: {
         base: 'Firefox',
-        flags: ['-headless']
-      }
+        flags: ['-headless'],
+      },
     },
 
-    singleRun: true
-  })
-}
+    singleRun: true,
+  });
+};

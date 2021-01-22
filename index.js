@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-module.exports = require('./src/core')
+module.exports = require('./src/core');
 
-module.exports.browser = require('./src/browser')
+module.exports.browser = require('./src/browser');
 
 // You can only include this in node because the "open" library that it uses
 // fails to compile in the browser
 if (typeof process !== 'undefined' && typeof window === 'undefined') {
-  module.exports.node = require('./src/node-browser')
+  module.exports.node = require('./src/node-browser');
 }
 
-module.exports.middleware = require('./src/middleware')
+module.exports.middleware = require('./src/middleware');

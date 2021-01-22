@@ -13,27 +13,27 @@
  * limitations under the License.
  */
 
-'use strict'
+'use strict';
 
-var express = require('express')
-var cors = require('cors')
-var bodyParser = require('body-parser')
-var https = require('https')
-var fs = require('fs')
-var URI = require('urijs')
-var jwt = require('jsonwebtoken')
+var express = require('express');
+var cors = require('cors');
+var bodyParser = require('body-parser');
+var https = require('https');
+var fs = require('fs');
+var URI = require('urijs');
+var jwt = require('jsonwebtoken');
 
-var configuration = require('./configuration.json')
-var token = require('./token.json')
-var idToken = require('./id_token.json')
+var configuration = require('./configuration.json');
+var token = require('./token.json');
+var idToken = require('./id_token.json');
 
-var app = express()
-app.use(cors())
-app.use(bodyParser.urlencoded({ extended: true }))
+var app = express();
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/.well-known/*', function (req, res) {
-  res.status(200).json(configuration)
-})
+  res.status(200).json(configuration);
+});
 
 app.post(URI(configuration['token_endpoint']).path(), function (req, res) {
   if (
@@ -43,26 +43,26 @@ app.post(URI(configuration['token_endpoint']).path(), function (req, res) {
   ) {
     switch (req.body.code) {
       case 'token':
-        res.json(token)
-        break
+        res.json(token);
+        break;
 
       case 'id_token':
-        idToken.nonce = req.body.nonce
+        idToken.nonce = req.body.nonce;
         res.json({
-          id_token: jwt.sign(idToken, '', { algorithm: 'none' })
-        })
-        break
+          id_token: jwt.sign(idToken, '', { algorithm: 'none' }),
+        });
+        break;
     }
   }
-})
+});
 
 var options = {
   key: fs.readFileSync('./test/server.key', 'utf8'),
   cert: fs.readFileSync('./test/server.crt', 'utf8'),
   ca: fs.readFileSync('./test/ca.crt', 'utf8'),
   requestCrt: true,
-  rejectUnauthorized: false
-}
+  rejectUnauthorized: false,
+};
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0
-https.createServer(options, app).listen(3000)
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+https.createServer(options, app).listen(3000);

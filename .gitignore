@@ -9,6 +9,7 @@ coverage
 # "Compiled" stuff
 dist
 src/public/bundle.js
+src/public/bundle.js.*
 
 # Dependency directory
 # Commenting this out is preferred by some people, see

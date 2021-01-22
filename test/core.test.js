@@ -14,222 +14,222 @@
  */
 
 /* eslint-env mocha */
-'use strict'
+'use strict';
 
-var sinon = require('sinon')
-var expect = require('chai').expect
-var URI = require('urijs')
-var objectAssign = require('object-assign')
+var sinon = require('sinon');
+var expect = require('chai').expect;
+var URI = require('urijs');
+var objectAssign = require('object-assign');
 
-var metadata = require('./metadata.json')
-var configuration = require('./configuration.json')
-var token = require('./token.json')
-var idToken = require('./id_token.json')
+var metadata = require('./metadata.json');
+var configuration = require('./configuration.json');
+var token = require('./token.json');
+var idToken = require('./id_token.json');
 
 describe('core.js', function () {
-  var core
+  var core;
 
-  before(function stubSignature () {
+  before(function stubSignature() {
     sinon
       .stub(require('@oada/oada-certs').jwksutils, 'jwkForSignature')
-      .yields(null, {})
-    sinon.stub(require('pem-jwk'), 'jwk2pem').returns('PEM')
-  })
+      .yields(null, {});
+    sinon.stub(require('pem-jwk'), 'jwk2pem').returns('PEM');
+  });
 
-  before(function loadModule () {
+  before(function loadModule() {
     // TODO: Figure out something less gross with rewire
-    var rewire = require('rewire')
-    core = rewire('../src/core.js')
-  })
+    var rewire = require('rewire');
+    core = rewire('../src/core.js');
+  });
 
-  before(function stubRegister () {
-    var registerStub = sinon.stub()
+  before(function stubRegister() {
+    var registerStub = sinon.stub();
 
-    registerStub.yields(null, metadata)
+    registerStub.yields(null, metadata);
     // Not sure how I feel about this...
-    core.__set__('register', registerStub)
-  })
-  ;['getAccessToken', 'getIDToken'].forEach(function (method) {
+    core.__set__('register', registerStub);
+  });
+  ['getAccessToken', 'getIDToken'].forEach(function (method) {
     describe('#' + method, function () {
       it('should redirect to authorization endpoint', function (done) {
         core[method](
           'localhost:3000',
           {},
-          function redirect (err, loc) {
-            expect(err).to.be.not.ok
+          function redirect(err, loc) {
+            expect(err).to.be.not.ok;
 
-            var url = URI.parse(loc)
-            url.query = url.fragment = undefined
+            var url = URI.parse(loc);
+            url.query = url.fragment = undefined;
 
             expect(URI.build(url)).to.equal(
               configuration['authorization_endpoint']
-            )
-            done()
+            );
+            done();
           },
           null
-        )
-      })
+        );
+      });
 
       it('should use registration response client ID', function (done) {
         core[method](
           'localhost:3000',
           {},
-          function redirect (err, loc) {
-            expect(err).to.be.not.ok
+          function redirect(err, loc) {
+            expect(err).to.be.not.ok;
 
             URI(loc).hasQuery('client_id', function (val) {
-              expect(val).to.equal(metadata['client_id'])
-              done()
-            })
+              expect(val).to.equal(metadata['client_id']);
+              done();
+            });
           },
           null
-        )
-      })
+        );
+      });
 
       it('should use registration response redirect URI', function (done) {
         core[method](
           'localhost:3000',
           {},
-          function redirect (err, loc) {
-            expect(err).to.be.not.ok
+          function redirect(err, loc) {
+            expect(err).to.be.not.ok;
 
             URI(loc).hasQuery('redirect_uri', function (val) {
-              expect(metadata['redirect_uris']).to.contain(val)
-              done()
-            })
+              expect(metadata['redirect_uris']).to.contain(val);
+              done();
+            });
           },
           null
-        )
-      })
+        );
+      });
 
-      var extraScopes = method === 'getIDToken' ? ' + openid' : ''
+      var extraScopes = method === 'getIDToken' ? ' + openid' : '';
       it('should send given scope(s)' + extraScopes, function (done) {
-        var scopes = ['read', 'write', 'foo']
-        var options = { scope: scopes.join(' ') }
+        var scopes = ['read', 'write', 'foo'];
+        var options = { scope: scopes.join(' ') };
 
         core[method](
           'localhost:3000',
           options,
-          function redirect (err, loc) {
-            expect(err).to.be.not.ok
+          function redirect(err, loc) {
+            expect(err).to.be.not.ok;
 
             URI(loc).hasQuery('scope', function (val) {
-              var vals = val.split(' ')
+              var vals = val.split(' ');
 
               scopes.forEach(function (scope) {
-                expect(vals).to.include(scope)
-              })
-              done()
-            })
+                expect(vals).to.include(scope);
+              });
+              done();
+            });
           },
           null
-        )
-      })
+        );
+      });
 
-      var flow = process.browser ? 'implicit' : 'code'
-      var tokType = method === 'getIDToken' ? 'id_token' : 'token'
-      var respType = flow === 'code' ? 'code' : tokType
+      var flow = process.browser ? 'implicit' : 'code';
+      var tokType = method === 'getIDToken' ? 'id_token' : 'token';
+      var respType = flow === 'code' ? 'code' : tokType;
       it('should use ' + flow + ' flow', function (done) {
         core[method](
           'localhost:3000',
           {},
-          function redirect (err, loc) {
-            expect(err).to.be.not.ok
+          function redirect(err, loc) {
+            expect(err).to.be.not.ok;
 
             URI(loc).hasQuery('response_type', function (val) {
-              expect(val).to.equal(respType)
-              done()
-            })
+              expect(val).to.equal(respType);
+              done();
+            });
           },
           null
-        )
-      })
+        );
+      });
 
       describe('#handleRedirect', function () {
-        var code = { code: tokType }
-        var ret = method === 'getIDToken' ? idToken : token
+        var code = { code: tokType };
+        var ret = method === 'getIDToken' ? idToken : token;
         var resp =
           flow === 'code'
             ? code
             : method === 'getIDToken'
             ? { id_token: idToken }
-            : token
-        var jwtVerify
+            : token;
+        var jwtVerify;
 
         beforeEach(function () {
-          jwtVerify = sinon.stub(require('jsonwebtoken'), 'verify')
-        })
+          jwtVerify = sinon.stub(require('jsonwebtoken'), 'verify');
+        });
 
         afterEach(function () {
-          jwtVerify.restore()
-        })
+          jwtVerify.restore();
+        });
 
         it('should pass token to its callback', function (done) {
           core[method]('localhost:3000', {}, function (err, loc) {
-            expect(err).to.be.not.ok
-            var locParams = URI(loc).query(true)
+            expect(err).to.be.not.ok;
+            var locParams = URI(loc).query(true);
 
             var params = objectAssign(
               {
-                state: locParams.state
+                state: locParams.state,
               },
               resp
-            )
+            );
 
             var t = JSON.parse(
               JSON.stringify(
                 objectAssign({}, ret, {
-                  nonce: locParams.nonce
+                  nonce: locParams.nonce,
                 })
               )
-            )
-            jwtVerify.yields(null, t)
+            );
+            jwtVerify.yields(null, t);
 
             core.handleRedirect(params, function (err, tok) {
-              expect(err).to.be.not.ok
+              expect(err).to.be.not.ok;
               expect(tok).to.deep.equal(
                 method === 'getIDToken' ? { id_token: t } : t
-              )
-              done()
-            })
-          })
-        })
+              );
+              done();
+            });
+          });
+        });
 
         it('should pass token to original callback', function (done) {
-          var t
+          var t;
           core[method](
             'localhost:3000',
             {},
             function (err, loc) {
-              expect(err).to.be.not.ok
-              var locParams = URI(loc).query(true)
+              expect(err).to.be.not.ok;
+              var locParams = URI(loc).query(true);
 
               var params = objectAssign(
                 {
-                  state: locParams.state
+                  state: locParams.state,
                 },
                 resp
-              )
+              );
 
               t = JSON.parse(
                 JSON.stringify(
                   objectAssign({}, ret, {
-                    nonce: locParams.nonce
+                    nonce: locParams.nonce,
                   })
                 )
-              )
-              jwtVerify.yields(null, t)
+              );
+              jwtVerify.yields(null, t);
 
-              core.handleRedirect(params)
+              core.handleRedirect(params);
             },
             function (err, tok) {
-              expect(err).to.be.not.ok
-              expect(tok).to.deep.equal(t)
-              done()
+              expect(err).to.be.not.ok;
+              expect(tok).to.deep.equal(t);
+              done();
             }
-          )
-        })
-      })
-    })
-  })
-})
+          );
+        });
+      });
+    });
+  });
+});
