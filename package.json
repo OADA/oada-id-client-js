@@ -3,6 +3,12 @@
   "version": "1.0.10",
   "description": "OADA identity client library for Node.JS and Browser",
   "main": "index.js",
+  "browser": "src/browser.js",
+  "unpkg": "dist/bundle.js",
+  "files": [
+    "index.js",
+    "dist/"
+  ],
   "scripts": {
     "prepublish": "npm run bundle",
     "bundle": "webpack",
@@ -57,7 +63,6 @@
     "url": "https://github.com/OADA/oada-id-client-js/issues"
   },
   "homepage": "https://github.com/OADA/oada-id-client-js",
-  "browser": "src/browser.js",
   "dependencies": {
     "@oada/oada-certs": "^3.1.6",
     "bluebird": "^3.7.2",
@@ -66,7 +71,7 @@
     "jwt-bearer-client-auth": "^1.0.0",
     "oauth-dyn-reg": "^1.0.2",
     "object-assign": "^4.1.1",
-    "open": "^7.0.3",
+    "open": "^8.2.0",
     "pem-jwk": "^2.0.0",
     "superagent": "^6.1.0",
     "urijs": "^1.18.12"
@@ -89,9 +94,9 @@
     "karma-mocha": "^2.0.1",
     "karma-mocha-reporter": "^2.2.5",
     "karma-vivaldi-launcher": "0.0.1",
-    "karma-webpack": "^4.0.2",
+    "karma-webpack": "^5.0.0",
     "lodash": "^4.17.15",
-    "mocha": "^8.2.1",
+    "mocha": "^9.0.0",
     "nyc": "^15.0.0",
     "prettier": "^2.2.1",
     "rewire": "^5.0.0",
@@ -99,10 +104,11 @@
     "sinon": "^9.0.1",
     "stream-browserify": "^3.0.0",
     "time-grunt": "^2.0.0",
+    "url": "^0.11.0",
     "util": "^0.12.3",
     "wd": "^1.12.1",
     "webpack": "^5.16.0",
     "webpack-cli": "^4.4.0",
-    "yargs": "^16.2.0"
+    "yargs": "^17.0.1"
   }
 }

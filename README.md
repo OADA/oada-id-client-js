@@ -12,12 +12,18 @@ Can be used both in NodeJS and in the browser.
 
 ### Installation
 
-The library is not yet published with `npm`,
-but it can be installed from the GitHub repo.
+For use in NodeJS or with something like webpack:
 
 ```sh
-$ npm install OADA/oada-id-client-js
+yarn add OADA/oada-id-client-js
 ```
+
+You can also get it from a CDN in browser:
+
+```html
+<script src="https://unpkg.com/@oada/oada-id-client"></script>
+```
+
 
 ### Browser Code Generation
 
