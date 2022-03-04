@@ -75,7 +75,7 @@
     "open": "^8.2.0",
     "pem-jwk": "^2.0.0",
     "superagent": "^6.1.0",
-    "urijs": "^1.18.12"
+    "urijs": "^1.19.9"
   },
   "devDependencies": {
     "async": "^3.2.0",
