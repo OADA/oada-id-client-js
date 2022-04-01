@@ -1,9 +1,15 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = ['dist', 'src/public'].map((dir) => ({
   entry: './src/browser.js',
   target: 'web',
   mode: 'production',
+  plugins: [
+    new webpack.ProvidePlugin({
+      process: 'process/browser',
+    }),
+  ],
   resolve: {
     fallback: {
       util: require.resolve('util/'),

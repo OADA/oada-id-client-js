@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "rootDir": ".",
+    "outDir": "../.test"
+  },
+  "include": ["**/*.ts", "**/*.js", "**/*.json"],
+  "references": [
+    {
+      "path": "../"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "lib": ["DOM"],
+    "rootDir": ".",
+    "outDir": "../dist"
+  },
+  "files": ["browser.ts"],
+  "include": ["."],
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
+}

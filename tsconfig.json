@@ -1,0 +1,33 @@
+{
+  "extends": "@tsconfig/node12",
+  "compilerOptions": {
+    "composite": true,
+    "stripInternal": true,
+    "importHelpers": true,
+    "alwaysStrict": true,
+    "strict": true,
+    "importsNotUsedAsValues": "error",
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitThis": true,
+    "noImplicitAny": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "sourceMap": true,
+    "declaration": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "files": [],
+  "exclude": ["src"],
+  "references": [
+    {
+      "path": "src/tsconfig.node.json"
+    },
+    {
+      "path": "src/tsconfig.browser.json"
+    }
+  ]
+}

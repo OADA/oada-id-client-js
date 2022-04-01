@@ -24,7 +24,6 @@ You can also get it from a CDN in browser:
 <script src="https://unpkg.com/@oada/oada-id-client"></script>
 ```
 
-
 ### Browser Code Generation
 
 The code to use in the browser can be generated with the following command:

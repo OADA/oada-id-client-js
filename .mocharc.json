@@ -1,0 +1,9 @@
+{
+  "reporter": "spec",
+  "ui": "bdd",
+  "exit": true,
+  "parallel": true,
+  "extensions": ["ts"],
+  "require": "ts-node/register",
+  "spec": ["test/**/*.test.ts"]
+}
