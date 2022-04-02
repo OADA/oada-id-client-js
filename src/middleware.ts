@@ -27,6 +27,7 @@ import {
   Options,
   getAccessToken as coreGetAccessToken,
   getIDToken as coreGetIDToken,
+  handleRedirect as coreHandleRedirect,
 } from './core.js';
 
 function middlewareify(
@@ -65,3 +66,12 @@ export const getIDToken = middlewareify(coreGetIDToken);
  * @returns Express middleware
  */
 export const getAccessToken = middlewareify(coreGetAccessToken);
+
+/**
+ * Middleware for handling redirects after OAuth flow
+ */
+export const handleRedirect: express.RequestHandler = async (request) => {
+  const token = await coreHandleRedirect(request.query);
+  // @ts-expect-error IDEK
+  request.token = token;
+};

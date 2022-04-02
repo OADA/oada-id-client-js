@@ -460,9 +460,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@oada/certs@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@oada/certs@npm:4.1.0"
+"@oada/certs@npm:^4.1.0, @oada/certs@npm:^4.1.1":
+  version: 4.1.1
+  resolution: "@oada/certs@npm:4.1.1"
   dependencies:
     clone-deep: ^4.0.1
     debug: ^4.3.4
@@ -484,7 +484,7 @@ __metadata:
   bin:
     certs: ./dist/cli.mjs
     oada-certs: ./dist/cli.mjs
-  checksum: 48fda835589c6bc8aebf5a3eb30baec05f0ff8e11f268687e57be0d6574393cb01393a255684dd8e93b620521a33daf82178d614ff7ad9eff8b7376a1566bc5c
+  checksum: c5dfc147fb1921ee5039872484a24ac6258b89581442a792014bd0c7ff2cd53ea3429274315153b1cb441d568934ca405de4bd0d44d3f7114e9ee01b4e01c269
   languageName: node
   linkType: hard
 
@@ -492,7 +492,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@oada/id-client@workspace:."
   dependencies:
-    "@oada/certs": ^4.1.0
+    "@oada/certs": ^4.1.1
     "@oada/types": ^1.8.1
     "@tsconfig/node12": ^1.0.9
     "@types/body-parser": ^1.19.2

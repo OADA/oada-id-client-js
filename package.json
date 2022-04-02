@@ -74,7 +74,7 @@
   },
   "homepage": "https://github.com/OADA/oada-id-client-js",
   "dependencies": {
-    "@oada/certs": "^4.1.0",
+    "@oada/certs": "^4.1.1",
     "is-wsl": "^2.2.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-bearer-client-auth": "^2.0.1",

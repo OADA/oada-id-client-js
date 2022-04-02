@@ -24,8 +24,8 @@ import URI from 'urijs';
 import crypto from 'crypto';
 import { verify } from 'jsonwebtoken';
 
-import type Metadata from '@oada/types/oada/oauth-dyn-reg/register-response/v1.js';
 import type OADAConfiguration from '@oada/types/oada/oada-configuration/v1.js';
+import type OADAMetadata from '@oada/types/oada/oauth-dyn-reg/register-response/v1.js';
 import { generate } from 'jwt-bearer-client-auth';
 import { jwksUtils as jwku } from '@oada/certs';
 
@@ -50,28 +50,36 @@ export interface QueryParameters {
 }
 
 export interface Options {
-  metadata: Metadata;
-  scope?: string;
+  metadata: Metadata | string;
+  scope?: string | readonly string[];
   params?: QueryParameters;
   privateKey: jwku.JWK;
-  client_id: string;
   redirect?: string;
   display?: string;
 }
 
 /**
- * @todo merge this into @oada/types
+ * @todo merge this into `@oada/types`
  */
 export interface Configuration extends OADAConfiguration {
   jwks_uri: string;
   issuer: string;
 }
 
+/**
+ * @todo merge this into `@oada/types`
+ */
+export type Metadata = Partial<OADAMetadata> & {
+  client_name: unknown;
+  redirect_uris: unknown;
+  contacts: readonly [string, ...(readonly string[])];
+};
+
 export interface State {
   key: jwku.JWK;
   domain: string;
   conf: Configuration;
-  options: Metadata;
+  options: OADAMetadata;
   query: QueryParameters;
 }
 
@@ -125,6 +133,10 @@ export const state = {
 
 const emitter = new EventEmitter();
 
+function isArray(value: unknown): value is unknown[] | readonly unknown[] {
+  return Array.isArray(value);
+}
+
 async function authorize(
   domain: string,
   configuration: string,
@@ -133,7 +145,11 @@ async function authorize(
 ) {
   // Get stuff from options object
   const { privateKey: key, metadata, params, scope, redirect } = options;
-  const query = { ...params, scope };
+  const query = {
+    ...params,
+    // Deepcode ignore ArrayMethodOnNonArray: It really is an array
+    scope: isArray(scope) ? scope.join(' ') : scope,
+  };
   // Assume key is PEM encoded
   if (key) {
     key.kty = key.kty ?? 'PEM';
@@ -220,7 +236,6 @@ export async function getAccessToken(
   // @ts-expect-error browser magics
   const response = process.browser ? 'token' : 'code';
   const parameters = {
-    scope: '',
     ...options,
     params: { response_type: response, ...options.params },
   };

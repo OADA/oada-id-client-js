@@ -28,7 +28,6 @@ import { stub } from 'sinon';
 import jwt from 'jsonwebtoken';
 import pemJWK from 'pem-jwk';
 
-import type Metadata from '@oada/types/oada/oauth-dyn-reg/register-response/v1.js';
 import { jwksUtils } from '@oada/certs';
 
 import config from './configuration';
@@ -54,7 +53,7 @@ const privateKey = {
 // eslint-disable-next-line github/no-then
 const metadata = uri.then(meta);
 
-stub(jwksUtils, 'jwkForSignature').resolves({ kty: 'test' });
+stub(jwksUtils, 'jwkForSignature').resolves({ kty: 'RSA', n: '1', e: '1' });
 stub(pemJWK, 'jwk2pem').returns('PEM');
 
 const registerStub = stub();
@@ -63,8 +62,11 @@ registerStub.resolves(metadata);
 core.__set__('register', registerStub);
 
 const options = {
-  client_id: 'TEST',
-  metadata: {} as unknown as Metadata,
+  metadata: {
+    client_name: 'TEST',
+    contacts: ['Rusty Shackleford <test@test.test>'],
+    redirect_uris: ['/redirect'] as [string],
+  },
   privateKey,
 } as const;
 
