@@ -84,7 +84,7 @@
     "pem-jwk": "^2.0.0",
     "superagent": "^7.1.2",
     "tslib": "^2.3.1",
-    "urijs": "^1.19.10"
+    "urijs": "^1.19.11"
   },
   "devDependencies": {
     "@oada/types": "^1.8.1",
