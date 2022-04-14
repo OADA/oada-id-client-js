@@ -1,11 +1,13 @@
+# @oada/id-client
+
 [![Build Status](https://travis-ci.org/OADA/oada-id-client-js.svg?branch=master)](https://travis-ci.org/OADA/oada-id-client-js)
 [![Coverage Status](https://coveralls.io/repos/OADA/oada-id-client-js/badge.svg?branch=master)](https://coveralls.io/r/OADA/oada-id-client-js?branch=master)
-[![Dependency Status](https://david-dm.org/oada/oada-id-client-js.svg)](https://david-dm.org/oada/oada-id-client-js)
-[![License](http://img.shields.io/:license-Apache%202.0-green.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+[![npm](https://img.shields.io/npm/v/@oada/id-client)](https://www.npmjs.com/package/@oada/id-client)
+[![Downloads/week](https://img.shields.io/npm/dw/@oada/id-client.svg)](https://npmjs.org/package/@oada/id-client)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
+[![License](https://img.shields.io/github/license/OADA/oada-id-client-js)](LICENSE)
 
-# oada-id-client
-
-JavaScript client library for OADA identity.
+TypeScript/JavaScript client library for OADA identity.
 Can be used both in NodeJS and in the browser.
 
 ## Getting Started
@@ -26,7 +28,7 @@ The code to use in the browser can be generated with the following command:
 yarn bundle
 ```
 
-This will create the file `dist/bundle.js`.
+This will create the file `bundle.js`.
 
 ## Examples
 
