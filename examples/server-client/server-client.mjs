@@ -1,4 +1,6 @@
-/* Copyright 2014 Open Ag Data Alliance
+/**
+ * @license
+ * Copyright 2014-2022 Open Ag Data Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,21 +15,31 @@
  * limitations under the License.
  */
 
-/*
+/* eslint-disable no-secrets/no-secrets */
+
+/**
  * Express server to test the server client part of the library
+ * @packageDocumentation
  */
-'use strict';
 
-var fs = require('fs');
-var express = require('express');
-var app = express();
-var login = require('../../').middleware;
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
 
-var pem = fs.readFileSync(__dirname + '/privkey.pem');
-var kid = '1234';
-var key = { pem: pem, kid: kid };
+import express from 'express';
 
-var options = {
+import { middleware as login } from '../..';
+
+const app = express();
+
+// eslint-disable-next-line security/detect-non-literal-fs-filename
+const pem = fs.readFileSync(
+  `${path.dirname(url.fileURLToPath(import.meta.url))}/privkey.pem`
+);
+const kid = '1234';
+const key = { pem, kid };
+
+const options = {
   metadata:
     'eyJqa3UiOiJodHRwczovL2lkZW50aXR5Lm9hZGEtZGV2LmNvbS9jZXJ0cyIsI' +
     'mtpZCI6ImtqY1NjamMzMmR3SlhYTEpEczNyMTI0c2ExIiwidHlwIjoiSldUIi' +
@@ -62,12 +74,8 @@ app.use('/who', login.getIDToken('identity.oada-dev.com', options));
 app.use('/get', login.getAccessToken('identity.oada-dev.com', options));
 
 app.use('/redirect', login.handleRedirect());
-app.use('/redirect', function (req, res) {
-  res.json(req.token);
+app.use('/redirect', (request, response) => {
+  response.json(request.token);
 });
 
-if (require.main === module) {
-  app.listen(3007);
-}
-
-module.exports = app;
+app.listen(3007);

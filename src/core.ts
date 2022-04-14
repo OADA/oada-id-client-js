@@ -24,8 +24,9 @@ import URI from 'urijs';
 import crypto from 'crypto';
 import { verify } from 'jsonwebtoken';
 
+import type Metadata from '@oada/types/oauth-dyn-reg/metadata.js';
 import type OADAConfiguration from '@oada/types/oada/oada-configuration/v1.js';
-import type OADAMetadata from '@oada/types/oada/oauth-dyn-reg/register-response/v1.js';
+import type RegistrationData from '@oada/types/oauth-dyn-reg/response.js';
 import { generate } from 'jwt-bearer-client-auth';
 import { jwksUtils as jwku } from '@oada/certs';
 
@@ -66,20 +67,11 @@ export interface Configuration extends OADAConfiguration {
   issuer: string;
 }
 
-/**
- * @todo merge this into `@oada/types`
- */
-export type Metadata = Partial<OADAMetadata> & {
-  client_name: unknown;
-  redirect_uris: unknown;
-  contacts: readonly [string, ...(readonly string[])];
-};
-
 export interface State {
   key: jwku.JWK;
   domain: string;
   conf: Configuration;
-  options: OADAMetadata;
+  options: RegistrationData;
   query: QueryParameters;
 }
 
@@ -170,7 +162,7 @@ async function authorize(
   const registration = await register(metadata, config.registration_endpoint);
 
   // Is this a good way to pick?
-  query.redirect_uri = redirect ?? registration.redirect_uris[0];
+  query.redirect_uri = redirect ?? registration.redirect_uris?.[0];
 
   // Stuff to remember for when redirect is received
   const stateTok = await state.storeState({
@@ -270,36 +262,39 @@ async function verifyIDToken(tokenState: State, query: QueryParameters) {
   return { ...parameters, id_token: token };
 }
 
-async function exchangeCode(state: State, query: QueryParameters) {
+async function exchangeCode(codeState: State, query: QueryParameters) {
   if (!query.code) {
-    return verifyIDToken(state, query);
+    return verifyIDToken(codeState, query);
   }
 
   const assertion = await generate({
-    key: state.key,
-    issuer: state.options.client_id,
-    clientId: state.options.client_id,
-    tokenEndpoint: state.conf.token_endpoint,
+    key: codeState.key,
+    issuer: codeState.options.client_id,
+    clientId: codeState.options.client_id,
+    tokenEndpoint: codeState.conf.token_endpoint,
     expiresIn: 60,
     payload: { jti: query.code },
   });
 
-  const resp = await request.post(state.conf.token_endpoint).type('form').send({
-    grant_type: 'authorization_code',
-    redirect_uri: state.query.redirect_uri,
-    client_assertion: assertion,
-    client_assertion_type:
-      'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
-    client_id: state.options.client_id,
-    code: query.code,
-  });
+  const resp = await request
+    .post(codeState.conf.token_endpoint)
+    .type('form')
+    .send({
+      grant_type: 'authorization_code',
+      redirect_uri: codeState.query.redirect_uri,
+      client_assertion: assertion,
+      client_assertion_type:
+        'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
+      client_id: codeState.options.client_id,
+      code: query.code,
+    });
   if (resp.error) {
     throw resp.error;
   }
 
   const token: unknown = JSON.parse(resp.text);
 
-  return verifyIDToken(state, token as QueryParameters);
+  return verifyIDToken(codeState, token as QueryParameters);
 }
 
 export async function handleRedirect(query: QueryParameters) {
@@ -317,3 +312,5 @@ export async function handleRedirect(query: QueryParameters) {
   emitter.emit(stateTok, token);
   return token;
 }
+
+export { type default as Metadata } from '@oada/types/oauth-dyn-reg/metadata.js';

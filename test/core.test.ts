@@ -18,7 +18,8 @@
 /* eslint-env mocha */
 /* eslint-disable unicorn/no-await-expression-member */
 
-import fs from 'fs';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import fs = require('fs');
 
 import URI from 'urijs';
 import { expect } from 'chai';
@@ -36,7 +37,7 @@ import meta from './metadata';
 import token from './token.json';
 
 // eslint-disable-next-line import/no-namespace
-import type * as dut from '../src/core';
+import type * as dut from '../dist/core.js';
 
 import EventEmitter, { once } from 'events';
 import uri from './setup';
@@ -68,7 +69,7 @@ const options = {
     redirect_uris: ['/redirect'] as [string],
   },
   privateKey,
-} as const;
+};
 
 // eslint-disable-next-line github/no-then
 const configuration = uri.then(config);
@@ -78,6 +79,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
     it('should recdirect to authorization endpoint', async () => {
       const emitter = new EventEmitter();
       const redirected = once(emitter, 'redirect');
+      // eslint-disable-next-line security/detect-object-injection
       const result = core[method](await uri, options, async (loc) => {
         try {
           const { query, fragment, ...url } = URI.parse(loc);
@@ -97,6 +99,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
     it('should use registration response client ID', async () => {
       const emitter = new EventEmitter();
       const redirected = once(emitter, 'redirect');
+      // eslint-disable-next-line security/detect-object-injection
       const result = core[method](await uri, options, async (loc) => {
         try {
           const m = await metadata;
@@ -114,6 +117,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
     it('should use registration response redirect URI', async () => {
       const emitter = new EventEmitter();
       const redirected = once(emitter, 'redirect');
+      // eslint-disable-next-line security/detect-object-injection
       const result = core[method](await uri, options, async (loc) => {
         try {
           const m = await metadata;
@@ -134,6 +138,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
       const opt = { ...options, scope: scopes.join(' ') };
       const emitter = new EventEmitter();
       const redirected = once(emitter, 'redirect');
+      // eslint-disable-next-line security/detect-object-injection
       const result = core[method](await uri, opt, (loc) => {
         try {
           new URI(loc).hasQuery('scope', (value: string) => {
@@ -157,6 +162,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
     it(`should use ${flow} flow`, async () => {
       const emitter = new EventEmitter();
       const redirected = once(emitter, 'redirect');
+      // eslint-disable-next-line security/detect-object-injection
       const result = core[method](await uri, options, (loc) => {
         try {
           new URI(loc).hasQuery('response_type', (value) => {
@@ -191,6 +197,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
       });
 
       it('should pass token to its callback', async () => {
+        // eslint-disable-next-line security/detect-object-injection
         await core[method](await uri, options, async (loc) => {
           const locParameters = new URI(loc).query(true);
 
@@ -216,6 +223,7 @@ for (const method of ['getAccessToken', 'getIDToken'] as const) {
 
       it('should pass token to original callback', async () => {
         let t: unknown;
+        // eslint-disable-next-line security/detect-object-injection
         const tok = await core[method](await uri, options, async (loc) => {
           const locParameters = new URI(loc).query(true);
 

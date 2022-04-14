@@ -34,8 +34,13 @@ plugins:
 parser: '@typescript-eslint/parser'
 
 parserOptions:
+  extraFileExtensions: ['.ts', '.mts', '.mjs']
   ecmaVersion: 2020
-  project: './tsconfig.eslint.json'
+  project:
+    - './src/tsconfig.browser.json'
+    - './src/tsconfig.node.json'
+    - './test/tsconfig.json'
+    - './tsconfig.eslint.json'
 
 overrides:
   - files: '*.ts'
@@ -46,7 +51,11 @@ overrides:
       - prettier
     parserOptions:
       ecmaVersion: 2020
-      project: './tsconfig.eslint.json'
+      project:
+        - './src/tsconfig.browser.json'
+        - './src/tsconfig.node.json'
+        - './test/tsconfig.json'
+        - './tsconfig.eslint.json'
     rules:
       '@typescript-eslint/naming-convention':
         [

@@ -30,6 +30,29 @@ import {
   handleRedirect as coreHandleRedirect,
 } from './core.js';
 
+// Add our stuff to the request interface?
+import type { IncomingMessage } from 'http';
+import type { ParsedQs } from 'qs';
+export type Token = Resolves<ReturnType<typeof coreHandleRedirect>>;
+declare module 'express-serve-static-core' {
+  export interface Request<
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    P = ParamsDictionary,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, unicorn/prevent-abbreviations, @typescript-eslint/no-explicit-any
+    ResBody = any,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, unicorn/prevent-abbreviations, @typescript-eslint/no-explicit-any
+    ReqBody = any,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, unicorn/prevent-abbreviations
+    ReqQuery = ParsedQs,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    Locals extends Record<string, any> = Record<string, any>
+  > extends IncomingMessage {
+    token?: Token;
+  }
+}
+
+type Resolves<T> = T extends Promise<infer V> ? V : T;
+
 function middlewareify(
   method: typeof coreGetAccessToken | typeof coreGetIDToken
 ) {
@@ -72,6 +95,7 @@ export const getAccessToken = middlewareify(coreGetAccessToken);
  */
 export const handleRedirect: express.RequestHandler = async (request) => {
   const token = await coreHandleRedirect(request.query);
-  // @ts-expect-error IDEK
-  request.token = token;
+  if (token) {
+    request.token = token;
+  }
 };

@@ -1,4 +1,6 @@
-/* Copyright 2014 Open Ag Data Alliance
+/**
+ * @license
+ * Copyright 2014-2022 Open Ag Data Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,14 +15,16 @@
  * limitations under the License.
  */
 
-module.exports = require('./src/core');
+/* eslint-disable import/no-commonjs, unicorn/prefer-module */
+module.exports = require('./dist/core');
 
-module.exports.browser = require('./src/browser');
+module.exports.browser = require('./dist/browser');
 
 // You can only include this in node because the "open" library that it uses
 // fails to compile in the browser
+// eslint-disable-next-line no-undef
 if (typeof process !== 'undefined' && typeof window === 'undefined') {
-  module.exports.node = require('./src/node-browser');
+  module.exports.node = require('./dist/node');
 }
 
-module.exports.middleware = require('./src/middleware');
+module.exports.middleware = require('./dist/middleware');

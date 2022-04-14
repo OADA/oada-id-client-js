@@ -23,7 +23,7 @@ import {
   getAccessToken as coreGetAccessToken,
   getIDToken as coreGetIDToken,
   handleRedirect as redirect,
-} from './core.js';
+} from './core';
 
 async function popUpRedirect(
   method: typeof coreGetAccessToken | typeof coreGetIDToken
@@ -51,6 +51,7 @@ export function handleRedirect() {
   const uri = new URI(window.location);
   const parameters = uri.query(uri.fragment()).query(true);
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   window.opener._oadaIdClientPopUpFunction(parameters);
   window.close();
 }

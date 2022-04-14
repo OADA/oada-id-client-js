@@ -15,7 +15,8 @@
  * limitations under the License.
  */
 
-import fs from 'fs';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+import fs = require('fs');
 import { once } from 'events';
 
 import URI from 'urijs';
@@ -76,9 +77,12 @@ app.post(
 );
 
 const options = {
-  key: fs.readFileSync('./test/server.key', 'utf8'),
-  cert: fs.readFileSync('./test/server.crt', 'utf8'),
-  ca: fs.readFileSync('./test/ca.crt', 'utf8'),
+  // eslint-disable-next-line unicorn/prefer-module, prefer-template, security/detect-non-literal-fs-filename
+  key: fs.readFileSync(__dirname + '/server.key', 'utf8'),
+  // eslint-disable-next-line unicorn/prefer-module, prefer-template, security/detect-non-literal-fs-filename
+  cert: fs.readFileSync(__dirname + '/server.crt', 'utf8'),
+  // eslint-disable-next-line unicorn/prefer-module, prefer-template, security/detect-non-literal-fs-filename
+  ca: fs.readFileSync(__dirname + '/ca.crt', 'utf8'),
   requestCrt: true,
   rejectUnauthorized: false,
 };

@@ -15,13 +15,7 @@ Can be used both in NodeJS and in the browser.
 For use in NodeJS or with something like webpack:
 
 ```sh
-yarn add OADA/oada-id-client-js
-```
-
-You can also get it from a CDN in browser:
-
-```html
-<script src="https://unpkg.com/@oada/oada-id-client"></script>
+yarn add @oada/id-client
 ```
 
 ### Browser Code Generation
@@ -29,7 +23,7 @@ You can also get it from a CDN in browser:
 The code to use in the browser can be generated with the following command:
 
 ```sh
-$ npm run bundle
+yarn bundle
 ```
 
 This will create the file `dist/bundle.js`.
@@ -61,7 +55,7 @@ parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containg client metadata,
+- [`metadata`][] object containing client metadata,
   or string of a [`software_statement`][] JWT
 - `privateKey`
   - `pem` string or buffer containing your client's PEM encoded private RSA
@@ -73,8 +67,8 @@ parameter with a name of `domain`.
 
 #### Usage Example
 
-```javascript
-var options = {
+```typescript
+const options = {
   metadata: {
     /* See spec linked above */
   },
@@ -103,7 +97,7 @@ parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containg client metadata,
+- [`metadata`][] object containing client metadata,
   or string of a [`software_statement`][] JWT
 - `privateKey`
   - `pem` string or buffer containing your client's PEM encoded private RSA
@@ -117,8 +111,8 @@ parameter with a name of `domain`.
 
 #### Usage Example
 
-```javascript
-var options = {
+```typescript
+const options = {
   metadata: {
     /* See spec linked above */
   },
@@ -145,7 +139,7 @@ another to receive `getAccessToken` redirects.
 
 #### Usage Example
 
-```javascript
+```typescript
 // Handle ID token redirects
 app.use(
   '/url/referenced/by/getIDToken/redirect_uri',
@@ -191,7 +185,7 @@ an OADA identity provider.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containg client metadata,
+- [`metadata`][] object containing client metadata,
   or string of a [`software_statement`][] JWT
 - `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
   string properties will be used (e.g. `display`, `prompt`, `login_hint`)
@@ -203,14 +197,14 @@ string properties will be used (e.g. `display`, `prompt`, `login_hint`).
 
 #### Usage Example
 
-```javascript
-var options = {
+```typescript
+const options = {
   metadata: {
     /* See spec linked above */
   },
 };
 
-var domain; // Set domain based on text box, dropdown, etc.
+const domain = /* Set domain based on text box, dropdown, etc. */;
 
 oadaIdClient.getIDToken(domain, options, function (err, idToken) {
   if (err) {
@@ -234,7 +228,7 @@ parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containg client metadata,
+- [`metadata`][] object containing client metadata,
   or string of a [`software_statement`][] JWT
 - [`scope`][] space separated string of OAuth scopes for the request access
   token to have.
@@ -245,20 +239,20 @@ parameter with a name of `domain`.
 
 #### Usage Example
 
-```javascript
-var options = {
+```typescript
+const options = {
   metadata: {
     /* See spec linked above */
   },
   scope: 'some.oada.defined.scope',
 };
 
-var domain; // Set domain based on text box, dropdown, etc.
+const domain = /* Set domain based on text box, dropdown, etc. */;
 
 oadaIdClient.getAccessToken(domain, options, function (err, accessToken) {
   if (err) {
     return console.dir(err);
-  } // Soemthing went wrong
+  } // Something went wrong
 
   console.dir(accessToken);
 });
@@ -295,13 +289,14 @@ Not yet documented.
 [in browser example]: examples/browser-client/
 
 1. [OpenID Connect Core 1.0](http://openid.net/specs/openid-connect-core-1_0.html)
-   [oidparams]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest "OpenID Connect Core 1.0 Section 3.1.2.1"
 1. [OAuth 2.0 Authorization Framework](http://tools.ietf.org/html/rfc6749 'RFC6749')
-   [`client_id`]: http://tools.ietf.org/html/rfc6749#section-2.2 "RFC6794 Section 2.2"
-   [`redirect_uri`]: http://tools.ietf.org/html/rfc6749#section-3.1.2 "RFC6794 Section 3.1.2"
-   [`scope`]: http://tools.ietf.org/html/rfc6749#section-3.3 "RFC6794 Section 3.3"
 1. [JSON Web Key (JWK) Draft 31](https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31)
-   [`kid`]: https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.5 "JWK Section 4.5"
 1. [OAuth 2.0 Dynamic Client Registration Protocol](https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg)
-   [`metadata`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2 "oauth-dyn-reg Section 2"
-   [`software_statement`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2.3 "oauth-dyn-reg Section 2.3"
+
+[oidparams]: http://openid.net/specs/openid-connect-core-1_0.html#AuthRequest 'OpenID Connect Core 1.0 Section 3.1.2.1'
+[`client_id`]: http://tools.ietf.org/html/rfc6749#section-2.2 'RFC6794 Section 2.2'
+[`redirect_uri`]: http://tools.ietf.org/html/rfc6749#section-3.1.2 'RFC6794 Section 3.1.2'
+[`scope`]: http://tools.ietf.org/html/rfc6749#section-3.3 'RFC6794 Section 3.3'
+[`kid`]: https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.5 'JWK Section 4.5'
+[`metadata`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2 'oauth-dyn-reg Section 2'
+[`software_statement`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2.3 'oauth-dyn-reg Section 2.3'

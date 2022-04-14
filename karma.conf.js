@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2014 Open Ag Data Alliance
+ * Copyright 2014-2022 Open Ag Data Alliance
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,69 +15,53 @@
  * limitations under the License.
  */
 
-require('./test/setup.js');
+/* eslint-disable unicorn/prevent-abbreviations, import/no-commonjs, unicorn/prefer-module */
+
+require('ts-node/register');
+
+const puppeteer = require('puppeteer');
+
+process.env.CHROME_BIN = puppeteer.executablePath();
 
 const Rewire = require('rewire-webpack-plugin');
-const webpack = require('./webpack.config')[0];
-const args = require('yargs').argv;
+const { mode, entry, output, ...webpack } = require('./webpack.config.ts');
 
-webpack.plugins = [new Rewire()].concat(webpack.plugins || []);
+webpack.plugins = [new Rewire()].concat(webpack.plugins ?? []);
 module.exports = function (config) {
-  const reporters = ['mocha'];
-  const preprocessors = {
-    'test/**/*.test.js': ['webpack'],
-  };
-
-  if (args.cover) {
-    reporters.push('coverage');
-    preprocessors['src/browser.js'] = ['webpack', 'coverage'];
-  }
-
   config.set({
     basePath: '',
-
-    frameworks: ['mocha'],
-
-    files: ['src/browser.js', 'test/**/*.test.js'],
-
+    plugins: [
+      'karma-webpack',
+      'karma-mocha',
+      'karma-mocha-reporter',
+      'karma-firefox-launcher',
+      'karma-chrome-launcher',
+      'karma-vivaldi-launcher',
+    ],
+    frameworks: ['mocha', 'webpack'],
+    files: ['test/**/*.test.ts'],
     exclude: [],
-
-    preprocessors,
-
+    preprocessors: {
+      'test/**/*.test.ts': ['webpack'],
+    },
+    karmaTypescriptConfig: {
+      bundlerOptions: {
+        validateSyntax: false,
+      },
+      tsconfig: 'test/tsconfig.json',
+    },
     webpack,
-
-    reporters: reporters,
-
     coverageReporter: {
       type: 'lcov',
       dir: 'coverage/',
       subdir: '.',
     },
-
+    reporters: ['mocha'],
     port: 9876,
-
     colors: true,
-
     logLevel: config.LOG_INFO,
-
     autoWatch: true,
-
-    // browsers: ['vivaldi'],
-    customLaunchers: {
-      vivaldi: {
-        base: 'Vivaldi',
-        flags: ['--allow-insecure-localhost'],
-      },
-      chrome: {
-        base: 'ChromeHeadless',
-        flags: ['--allow-insecure-localhost', '--disable-gpu'],
-      },
-      firefox: {
-        base: 'Firefox',
-        flags: ['-headless'],
-      },
-    },
-
+    browsers: ['ChromeHeadless'],
     singleRun: true,
   });
 };

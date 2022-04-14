@@ -4,6 +4,6 @@
     "noEmit": true,
     "allowJs": true
   },
-  "include": ["**/*.ts", "**/*.js"],
+  "include": ["**/*.ts", "**/*.mts", "**/*.js", "**/*.mjs"],
   "exclude": []
 }

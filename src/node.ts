@@ -32,8 +32,8 @@ import {
   Metadata,
   Options,
   getAccessToken as coreGetAccessToken,
-  handleRedirect,
   getIDToken as coreGetIDToken,
+  handleRedirect,
 } from './core.js';
 
 // TODO: Probably remove this once I am sure things work
@@ -45,14 +45,14 @@ function getPrivateKey() {
   return { kty: 'PEM', pem } as const;
 }
 
-async function genMetadata<M extends Partial<Metadata>>(
+async function genMetadata<M extends Metadata>(
   privateKey: string | jwksUtils.JWK,
   {
     client_name = '@oada/id-client',
     contacts = ['@oada/id-client'],
     ...rest
   }: M = {} as M
-) {
+): Promise<M> {
   const metadata = {
     token_endpoint_auth_method:
       'urn:ietf:params:oauth:client-assertion-type:jwt-bearer',
@@ -66,10 +66,11 @@ async function genMetadata<M extends Partial<Metadata>>(
     contacts,
   };
   const jwt = await sign(metadata, privateKey);
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return {
     ...metadata,
     software_statement: jwt,
-  };
+  } as M & typeof metadata;
 }
 
 /**
@@ -98,7 +99,7 @@ function nodeify(method: typeof coreGetAccessToken | typeof coreGetIDToken) {
         response.statusCode = 400;
         throw error;
       } finally {
-        // TODO: Make page close now
+        // FIXME: Make page close now
         response.end();
       }
     });
@@ -133,8 +134,8 @@ function nodeify(method: typeof coreGetAccessToken | typeof coreGetIDToken) {
           metadata: meta,
           redirect,
         },
-        async (redirect) => {
-          await open(redirect, {
+        async (redirectUri) => {
+          await open(redirectUri, {
             // @ts-expect-error This is a secrept parameter
             url: true,
             // Hack to make open work in WSL
