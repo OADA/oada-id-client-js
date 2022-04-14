@@ -15,7 +15,6 @@
     "dist/"
   ],
   "scripts": {
-    "prepublish": "npm run build && npm run bundle",
     "bundle": "webpack",
     "build": "tsc -b",
     "test": "cross-env TS_NODE_PROJECT='test/tsconfig.json' mocha",
