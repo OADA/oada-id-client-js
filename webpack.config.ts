@@ -18,7 +18,6 @@
 /* eslint-disable unicorn/prefer-module */
 
 import path from 'path';
-import url from 'url';
 import webpack from 'webpack';
 
 const config: webpack.Configuration = {
@@ -81,7 +80,7 @@ const config: webpack.Configuration = {
     __dirname: true,
   },
   output: {
-    path: path.resolve(path.dirname(url.fileURLToPath(import.meta.url))),
+    path: path.resolve(__dirname),
     filename: 'bundle.js',
     library: 'oadaIdClient',
   },

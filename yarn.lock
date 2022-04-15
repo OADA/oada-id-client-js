@@ -479,7 +479,7 @@ __metadata:
   resolution: "@oada/id-client@workspace:."
   dependencies:
     "@oada/certs": ^4.1.1
-    "@oada/types": ^2.0.0
+    "@oada/types": ^2.0.1
     "@tsconfig/node12": ^1.0.9
     "@types/body-parser": ^1.19.2
     "@types/chai": ^4.3.1
@@ -488,7 +488,7 @@ __metadata:
     "@types/express-serve-static-core": ^4.17.28
     "@types/jsonwebtoken": ^8.5.8
     "@types/mocha": ^9.1.0
-    "@types/node": 12.20.47
+    "@types/node": 12.20.48
     "@types/pem-jwk": ^2.0.0
     "@types/qs": ^6.9.7
     "@types/rewire": ^2.5.28
@@ -578,14 +578,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@oada/types@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@oada/types@npm:2.0.0"
+"@oada/types@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@oada/types@npm:2.0.1"
   dependencies:
     ajv: 8.11.0
     ajv-formats: ^2.1.1
     ajv-formats-draft2019: ^1.6.1
-  checksum: 4bce2ce628587bfc177cf4024b41136fd2c53dd51b25b2e9caaf6252e6020d3fd72ca4afcdb59f087150d206f3be76178778447c03c42449eaebd364a14bc8ec
+  checksum: 7496b83a0d12cb3df00f5563d7d8b15cd585ea1fe823c83f78c040cd03cbea5c31480f78ae2d2c1d8e81019e8fb0f9c02bac29357f4084e555ebaebf951738b1
   languageName: node
   linkType: hard
 
@@ -873,10 +873,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:12.20.47":
-  version: 12.20.47
-  resolution: "@types/node@npm:12.20.47"
-  checksum: 97487af02fada4342e1bd47f9c9ebf601c12b85cbf17056ba73a315339ae996490403f2d4d1d799d8078cfe43a59e33370b4a5ae2d4fb79dd02359f4691934b4
+"@types/node@npm:12.20.48":
+  version: 12.20.48
+  resolution: "@types/node@npm:12.20.48"
+  checksum: 48bd705bda1af2332c50fb24819bba7b0eac791b07c24c098c39b10940170a53bd3c4755aedc3409c7114c539f1f86ea657aa6838d164fd135e3b89b9f9aa772
   languageName: node
   linkType: hard
 

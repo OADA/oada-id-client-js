@@ -12,6 +12,7 @@ package.lock
 .nvimlog
 
 # Build output
+bundle.*
 dist
 .test
 
