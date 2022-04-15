@@ -54,7 +54,7 @@ export interface Options {
   metadata: Metadata | string;
   scope?: string | readonly string[];
   params?: QueryParameters;
-  privateKey: jwku.JWK;
+  privateKey?: jwku.JWK;
   redirect?: string;
   display?: string;
 }
@@ -68,7 +68,7 @@ export interface Configuration extends OADAConfiguration {
 }
 
 export interface State {
-  key: jwku.JWK;
+  key?: jwku.JWK;
   domain: string;
   conf: Configuration;
   options: RegistrationData;
@@ -265,6 +265,10 @@ async function verifyIDToken(tokenState: State, query: QueryParameters) {
 async function exchangeCode(codeState: State, query: QueryParameters) {
   if (!query.code) {
     return verifyIDToken(codeState, query);
+  }
+
+  if (!codeState.key) {
+    throw new Error('No key provided, cannot perform code exchange');
   }
 
   const assertion = await generate({

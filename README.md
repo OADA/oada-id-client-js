@@ -1,6 +1,5 @@
 # @oada/id-client
 
-[![Build Status](https://travis-ci.org/OADA/oada-id-client-js.svg?branch=master)](https://travis-ci.org/OADA/oada-id-client-js)
 [![Coverage Status](https://coveralls.io/repos/OADA/oada-id-client-js/badge.svg?branch=master)](https://coveralls.io/r/OADA/oada-id-client-js?branch=master)
 [![npm](https://img.shields.io/npm/v/@oada/id-client)](https://www.npmjs.com/package/@oada/id-client)
 [![Downloads/week](https://img.shields.io/npm/dw/@oada/id-client.svg)](https://npmjs.org/package/@oada/id-client)
@@ -35,11 +34,96 @@ This will create the file `bundle.js`.
 - [On Server Example][]
 - [In Browser Example][]
 
+## High-Level Node.JS wrapper Usage
+
+This version of the library wraps the core functionality
+for easy use in typical Node.JS uses.
+
+It will pop up a window using the default browser
+to take the user through the needed flows
+and the return the resulting token(s).
+
+### getIDToken(domain, options)
+
+Asynchronous function for generating an ID token request against
+an OADA identity provider.
+
+#### Parameters
+
+`domain` string of domain with which to log in the user.
+
+`options` object containing at least the following properties:
+
+- `metadata` object containing [client metadata][],
+  or string of a [`software_statement`][] JWT
+- `privateKey` a private JWK for use in the JWT bearer client auth
+  (required for code flow)
+- `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
+  string properties will be used (e.g. `display`, `prompt`, `login_hint`)
+
+[Optional OpenID Connect parameters][oidparams] placed in options as
+string properties will be used (e.g. `display`, `prompt`, `login_hint`).
+
+#### Usage Example
+
+```typescript
+const options = {
+  metadata: {
+    /* See spec linked above */
+  },
+};
+
+const domain = /* Set domain based on text box, dropdown, etc. */;
+
+// Promise will resolve after user completes the flow in the browser
+const idToken = await oadaIdClient.getIDToken(domain, options);
+console.dir(idToken);
+```
+
+### getAccessToken(domain, options)
+
+Asynchronous function for generating an access token request against an
+OADA compliant API.
+
+#### Parameters
+
+`domain` string of domain from which to get an OADA API access token.
+The value passed to the function can be overridden by a query or form
+parameter with a name of `domain`.
+
+`options` object containing at least the following properties:
+
+- `metadata` object containing [client metadata][],
+  or string of a [`software_statement`][] JWT
+- [`scope`][] space separated string of OAuth scopes for the request access
+  token to have.
+- `privateKey` a private JWK for use in the JWT bearer client auth
+  (required for code flow)
+- `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
+  string properties will be used (e.g. `display`, `prompt`, `login_hint`)
+
+#### Usage Example
+
+```typescript
+const options = {
+  metadata: {
+    /* See spec linked above */
+  },
+  scope: 'some.oada.defined.scope',
+};
+
+const domain = /* Set domain based on text box, dropdown, etc. */;
+
+// Promise will resolve after user completes the flow in the browser
+const accessToken = await oadaIdClient.getAccessToken(domain, options);
+console.dir(accessToken);
+```
+
 ## Connect Style "Middleware" Wrapper Usage
 
-Version of the library functions which wrap the core functionality
+This version of the library wraps the core functionality
 for use as connect style "middleware".
-This can be used in a NodeJS server using a compatible web development
+This can be used in a Node.JS server using a compatible web development
 framework, such as express.
 
 For a working example of using this wrapper, see the [on server example][].
@@ -57,13 +141,10 @@ parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containing client metadata,
+- `metadata` object containing [client metadata][],
   or string of a [`software_statement`][] JWT
-- `privateKey`
-  - `pem` string or buffer containing your client's PEM encoded private RSA
-    key
-  - [`kid`][] string containing the key ID parameter,
-    for finding the corresponding public key where your client is registered
+- `privateKey` a private JWK for use in the JWT bearer client auth
+  (required for code flow)
 - `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
   string properties will be used (e.g. `display`, `prompt`, `login_hint`)
 
@@ -99,13 +180,10 @@ parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containing client metadata,
+- `metadata` object containing [client metadata][],
   or string of a [`software_statement`][] JWT
-- `privateKey`
-  - `pem` string or buffer containing your client's PEM encoded private RSA
-    key
-  - [`kid`][] string containing the key ID parameter,
-    for finding the corresponding public key where your client is registered
+- `privateKey` a private JWK for use in the JWT bearer client auth
+  (required for code flow)
 - [`scope`][] space separated string of OAuth scopes for the request access
   token to have.
 - `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
@@ -135,7 +213,7 @@ app.use(
 
 Middleware for handling redirects from `getIDToken` or `getAccessToken`
 middlewares.
-In most case you will apply this middleware in two locations,
+In most cases, you will apply this middleware in two locations,
 one to receive `getIDToken` redirects and
 another to receive `getAccessToken` redirects.
 
@@ -171,12 +249,12 @@ app.use(
 
 ## Browser Wrapper Usage
 
-Version of the library functions which wrap the core functionality
+This version of the library wraps the core functionality
 for easy use in the browser.
 
 For a working example of using this wrapper, see the [in browser example][].
 
-### getIDToken(domain, options, callback)
+### getIDToken(domain, options)
 
 Asynchronous function for generating an ID token request against
 an OADA identity provider.
@@ -187,15 +265,13 @@ an OADA identity provider.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containing client metadata,
+- `metadata` object containing [client metadata][],
   or string of a [`software_statement`][] JWT
 - `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
   string properties will be used (e.g. `display`, `prompt`, `login_hint`)
 
 [Optional OpenID Connect parameters][oidparams] placed in options as
 string properties will be used (e.g. `display`, `prompt`, `login_hint`).
-
-`callback` function of the form `function(err, idToken)`.
 
 #### Usage Example
 
@@ -208,16 +284,11 @@ const options = {
 
 const domain = /* Set domain based on text box, dropdown, etc. */;
 
-oadaIdClient.getIDToken(domain, options, function (err, idToken) {
-  if (err) {
-    return console.dir(err);
-  } // Soemthing went wrong
-
-  console.dir(idToken);
-});
+const idToken = await oadaIdClient.getIDToken(domain, options);
+console.dir(idToken);
 ```
 
-### getAccessToken(domain, options, callback)
+### getAccessToken(domain, options)
 
 Asynchronous function for generating an access token request against an
 OADA compliant API.
@@ -230,14 +301,12 @@ parameter with a name of `domain`.
 
 `options` object containing at least the following properties:
 
-- [`metadata`][] object containing client metadata,
+- `metadata` object containing [client metadata][],
   or string of a [`software_statement`][] JWT
 - [`scope`][] space separated string of OAuth scopes for the request access
   token to have.
 - `params` [Optional OpenID Connect parameters][oidparams] placed in `params` as
   string properties will be used (e.g. `display`, `prompt`, `login_hint`)
-
-`callback` function of the form `function(err, accessToken)`.
 
 #### Usage Example
 
@@ -251,13 +320,8 @@ const options = {
 
 const domain = /* Set domain based on text box, dropdown, etc. */;
 
-oadaIdClient.getAccessToken(domain, options, function (err, accessToken) {
-  if (err) {
-    return console.dir(err);
-  } // Something went wrong
-
-  console.dir(accessToken);
-});
+const accessToken = await oadaIdClient.getAccessToken(domain, options);
+console.dir(accessToken);
 ```
 
 ### handleRedirect()
@@ -300,5 +364,5 @@ Not yet documented.
 [`redirect_uri`]: http://tools.ietf.org/html/rfc6749#section-3.1.2 'RFC6794 Section 3.1.2'
 [`scope`]: http://tools.ietf.org/html/rfc6749#section-3.3 'RFC6794 Section 3.3'
 [`kid`]: https://tools.ietf.org/html/draft-ietf-jose-json-web-key-31#section-4.5 'JWK Section 4.5'
-[`metadata`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2 'oauth-dyn-reg Section 2'
+[client metadata]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2 'oauth-dyn-reg Section 2'
 [`software_statement`]: https://tools.ietf.org/html/draft-ietf-oauth-dyn-reg#section-2.3 'oauth-dyn-reg Section 2.3'
