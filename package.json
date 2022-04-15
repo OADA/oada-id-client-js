@@ -1,9 +1,8 @@
 {
   "name": "@oada/id-client",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "OADA identity client library for Node.JS and Browser",
   "main": "index.js",
-  "types": "index.d.ts",
   "browser": {
     ".": "dist/browser.js",
     "./dist/node-browser.js": false
