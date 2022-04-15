@@ -25,7 +25,7 @@ import {
   handleRedirect as redirect,
 } from './core';
 
-async function popUpRedirect(
+function popUpRedirect(
   method: typeof coreGetAccessToken | typeof coreGetIDToken
 ) {
   return async function (domain: string, options: Options) {
