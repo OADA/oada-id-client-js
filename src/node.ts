@@ -17,7 +17,6 @@
 
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { URL } from 'url';
 import fs from 'fs';
 import http from 'http';
 import { once } from 'events';

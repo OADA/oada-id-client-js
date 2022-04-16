@@ -1,16 +1,12 @@
 {
   "name": "@oada/id-client",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "description": "OADA identity client library for Node.JS and Browser",
   "main": "index.js",
   "browser": {
     "./dist/node.js": false,
     "buffer": "buffer/",
     "crypto": "crypto-browserify",
-    "events": "events/",
-    "stream": "stream-browserify",
-    "string_decoder": "string_decoder/",
-    "url": "url/",
     "util": "util/"
   },
   "engines": {
