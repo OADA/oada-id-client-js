@@ -17,14 +17,12 @@
 
 /* eslint-disable unicorn/prevent-abbreviations, import/no-commonjs, unicorn/prefer-module */
 
-require('ts-node/register');
-
 const puppeteer = require('puppeteer');
 
 process.env.CHROME_BIN = puppeteer.executablePath();
 
 const Rewire = require('rewire-webpack-plugin');
-const { mode, entry, output, ...webpack } = require('./webpack.config.ts');
+const { mode, entry, output, ...webpack } = require('./webpack.config');
 
 webpack.plugins = [new Rewire()].concat(webpack.plugins ?? []);
 module.exports = function (config) {

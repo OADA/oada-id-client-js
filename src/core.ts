@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import EventEmitter, { once } from 'events';
+import { EventEmitter2 } from 'eventemitter2';
 
 import { RSA_JWK, jwk2pem } from 'pem-jwk';
 import request from 'superagent';
@@ -123,7 +123,7 @@ export const state = {
   retrieveState,
 };
 
-const emitter = new EventEmitter();
+const emitter = new EventEmitter2();
 
 function isArray(value: unknown): value is unknown[] | readonly unknown[] {
   return Array.isArray(value);
@@ -181,12 +181,12 @@ async function authorize(
     // Do not send client_secret here
     .removeQuery('client_secret');
 
-  const response = once(emitter, stateTok) as Promise<[QueryParameters]>;
+  const response = EventEmitter2.once(emitter, stateTok);
   // Redirect the user to constructed uri
   // eslint-disable-next-line @typescript-eslint/no-base-to-string
   await redirectCB(uri.toString());
 
-  const [tok] = await response;
+  const [tok] = (await response) as [QueryParameters];
   return tok;
 }
 
