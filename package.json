@@ -71,7 +71,7 @@
     "@oada/certs": "^4.1.1",
     "eventemitter2": "^6.4.5",
     "is-wsl": "^2.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jwt-bearer-client-auth": "^2.0.1",
     "oauth-dyn-reg": "^2.1.1",
     "open": "^8.4.0",
